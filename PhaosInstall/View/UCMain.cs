@@ -51,7 +51,7 @@ namespace ML3DInstaller
             this.software = software;
             this.version = version;
 
-            DefaultPath = @"C:\Program Files (x86)\Microlight3D\"+software+@"\";
+            DefaultPath = @"C:\Program Files (x86)\Microlight3D\" + software + @"\";
             ChosenPath = DefaultPath;
 
             lblTitle.Text = "Installing " + software + " version " + version;
@@ -149,7 +149,7 @@ namespace ML3DInstaller
                 label1.Text = text;
                 RefreshUI();
             }
-            
+
         }
 
         private void RefreshUI()
@@ -173,7 +173,7 @@ namespace ML3DInstaller
             }
         }
 
-        
+
 
         public void SetCursor(Cursor cursor)
         {
@@ -185,10 +185,23 @@ namespace ML3DInstaller
             {
                 this.Cursor = cursor;
             }
-            
+
         }
 
-        #endregion
+        public void End()
+        {
+            if (InvokeRequired && !IsDisposed)
+            {
+                Invoke(new Action(() => End()));
+            }
+            else
+            {
+                this.Hide();
+                this.Dispose();
+            }
 
+            #endregion
+
+        }
     }
 }

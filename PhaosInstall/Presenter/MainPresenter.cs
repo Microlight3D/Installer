@@ -25,6 +25,8 @@ namespace ML3DInstaller.Presenter
         private CancellationTokenSource DocCopy;
 
         private UCDependencies dependenciesView;
+
+        private bool InstallBlender = false;
         public MainPresenter(UCMain uCMain, string software, string version, string installDependencies) {
 
             userControlMain = uCMain;
@@ -40,6 +42,8 @@ namespace ML3DInstaller.Presenter
 
             Updater = new Update(software, version);
         }
+
+        
 
         private void UserControlMain_CancelInstall(object? sender, EventArgs e)
         {
@@ -92,7 +96,7 @@ namespace ML3DInstaller.Presenter
             // Check for internet connection
             if (!CheckInternet())
             {
-                MessageBox.Show("An internet connection is necessary to update this software.\nPlease connect to the internet before re-trying", "No Connection detected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("An internet connection is required to update this software.\nPlease connect to the internet before re-trying", "No Connection detected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             if (cancellationToken.IsCancellationRequested)
@@ -174,8 +178,22 @@ namespace ML3DInstaller.Presenter
 
         public void SelectDependencies(string[] availableExes)
         {
+            List<string> chocoList = new List<string>();
+            chocoList.AddRange(new string[]
+            {
+                "dotnetcore-runtime --version 3.1.32 ",
+                "netfx-4.8",
+                "vcredist-all",
+                "windirstat",
+                "klayout",
+                "teamviewer",
+                "termite",
+                "imagej",
+                "!blender"
+            });
             this.dependenciesView = new UCDependencies();
             dependenciesView.SetItems(availableExes);
+            dependenciesView.SetChoco(chocoList);
             dependenciesView.Cancel += (sender, e) =>
             {
                 dependenciesView.Hide();
@@ -201,11 +219,11 @@ namespace ML3DInstaller.Presenter
         }
         private void DependenciesView_Continue(object? sender, string[] dependenciesToInstall)
         {
-            Updater.RunExecutablesList(dependenciesToInstall);
             dependenciesView.Hide();
             dependenciesView.Dispose();
-            this.userControlMain.Hide();
-            this.userControlMain.Dispose();
+            userControlMain.UpdateInfo("Installing Dependencies ...");
+            Updater.RunExecutablesList(dependenciesToInstall);
+            this.userControlMain.End();
             Application.Exit();
             
         }

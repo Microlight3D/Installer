@@ -43,6 +43,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
         "Release"
         {
@@ -59,6 +67,22 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
+            }
         }
     }
     "Deployable"
@@ -92,7 +116,7 @@
         {
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1E60F392D907463CB43ACFC3377A74CF"
             {
-            "SourcePath" = "8:C:\\Workspace\\ML3D\\Phaos\\Phaos\\iconePhaos2.ico"
+            "SourcePath" = "8:..\\..\\Phaos\\Phaos\\iconePhaos2.ico"
             "TargetName" = "8:iconePhaos2.ico"
             "Tag" = "8:"
             "Folder" = "8:_1C0724147FAB4A3480F09E7277F2B354"
@@ -118,7 +142,7 @@
         {
             "{3C67513D-01DD-4637-8A68-80971EB9504F}:_1C0724147FAB4A3480F09E7277F2B354"
             {
-            "DefaultLocation" = "8:[ProgramFilesFolder][Manufacturer]\\[ProductName]"
+            "DefaultLocation" = "8:[ProgramFiles64Folder][Manufacturer]\\[ProductName]"
             "Name" = "8:#1925"
             "AlwaysCreate" = "11:TRUE"
             "Condition" = "8:"
@@ -177,15 +201,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:ML3DSetup"
-        "ProductCode" = "8:{52AF16E2-093D-4A2C-AF91-A3F84DBB0AA2}"
-        "PackageCode" = "8:{95FCD43E-2951-4F22-BAC8-0357DF0F2A03}"
+        "ProductCode" = "8:{6BA0B6FA-185A-42B3-AD0C-5C6E9577E5A5}"
+        "PackageCode" = "8:{D072A40B-6EC8-4094-A2B1-C3469B2944AB}"
         "UpgradeCode" = "8:{F3224DC5-D5F4-4EDD-B3BC-85B0048DE2CC}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:FALSE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.0.10"
+        "ProductVersion" = "8:1.0.12"
         "Manufacturer" = "8:Microlight3D"
         "ARPHELPTELEPHONE" = "8:+33476549516"
         "ARPHELPLINK" = "8:https://www.microlight3d.com/contact"
@@ -199,7 +223,7 @@
         "ARPIconIndex" = "3:32512"
         "SearchPath" = "8:"
         "UseSystemSearchPath" = "11:TRUE"
-        "TargetPlatform" = "3:0"
+        "TargetPlatform" = "3:1"
         "PreBuildEvent" = "8:"
         "PostBuildEvent" = "8:"
         "RunPostBuildEvent" = "3:0"
@@ -727,7 +751,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_9BDEFEF2A64941599528111EDD306176"
             {
-            "SourcePath" = "8:..\\PhaosInstall\\obj\\Release\\net8.0-windows7.0\\apphost.exe"
+            "SourcePath" = "8:..\\PhaosInstall\\obj\\Release\\net8.0-windows7.0\\win-x64\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_1C0724147FAB4A3480F09E7277F2B354"

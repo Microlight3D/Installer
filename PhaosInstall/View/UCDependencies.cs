@@ -31,16 +31,26 @@ namespace ML3DInstaller
                 checkedListBox1.SetItemChecked(checkedListBox1.Items.Add(Path.GetFileName(item)), true);
             }
         }
+
+        public void SetChoco(List<string> chocoItems)
+        {
+            foreach (string item in chocoItems)
+            {
+                string rItem = item.Replace("!", "");
+                checkedListBox1.SetItemChecked(checkedListBox1.Items.Add(rItem), !item.StartsWith("!"));
+                nameToPath[rItem] = "choco install -y " + rItem;
+            }
+        }
         #endregion
 
         #region event forwarding
-        private void button1_Click(object sender, EventArgs e)
+        private void btnCancel_Click(object sender, EventArgs e)
         {
             Cancel?.Invoke(this, EventArgs.Empty);
         }
         #endregion
 
-        private void button2_Click(object sender, EventArgs e)
+        private void btnContinue_Click(object sender, EventArgs e)
         {
             List<string> items = new List<string>();
             foreach (string item in this.checkedListBox1.CheckedItems)

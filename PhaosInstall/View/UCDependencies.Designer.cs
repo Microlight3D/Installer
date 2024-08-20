@@ -33,8 +33,8 @@
             tableLayoutPanel2 = new TableLayoutPanel();
             checkBox1 = new CheckBox();
             checkedListBox1 = new CheckedListBox();
-            button1 = new Button();
-            button2 = new Button();
+            btnCancel = new Button();
+            btnContinue = new Button();
             tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
             SuspendLayout();
@@ -46,8 +46,8 @@
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel1.Controls.Add(label1, 0, 0);
             tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 0, 1);
-            tableLayoutPanel1.Controls.Add(button1, 0, 2);
-            tableLayoutPanel1.Controls.Add(button2, 1, 2);
+            tableLayoutPanel1.Controls.Add(btnCancel, 0, 2);
+            tableLayoutPanel1.Controls.Add(btnContinue, 1, 2);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -92,8 +92,6 @@
             // checkBox1
             // 
             checkBox1.AutoSize = true;
-            checkBox1.Checked = true;
-            checkBox1.CheckState = CheckState.Checked;
             checkBox1.Dock = DockStyle.Top;
             checkBox1.Location = new Point(3, 3);
             checkBox1.Name = "checkBox1";
@@ -115,27 +113,27 @@
             checkedListBox1.Click += checkedListBox1_Click;
             checkedListBox1.SelectedIndexChanged += checkedListBox1_SelectedIndexChanged;
             // 
-            // button1
+            // btnCancel
             // 
-            button1.Dock = DockStyle.Top;
-            button1.Location = new Point(3, 239);
-            button1.Name = "button1";
-            button1.Size = new Size(131, 23);
-            button1.TabIndex = 2;
-            button1.Text = "Cancel";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
+            btnCancel.Dock = DockStyle.Top;
+            btnCancel.Location = new Point(3, 239);
+            btnCancel.Name = "btnCancel";
+            btnCancel.Size = new Size(131, 23);
+            btnCancel.TabIndex = 2;
+            btnCancel.Text = "Cancel";
+            btnCancel.UseVisualStyleBackColor = true;
+            btnCancel.Click += btnCancel_Click;
             // 
-            // button2
+            // btnContinue
             // 
-            button2.Dock = DockStyle.Fill;
-            button2.Location = new Point(140, 239);
-            button2.Name = "button2";
-            button2.Size = new Size(131, 23);
-            button2.TabIndex = 3;
-            button2.Text = "Continue";
-            button2.UseVisualStyleBackColor = true;
-            button2.Click += button2_Click;
+            btnContinue.Dock = DockStyle.Fill;
+            btnContinue.Location = new Point(140, 239);
+            btnContinue.Name = "btnContinue";
+            btnContinue.Size = new Size(131, 23);
+            btnContinue.TabIndex = 3;
+            btnContinue.Text = "Continue";
+            btnContinue.UseVisualStyleBackColor = true;
+            btnContinue.Click += btnContinue_Click;
             // 
             // UCDependencies
             // 
@@ -158,7 +156,7 @@
         private TableLayoutPanel tableLayoutPanel2;
         private CheckBox checkBox1;
         private CheckedListBox checkedListBox1;
-        private Button button1;
-        private Button button2;
+        private Button btnCancel;
+        private Button btnContinue;
     }
 }

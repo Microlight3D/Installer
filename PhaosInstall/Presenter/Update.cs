@@ -215,20 +215,41 @@ namespace ML3DInstaller.Presenter
             {
                 try
                 {
-                    var process = new Process
+                    if (executable.StartsWith("choco"))
                     {
-                        StartInfo = new ProcessStartInfo()
-                        {
-                            FileName = executable
-                        }
-                    };
-                    process.Start();
-                    process.WaitForExit();
-                }
-                catch {
-                    continue;
-                }
+                        RunChocoInstall(executable);
+                    } else
+                    {
+                        ExeInstall(executable);
+                    }
+                } catch { continue; } // if something fails, just continue instlaling stuff
             }
+        }
+
+        private void ExeInstall(string exeFilePath)
+        {
+            var process = new Process
+            {
+                StartInfo = new ProcessStartInfo()
+                {
+                    FileName = exeFilePath
+                }
+            };
+            process.Start();
+            process.WaitForExit();
+        }
+
+        private void RunChocoInstall(string package)
+        {
+            StringBuilder args_builder = new StringBuilder();
+            args_builder.Append(package);
+
+            Process process = new Process();
+            process.StartInfo.FileName = "powershell";
+            process.StartInfo.Arguments = args_builder.ToString();
+            process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            process.Start();
+            process.WaitForExit();
         }
 
         public void DeleteDownloaded()
@@ -245,10 +266,7 @@ namespace ML3DInstaller.Presenter
             }
         }
 
-        public void RunChocoInstall(string package)
-        {
-
-        }
+        
 
         private void DependenciesView_Continue(object? sender, List<string> dependenciesToInstall)
         {
