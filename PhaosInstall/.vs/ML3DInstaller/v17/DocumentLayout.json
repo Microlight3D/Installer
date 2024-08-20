@@ -1,0 +1,112 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Matvei\\source\\repos\\PhaosInstall\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{48CC6BC8-FA63-47D5-8988-D8D0B04E0CD6}|ML3DInstaller.csproj|c:\\users\\matvei\\source\\repos\\phaosinstall\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{48CC6BC8-FA63-47D5-8988-D8D0B04E0CD6}|ML3DInstaller.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{48CC6BC8-FA63-47D5-8988-D8D0B04E0CD6}|ML3DInstaller.csproj|c:\\users\\matvei\\source\\repos\\phaosinstall\\presenter\\mainpresenter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{48CC6BC8-FA63-47D5-8988-D8D0B04E0CD6}|ML3DInstaller.csproj|solutionrelative:presenter\\mainpresenter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{48CC6BC8-FA63-47D5-8988-D8D0B04E0CD6}|ML3DInstaller.csproj|c:\\users\\matvei\\source\\repos\\phaosinstall\\presenter\\update.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{48CC6BC8-FA63-47D5-8988-D8D0B04E0CD6}|ML3DInstaller.csproj|solutionrelative:presenter\\update.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{48CC6BC8-FA63-47D5-8988-D8D0B04E0CD6}|ML3DInstaller.csproj|c:\\users\\matvei\\source\\repos\\phaosinstall\\view\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{48CC6BC8-FA63-47D5-8988-D8D0B04E0CD6}|ML3DInstaller.csproj|solutionrelative:view\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{48CC6BC8-FA63-47D5-8988-D8D0B04E0CD6}|ML3DInstaller.csproj|c:\\users\\matvei\\source\\repos\\phaosinstall\\view\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{48CC6BC8-FA63-47D5-8988-D8D0B04E0CD6}|ML3DInstaller.csproj|solutionrelative:view\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{57d563b6-44a5-47df-85be-f4199ad6b651}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Matvei\\source\\repos\\PhaosInstall\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\Matvei\\source\\repos\\PhaosInstall\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AQIAAB4AAAAAAAAAAAAQwFgAAAAwAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-19T14:28:15.46Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Update.cs",
+              "DocumentMoniker": "C:\\Users\\Matvei\\source\\repos\\PhaosInstall\\Presenter\\Update.cs",
+              "RelativeDocumentMoniker": "Presenter\\Update.cs",
+              "ToolTip": "C:\\Users\\Matvei\\source\\repos\\PhaosInstall\\Presenter\\Update.cs",
+              "RelativeToolTip": "Presenter\\Update.cs",
+              "ViewState": "AQIAAMoAAAAAAAAAAAAhwNMAAAAUAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-19T14:19:02.264Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MainPresenter.cs",
+              "DocumentMoniker": "C:\\Users\\Matvei\\source\\repos\\PhaosInstall\\Presenter\\MainPresenter.cs",
+              "RelativeDocumentMoniker": "Presenter\\MainPresenter.cs",
+              "ToolTip": "C:\\Users\\Matvei\\source\\repos\\PhaosInstall\\Presenter\\MainPresenter.cs",
+              "RelativeToolTip": "Presenter\\MainPresenter.cs",
+              "ViewState": "AQIAALoAAAAAAAAAAAAQwMcAAAANAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-19T14:13:19.391Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Form1.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\Matvei\\source\\repos\\PhaosInstall\\View\\Form1.cs",
+              "RelativeDocumentMoniker": "View\\Form1.cs",
+              "ToolTip": "C:\\Users\\Matvei\\source\\repos\\PhaosInstall\\View\\Form1.cs [Design]*",
+              "RelativeToolTip": "View\\Form1.cs [Design]*",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-19T13:14:15.594Z",
+              "EditorCaption": " [Design]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Form1.cs",
+              "DocumentMoniker": "C:\\Users\\Matvei\\source\\repos\\PhaosInstall\\View\\Form1.cs",
+              "RelativeDocumentMoniker": "View\\Form1.cs",
+              "ToolTip": "C:\\Users\\Matvei\\source\\repos\\PhaosInstall\\View\\Form1.cs*",
+              "RelativeToolTip": "View\\Form1.cs*",
+              "ViewState": "AQIAABMAAAAAAAAAAAAgwAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-19T13:14:09.826Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
