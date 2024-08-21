@@ -3,34 +3,12 @@
   "WorkspaceRootPath": "C:\\Workspace\\ML3D\\Installer\\PhaosInstall\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{48CC6BC8-FA63-47D5-8988-D8D0B04E0CD6}|ML3DInstaller.csproj|c:\\workspace\\ml3d\\installer\\phaosinstall\\view\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{48CC6BC8-FA63-47D5-8988-D8D0B04E0CD6}|ML3DInstaller.csproj|solutionrelative:view\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{48CC6BC8-FA63-47D5-8988-D8D0B04E0CD6}|ML3DInstaller.csproj|c:\\workspace\\ml3d\\installer\\phaosinstall\\view\\ucmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{48CC6BC8-FA63-47D5-8988-D8D0B04E0CD6}|ML3DInstaller.csproj|solutionrelative:view\\ucmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{48CC6BC8-FA63-47D5-8988-D8D0B04E0CD6}|ML3DInstaller.csproj|c:\\workspace\\ml3d\\installer\\phaosinstall\\presenter\\update.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{48CC6BC8-FA63-47D5-8988-D8D0B04E0CD6}|ML3DInstaller.csproj|solutionrelative:presenter\\update.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{48CC6BC8-FA63-47D5-8988-D8D0B04E0CD6}|ML3DInstaller.csproj|c:\\workspace\\ml3d\\installer\\phaosinstall\\presenter\\mainpresenter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{48CC6BC8-FA63-47D5-8988-D8D0B04E0CD6}|ML3DInstaller.csproj|solutionrelative:presenter\\mainpresenter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Matvei\\AppData\\Local\\Temp\\.vsdbgsrc\\559c93e3188528b9de6aada21e43063759736ee359f3003d7558584466ddb1e4\\Control.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{48CC6BC8-FA63-47D5-8988-D8D0B04E0CD6}|ML3DInstaller.csproj|c:\\workspace\\ml3d\\installer\\phaosinstall\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{48CC6BC8-FA63-47D5-8988-D8D0B04E0CD6}|ML3DInstaller.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{48CC6BC8-FA63-47D5-8988-D8D0B04E0CD6}|ML3DInstaller.csproj|c:\\workspace\\ml3d\\installer\\phaosinstall\\view\\formpleasewait.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{48CC6BC8-FA63-47D5-8988-D8D0B04E0CD6}|ML3DInstaller.csproj|solutionrelative:view\\formpleasewait.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Matvei\\AppData\\Local\\Temp\\.vsdbgsrc\\afd2de3cfff42201063ffd00454937a575df96f8bb2b1925a5fd1e81ac22d5be\\Application.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{48CC6BC8-FA63-47D5-8988-D8D0B04E0CD6}|ML3DInstaller.csproj|c:\\workspace\\ml3d\\installer\\phaosinstall\\view\\formpleasewait.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{48CC6BC8-FA63-47D5-8988-D8D0B04E0CD6}|ML3DInstaller.csproj|solutionrelative:view\\formpleasewait.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     }
   ],
   "DocumentGroupContainers": [
@@ -40,7 +18,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
@@ -53,104 +31,27 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "UCMain.cs",
-              "DocumentMoniker": "C:\\Workspace\\ML3D\\Installer\\PhaosInstall\\View\\UCMain.cs",
-              "RelativeDocumentMoniker": "View\\UCMain.cs",
-              "ToolTip": "C:\\Workspace\\ML3D\\Installer\\PhaosInstall\\View\\UCMain.cs",
-              "RelativeToolTip": "View\\UCMain.cs",
-              "ViewState": "AQIAAB0AAAAAAAAAAAAQwL4AAAAZAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-20T12:23:26.759Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Control.cs",
-              "DocumentMoniker": "C:\\Users\\Matvei\\AppData\\Local\\Temp\\.vsdbgsrc\\559c93e3188528b9de6aada21e43063759736ee359f3003d7558584466ddb1e4\\Control.cs",
-              "RelativeDocumentMoniker": "..\\..\\..\\..\\Users\\Matvei\\AppData\\Local\\Temp\\.vsdbgsrc\\559c93e3188528b9de6aada21e43063759736ee359f3003d7558584466ddb1e4\\Control.cs",
-              "ToolTip": "C:\\Users\\Matvei\\AppData\\Local\\Temp\\.vsdbgsrc\\559c93e3188528b9de6aada21e43063759736ee359f3003d7558584466ddb1e4\\Control.cs [Read Only]",
-              "RelativeToolTip": "..\\..\\..\\..\\Users\\Matvei\\AppData\\Local\\Temp\\.vsdbgsrc\\559c93e3188528b9de6aada21e43063759736ee359f3003d7558584466ddb1e4\\Control.cs [Read Only]",
-              "ViewState": "AQIAAGcVAAAAAAAAAAAawHsVAABfAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-20T12:21:42.175Z",
-              "EditorCaption": " [Read Only]"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Form1.cs",
-              "DocumentMoniker": "C:\\Workspace\\ML3D\\Installer\\PhaosInstall\\View\\Form1.cs",
-              "RelativeDocumentMoniker": "View\\Form1.cs",
-              "ToolTip": "C:\\Workspace\\ML3D\\Installer\\PhaosInstall\\View\\Form1.cs",
-              "RelativeToolTip": "View\\Form1.cs",
-              "ViewState": "AQIAABMAAAAAAAAAAAAgwDIAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-20T12:10:05.625Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
               "Title": "MainPresenter.cs",
               "DocumentMoniker": "C:\\Workspace\\ML3D\\Installer\\PhaosInstall\\Presenter\\MainPresenter.cs",
               "RelativeDocumentMoniker": "Presenter\\MainPresenter.cs",
               "ToolTip": "C:\\Workspace\\ML3D\\Installer\\PhaosInstall\\Presenter\\MainPresenter.cs",
               "RelativeToolTip": "Presenter\\MainPresenter.cs",
-              "ViewState": "AQIAAMQAAAAAAAAAAAAAAOEAAAAMAAAA",
+              "ViewState": "AQIAAHoAAAAAAAAAAAAawJcAAAAMAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-20T11:52:15.364Z",
+              "WhenOpened": "2024-08-21T07:47:58.147Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "Application.cs",
-              "DocumentMoniker": "C:\\Users\\Matvei\\AppData\\Local\\Temp\\.vsdbgsrc\\afd2de3cfff42201063ffd00454937a575df96f8bb2b1925a5fd1e81ac22d5be\\Application.cs",
-              "RelativeDocumentMoniker": "..\\..\\..\\..\\Users\\Matvei\\AppData\\Local\\Temp\\.vsdbgsrc\\afd2de3cfff42201063ffd00454937a575df96f8bb2b1925a5fd1e81ac22d5be\\Application.cs",
-              "ToolTip": "C:\\Users\\Matvei\\AppData\\Local\\Temp\\.vsdbgsrc\\afd2de3cfff42201063ffd00454937a575df96f8bb2b1925a5fd1e81ac22d5be\\Application.cs [Read Only]",
-              "RelativeToolTip": "..\\..\\..\\..\\Users\\Matvei\\AppData\\Local\\Temp\\.vsdbgsrc\\afd2de3cfff42201063ffd00454937a575df96f8bb2b1925a5fd1e81ac22d5be\\Application.cs [Read Only]",
-              "ViewState": "AQIAAHEKAAAAAAAAAAAawIQKAAADAAAA",
+              "DocumentIndex": 0,
+              "Title": "Update.cs",
+              "DocumentMoniker": "C:\\Workspace\\ML3D\\Installer\\PhaosInstall\\Presenter\\Update.cs",
+              "RelativeDocumentMoniker": "Presenter\\Update.cs",
+              "ToolTip": "C:\\Workspace\\ML3D\\Installer\\PhaosInstall\\Presenter\\Update.cs",
+              "RelativeToolTip": "Presenter\\Update.cs",
+              "ViewState": "AQIAAIwAAAAAAAAAAAAAAJsAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-20T11:52:22.943Z",
-              "EditorCaption": " [Read Only]"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "FormPleaseWait.cs [Design]",
-              "DocumentMoniker": "C:\\Workspace\\ML3D\\Installer\\PhaosInstall\\View\\FormPleaseWait.cs",
-              "RelativeDocumentMoniker": "View\\FormPleaseWait.cs",
-              "ToolTip": "C:\\Workspace\\ML3D\\Installer\\PhaosInstall\\View\\FormPleaseWait.cs [Design]",
-              "RelativeToolTip": "View\\FormPleaseWait.cs [Design]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-20T09:59:54.712Z",
-              "EditorCaption": " [Design]"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "FormPleaseWait.cs",
-              "DocumentMoniker": "C:\\Workspace\\ML3D\\Installer\\PhaosInstall\\View\\FormPleaseWait.cs",
-              "RelativeDocumentMoniker": "View\\FormPleaseWait.cs",
-              "ToolTip": "C:\\Workspace\\ML3D\\Installer\\PhaosInstall\\View\\FormPleaseWait.cs",
-              "RelativeToolTip": "View\\FormPleaseWait.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAAAuAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-20T09:48:50.59Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Workspace\\ML3D\\Installer\\PhaosInstall\\Program.cs",
-              "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "C:\\Workspace\\ML3D\\Installer\\PhaosInstall\\Program.cs",
-              "RelativeToolTip": "Program.cs",
-              "ViewState": "AQIAAAYAAAAAAAAAAAAAACIAAAAIAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-20T09:45:49.34Z",
+              "WhenOpened": "2024-08-21T07:43:11.809Z",
               "EditorCaption": ""
             }
           ]

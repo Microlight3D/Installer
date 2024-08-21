@@ -91,7 +91,9 @@ namespace ML3DInstaller
             args_builder = new StringBuilder();
 
             // APPEND THE POWERSHELL WINDOWS DEFENDER EXCLUSION COMMAND
-            args_builder.Append("Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('http://internal/odata/repo/ChocolateyInstall.ps1'))");
+            args_builder.Append("-Command { ");
+            args_builder.Append("[Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12;Set-ExecutionPolicy Bypass -Scope Process -Force;iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1')); ");
+            args_builder.Append("}");
 
             // INITIATE A "Process" OBJECT
             process = new Process();

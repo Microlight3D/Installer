@@ -66,12 +66,14 @@ namespace ML3DInstaller.Presenter
             return true;
         }
 
+        bool InstalledCancel = false;
+
         private async void UserControlMain_InstallSoftware(object? sender, string outputPath)
         {
             CancelInstall = new CancellationTokenSource();
             var CancelToken = CancelInstall.Token;
 
-            bool installedCancel = false;
+            
             userControlMain.SetMode("Loading");
             try
             {
@@ -79,16 +81,16 @@ namespace ML3DInstaller.Presenter
             }
             catch (OperationCanceledException)
             {
-                installedCancel = true;
+                InstalledCancel = true;
             }
-            if (Updater.OperationCancelled || installedCancel)
+            if (Updater.OperationCancelled || InstalledCancel)
             {
                 MessageBox.Show("Installation Cancelled.");
             } else
             {
                 MessageBox.Show("Installation Complete");
-                Application.Exit();
             }
+            Application.Exit();
         }
 
         private async void InstallSoftware(string outputPath, CancellationToken cancellationToken)
@@ -122,7 +124,12 @@ namespace ML3DInstaller.Presenter
                 return;
             }
             userControlMain.UpdateInfo("Downloading the software from Github");
-            Updater.DownloadZip(githubLink, outputZip);
+            if (!Updater.DownloadZip(githubLink, outputZip))
+            {
+                MessageBox.Show("An error occured during the downloading of the software.\nPlease restart the installer and try again. If nothing changes, contact the Microlight 3D Support at support@microlight.fr", "Downloading error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                InstalledCancel = true;
+                return;
+            }
             if (cancellationToken.IsCancellationRequested)
             {
                 return;
@@ -163,10 +170,10 @@ namespace ML3DInstaller.Presenter
             {
                 return;
             }
-            // Copy Configuration and Documentation to Documents
+
             // Create Shortcut
             Updater.CreateShortcut(executablePath);
-
+            Updater.AddShortcutToStart(executablePath);
             if (installDependencies)
             {
                 // Get the list of dependencies
@@ -174,7 +181,10 @@ namespace ML3DInstaller.Presenter
                 this.SelectDependencies(listOfExe);
             }
             Updater.DeleteDownloaded();
+            this.userControlMain.End();
         }
+
+        private Form DependenciesForm;
 
         public void SelectDependencies(string[] availableExes)
         {
@@ -202,30 +212,24 @@ namespace ML3DInstaller.Presenter
             };
             dependenciesView.Continue += DependenciesView_Continue;
 
-            using (var dialogForm = new Form())
-            {
-                dialogForm.Text = "Select Dependencies";
-                dialogForm.FormBorderStyle = FormBorderStyle.FixedDialog;
-                dialogForm.StartPosition = FormStartPosition.CenterScreen;
-                dialogForm.MinimizeBox = false;
-                dialogForm.MaximizeBox = false;
-                dialogForm.ClientSize = new Size(300, 600);
+            DependenciesForm = new Form();
+            DependenciesForm.Text = "Select Dependencies";
+            DependenciesForm.FormBorderStyle = FormBorderStyle.FixedDialog;
+            DependenciesForm.StartPosition = FormStartPosition.CenterScreen;
+            DependenciesForm.MinimizeBox = false;
+            DependenciesForm.MaximizeBox = false;
+            DependenciesForm.ClientSize = new Size(300, 600);
 
-                dialogForm.Controls.Add(dependenciesView);
-                dependenciesView.Dock = DockStyle.Fill;
-
-                dialogForm.ShowDialog();
-            }
+            DependenciesForm.Controls.Add(dependenciesView);
+            dependenciesView.Dock = DockStyle.Fill;
+            DependenciesForm.ShowDialog();
         }
         private void DependenciesView_Continue(object? sender, string[] dependenciesToInstall)
         {
-            dependenciesView.Hide();
-            dependenciesView.Dispose();
+            DependenciesForm?.Hide();
+            DependenciesForm?.Dispose();
             userControlMain.UpdateInfo("Installing Dependencies ...");
             Updater.RunExecutablesList(dependenciesToInstall);
-            this.userControlMain.End();
-            Application.Exit();
-            
         }
         private void UserControlMain_ExitApp(object? sender, EventArgs e)
         {

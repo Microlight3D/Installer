@@ -109,13 +109,21 @@ namespace ML3DInstaller.Presenter
 
         private string DownloadedZip = "";
 
-        public void DownloadZip(string zipUrl, string zipName)
+        public bool DownloadZip(string zipUrl, string zipName)
         {
-            DownloadedZip = TempDirectory + "\\" + zipName;
-            WebClient webClient = new WebClient();
-            webClient.Headers.Add("Accept: text/html, application/xhtml+xml, */*");
-            webClient.Headers.Add("User-Agent: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)");
-            webClient.DownloadFile(new Uri(zipUrl), DownloadedZip);
+            try
+            {
+                DownloadedZip = TempDirectory + "\\" + zipName;
+                WebClient webClient = new WebClient();
+                webClient.Headers.Add("Accept: text/html, application/xhtml+xml, */*");
+                webClient.Headers.Add("User-Agent: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)");
+                webClient.DownloadFile(new Uri(zipUrl), DownloadedZip);
+            } catch
+            {
+                return false;
+            }
+            return true;
+            
         }
 
         private string ExtractedZip = "";
@@ -194,6 +202,28 @@ namespace ML3DInstaller.Presenter
             }
         }
 
+        public void AddShortcutToStart(string pathToExe, string pathToIcon="")
+        {
+            string commonStartMenuPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu);
+            string appStartMenuPath = Path.Combine(commonStartMenuPath, "Programs", "Microlight 3D");
+
+            if (!Directory.Exists(appStartMenuPath))
+                Directory.CreateDirectory(appStartMenuPath);
+
+            string shortcutLocation = Path.Combine(appStartMenuPath, Software + ".lnk");
+            WshShell shell = new WshShell();
+            IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(shortcutLocation);
+
+            shortcut.Description = "Microlight 3D Micro-Printing software\n"+Software+" v"+Version;
+            if (!pathToIcon.Equals(""))
+            {
+                shortcut.IconLocation = pathToIcon;
+            }
+             //uncomment to set the icon of the shortcut
+            shortcut.TargetPath = pathToExe;
+            shortcut.Save();
+        }
+
         /// <summary>
         /// Get the list of all Executables in a folder, recursively
         /// </summary>
@@ -222,7 +252,7 @@ namespace ML3DInstaller.Presenter
                     {
                         ExeInstall(executable);
                     }
-                } catch { continue; } // if something fails, just continue instlaling stuff
+                } catch { continue; } // if something fails, just continue installing stuff
             }
         }
 

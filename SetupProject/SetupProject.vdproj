@@ -50,6 +50,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
         "Release"
@@ -201,15 +209,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:ML3DSetup"
-        "ProductCode" = "8:{6BA0B6FA-185A-42B3-AD0C-5C6E9577E5A5}"
-        "PackageCode" = "8:{D072A40B-6EC8-4094-A2B1-C3469B2944AB}"
+        "ProductCode" = "8:{B552B2FB-F12D-49DE-B5AC-8E222D39044E}"
+        "PackageCode" = "8:{EB2810B3-98C4-4992-955A-6A658ECCFA35}"
         "UpgradeCode" = "8:{F3224DC5-D5F4-4EDD-B3BC-85B0048DE2CC}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:FALSE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.0.12"
+        "ProductVersion" = "8:1.1.0"
         "Manufacturer" = "8:Microlight3D"
         "ARPHELPTELEPHONE" = "8:+33476549516"
         "ARPHELPLINK" = "8:https://www.microlight3d.com/contact"
@@ -751,7 +759,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_9BDEFEF2A64941599528111EDD306176"
             {
-            "SourcePath" = "8:..\\PhaosInstall\\obj\\Release\\net8.0-windows7.0\\win-x64\\apphost.exe"
+            "SourcePath" = "8:..\\PhaosInstall\\obj\\Debug\\net8.0-windows7.0\\win-x64\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_1C0724147FAB4A3480F09E7277F2B354"
