@@ -123,7 +123,7 @@ namespace ML3DInstaller.Presenter
             {
                 return;
             }
-            userControlMain.UpdateInfo("Downloading the software from Github");
+            userControlMain.UpdateInfo("Downloading the software");
             if (!Updater.DownloadZip(githubLink, outputZip))
             {
                 MessageBox.Show("An error occured during the downloading of the software.\nPlease restart the installer and try again. If nothing changes, contact the Microlight 3D Support at support@microlight.fr", "Downloading error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -199,7 +199,7 @@ namespace ML3DInstaller.Presenter
                 "teamviewer",
                 "termite",
                 "imagej",
-                "!blender"
+                "!blender",
             });
             this.dependenciesView = new UCDependencies();
             dependenciesView.SetItems(availableExes);
@@ -229,13 +229,22 @@ namespace ML3DInstaller.Presenter
             DependenciesForm?.Hide();
             DependenciesForm?.Dispose();
             userControlMain.UpdateInfo("Installing Dependencies ...");
+            Updater.RunChocoInstalls += Updater_RunChocoInstalls;
             Updater.RunExecutablesList(dependenciesToInstall);
         }
+
+        private void Updater_RunChocoInstalls(object? sender, EventArgs e)
+        {
+            userControlMain.UpdateInfo("The installation process isn't over, please wait ...");
+        }
+
         private void UserControlMain_ExitApp(object? sender, EventArgs e)
         {
             userControlMain.Hide();
             
         }
+
+        
 
     }
 }

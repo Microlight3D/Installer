@@ -235,25 +235,30 @@ namespace ML3DInstaller.Presenter
             return Directory.GetFiles(path, "*.exe", SearchOption.AllDirectories);
         }
 
+        public event EventHandler RunChocoInstalls; 
+
         /// <summary>
         /// Open all executable files in the list of files
         /// </summary>
         /// <param name="executableList"></param>
         public void RunExecutablesList(string[] executableList)
         {
+            List<string> chocoInstalls = new List<string>();
             foreach (string executable in executableList)
             {
                 try
                 {
                     if (executable.StartsWith("choco"))
                     {
-                        RunChocoInstall(executable);
+                        chocoInstalls.Add(executable);
                     } else
                     {
                         ExeInstall(executable);
                     }
                 } catch { continue; } // if something fails, just continue installing stuff
             }
+            RunChocoInstalls?.Invoke(this, null);
+            RunChocoInstallList(chocoInstalls);
         }
 
         private void ExeInstall(string exeFilePath)
@@ -269,7 +274,46 @@ namespace ML3DInstaller.Presenter
             process.WaitForExit();
         }
 
-        private void RunChocoInstall(string package)
+        private void RunChocoInstallList(List<string> packagesList)
+        {
+            List<string> failedPackages = new List<string>();
+            if (packagesList != null && packagesList.Count > 0)
+            {
+                InstallChoco();
+            }
+            foreach(string package in packagesList)
+            {
+                Process p = RunChocoInstall(package, false);
+                if (p.ExitCode != 0)
+                {
+                    failedPackages.Add(package);
+                }
+            }
+            if (failedPackages.Count > 0)
+            {
+                string failedPackagesString = String.Join("\n", failedPackages);
+                MessageBox.Show("The following packages' installation failed : \n" + failedPackagesString + "\n Please try installing manually by doing 'Win+R', typing 'cmd', return, and entering each line shown in this dialog.", "Install failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void InstallChoco()
+        {
+            StringBuilder args_builder = new StringBuilder();
+            args_builder.Append("/c powershell -NoProfile -ExecutionPolicy Bypass ");
+            args_builder.Append("-Command \"[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; ");
+            args_builder.Append("iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1')); ");
+
+            Process process = new Process();
+            process.StartInfo.FileName = "cmd.exe";
+            process.StartInfo.Arguments = args_builder.ToString();
+            process.StartInfo.Verb = "runas";  // 'runas' to run as administrator
+            process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
+
+            process.Start();
+            process.WaitForExit();
+        }
+
+        private Process RunChocoInstall(string package, bool hidden=true)
         {
             StringBuilder args_builder = new StringBuilder();
             args_builder.Append(package);
@@ -277,9 +321,13 @@ namespace ML3DInstaller.Presenter
             Process process = new Process();
             process.StartInfo.FileName = "powershell";
             process.StartInfo.Arguments = args_builder.ToString();
-            process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            if (hidden)
+            {
+                process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            }
             process.Start();
             process.WaitForExit();
+            return process;
         }
 
         public void DeleteDownloaded()
@@ -293,24 +341,6 @@ namespace ML3DInstaller.Presenter
             if (Directory.Exists(folderPath))
             {
                 Directory.Delete(folderPath, true);
-            }
-        }
-
-        
-
-        private void DependenciesView_Continue(object? sender, List<string> dependenciesToInstall)
-        {
-            foreach (string dependency in dependenciesToInstall)
-            {
-                var process = new Process
-                {
-                    StartInfo = new ProcessStartInfo()
-                    {
-                        FileName = dependency
-                    }
-                };
-                process.Start();
-                process.WaitForExit();
             }
         }
     }
