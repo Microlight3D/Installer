@@ -300,7 +300,7 @@ namespace ML3DInstaller.Presenter
                          "Install failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
-            if (verbose)
+            else if (verbose)
             {
                 MessageBox.Show("The choocolatey packages installation succeed : \n"
                     +"\n\n. Message log :"+stdOutput.ToString()
