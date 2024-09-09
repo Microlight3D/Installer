@@ -16,7 +16,7 @@ namespace ML3DInstaller.Presenter
         private string Software;
         private string Version;
 
-        private bool installDependencies;
+        private bool InstallDependencies;
 
         private CancellationTokenSource CancelInstall;
 
@@ -27,7 +27,7 @@ namespace ML3DInstaller.Presenter
         private UCDependencies dependenciesView;
 
         private bool InstallBlender = false;
-        public MainPresenter(UCMain uCMain, string software, string version, string installDependencies) {
+        public MainPresenter(UCMain uCMain, string software, string version, bool installDependencies, bool IsVerbose) {
 
             userControlMain = uCMain;
             userControlMain.Init(software, version);
@@ -38,9 +38,9 @@ namespace ML3DInstaller.Presenter
 
             this.Software = software;
             this.Version = version;
-            this.installDependencies = installDependencies == "True";
+            this.InstallDependencies = installDependencies;
 
-            Updater = new Update(software, version);
+            Updater = new Update(software, version, installDependencies, IsVerbose);
         }
 
         
@@ -174,7 +174,7 @@ namespace ML3DInstaller.Presenter
             // Create Shortcut
             Updater.CreateShortcut(executablePath);
             Updater.AddShortcutToStart(executablePath);
-            if (installDependencies)
+            if (InstallDependencies)
             {
                 // Get the list of dependencies
                 var listOfExe = Updater.GetAllExeInFolder(dependenciesPath);
@@ -200,6 +200,7 @@ namespace ML3DInstaller.Presenter
                 "termite",
                 "imagej",
                 "!blender",
+                "hello uwu"
             });
             this.dependenciesView = new UCDependencies();
             dependenciesView.SetItems(availableExes);

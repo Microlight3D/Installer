@@ -40,6 +40,7 @@
             cbSoftware = new ComboBox();
             button1 = new Button();
             checkBox1 = new CheckBox();
+            cbVerbose = new CheckBox();
             tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
             tableLayoutPanel4.SuspendLayout();
@@ -56,16 +57,17 @@
             tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 0, 2);
             tableLayoutPanel1.Controls.Add(button1, 1, 3);
             tableLayoutPanel1.Controls.Add(checkBox1, 0, 3);
+            tableLayoutPanel1.Controls.Add(cbVerbose, 0, 4);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 4;
+            tableLayoutPanel1.RowCount = 5;
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel1.Size = new Size(343, 132);
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.Size = new Size(343, 148);
             tableLayoutPanel1.TabIndex = 0;
             // 
             // lblInfo
@@ -108,7 +110,7 @@
             tableLayoutPanel2.RowCount = 1;
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel2.Size = new Size(337, 47);
+            tableLayoutPanel2.Size = new Size(337, 49);
             tableLayoutPanel2.TabIndex = 2;
             // 
             // tableLayoutPanel4
@@ -126,7 +128,7 @@
             tableLayoutPanel4.RowCount = 2;
             tableLayoutPanel4.RowStyles.Add(new RowStyle());
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel4.Size = new Size(169, 47);
+            tableLayoutPanel4.Size = new Size(169, 49);
             tableLayoutPanel4.TabIndex = 1;
             // 
             // label3
@@ -166,7 +168,7 @@
             tableLayoutPanel3.RowCount = 2;
             tableLayoutPanel3.RowStyles.Add(new RowStyle());
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel3.Size = new Size(168, 47);
+            tableLayoutPanel3.Size = new Size(168, 49);
             tableLayoutPanel3.TabIndex = 0;
             // 
             // lblSoftware
@@ -195,10 +197,11 @@
             // 
             button1.Dock = DockStyle.Right;
             button1.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            button1.Location = new Point(231, 99);
+            button1.Location = new Point(231, 101);
             button1.MinimumSize = new Size(0, 30);
             button1.Name = "button1";
-            button1.Size = new Size(109, 30);
+            tableLayoutPanel1.SetRowSpan(button1, 2);
+            button1.Size = new Size(109, 44);
             button1.TabIndex = 3;
             button1.Text = "Continue";
             button1.UseVisualStyleBackColor = true;
@@ -208,7 +211,7 @@
             // 
             checkBox1.AutoSize = true;
             checkBox1.Dock = DockStyle.Top;
-            checkBox1.Location = new Point(3, 99);
+            checkBox1.Location = new Point(3, 101);
             checkBox1.Name = "checkBox1";
             checkBox1.Size = new Size(222, 19);
             checkBox1.TabIndex = 4;
@@ -216,14 +219,25 @@
             checkBox1.UseVisualStyleBackColor = true;
             checkBox1.CheckedChanged += checkBox1_CheckedChanged;
             // 
+            // cbVerbose
+            // 
+            cbVerbose.AutoSize = true;
+            cbVerbose.Location = new Point(3, 126);
+            cbVerbose.Name = "cbVerbose";
+            cbVerbose.Size = new Size(101, 19);
+            cbVerbose.TabIndex = 5;
+            cbVerbose.Text = "Verbose Install";
+            cbVerbose.UseVisualStyleBackColor = true;
+            cbVerbose.Visible = false;
+            // 
             // UCHome
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(tableLayoutPanel1);
-            MinimumSize = new Size(343, 132);
+            MinimumSize = new Size(343, 148);
             Name = "UCHome";
-            Size = new Size(343, 132);
+            Size = new Size(343, 148);
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
             tableLayoutPanel2.ResumeLayout(false);
@@ -249,5 +263,6 @@
         private ComboBox cbVersion;
         private Button button1;
         private CheckBox checkBox1;
+        private CheckBox cbVerbose;
     }
 }

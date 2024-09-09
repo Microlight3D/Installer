@@ -111,13 +111,13 @@ namespace ML3DInstaller
 
         }
 
-        private void UcHome1_Continue(object? sender, string[] e)
+        private void UcHome1_Continue(object? sender, Tuple<string, string, bool, bool> arguments)
         {
             SwitchMode("Install");
             MainPresenter mp;
-            string software = e[0];
-            string version = e[1].Replace("latest (", "").Replace(")", "");
-                mp = new MainPresenter(ucMain1,software, version, e[2]);
+            string software = arguments.Item1;
+            string version = arguments.Item2.Replace("latest (", "").Replace(")", "");
+                mp = new MainPresenter(ucMain1,software, version, arguments.Item3, arguments.Item4);
         }
 
         private void SwitchMode(string mode)

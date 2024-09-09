@@ -32,16 +32,28 @@ namespace ML3DInstaller.Presenter
 
         public bool OperationCancelled { get; private set; } = false;
 
+        private readonly bool installDependencies;
+        private readonly bool installVerbose;
+
         /// <summary>
         /// Initialize the Updater
         /// </summary>
         /// <param name="software">Software name eg: "Phaos"</param>
         /// <param name="version">Version number eg: "2.2.6.5"</param>
-        public Update(string software, string version) 
+        public Update(string software, string version, bool installDependencies, bool verboeInstall) 
         { 
             this.Software = software;
             this.Version = version;
-
+            this.installDependencies = installDependencies;
+            if (installDependencies)
+            {
+                this.installVerbose = verboeInstall;
+            }
+            else
+            {
+                this.installVerbose = false;
+            }
+            
             string softwarePath = software + "Redistribuable-" + version + "\\" + software + "-" + version;
             SourceSoftwarePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, softwarePath);
 
@@ -272,7 +284,7 @@ namespace ML3DInstaller.Presenter
             process.WaitForExit();
         }
 
-        private void RunChocoInstallList(List<string> packagesList, bool verbose =true)
+        private void RunChocoInstallList(List<string> packagesList)
         {
             StringBuilder errorOutput = new StringBuilder();
             StringBuilder stdOutput = new StringBuilder();
@@ -300,7 +312,7 @@ namespace ML3DInstaller.Presenter
                          "Install failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
-            else if (verbose)
+            else if (installVerbose)
             {
                 MessageBox.Show("The choocolatey packages installation succeed : \n"
                     +"\n\n. Message log :"+stdOutput.ToString()
@@ -313,7 +325,7 @@ namespace ML3DInstaller.Presenter
         /// Install chocolatey repo onto the machine for future usage
         /// </summary>
         /// <param name="verbose"> Verbose mode </param>
-        private void InstallChoco(bool verbose=true)
+        private void InstallChoco()
         {
             StringBuilder argsBuilder = new StringBuilder();
             argsBuilder.Append("Set-ExecutionPolicy Bypass -Scope Process -Force;");
@@ -352,7 +364,7 @@ namespace ML3DInstaller.Presenter
                 MessageBox.Show(errorOutput.ToString(), "Error in chocolatey installation :", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            else if(verbose)
+            else if(installVerbose)
             {
                 MessageBox.Show(standardOutput.ToString(), "Chocolatey installation completed", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }

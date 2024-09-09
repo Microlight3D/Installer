@@ -48,7 +48,7 @@
             tableLayoutPanel1.RowCount = 1;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel1.Size = new Size(411, 134);
+            tableLayoutPanel1.Size = new Size(415, 153);
             tableLayoutPanel1.TabIndex = 0;
             // 
             // ucMain1
@@ -57,26 +57,26 @@
             ucMain1.Location = new Point(3, 3);
             ucMain1.MinimumSize = new Size(0, 135);
             ucMain1.Name = "ucMain1";
-            ucMain1.Size = new Size(199, 135);
+            ucMain1.Size = new Size(201, 147);
             ucMain1.TabIndex = 1;
             // 
             // ucHome1
             // 
             ucHome1.Dock = DockStyle.Fill;
-            ucHome1.Location = new Point(208, 3);
+            ucHome1.Location = new Point(210, 3);
             ucHome1.MinimumSize = new Size(343, 132);
             ucHome1.Name = "ucHome1";
-            ucHome1.Size = new Size(343, 132);
+            ucHome1.Size = new Size(343, 147);
             ucHome1.TabIndex = 2;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(411, 134);
+            ClientSize = new Size(415, 153);
             Controls.Add(tableLayoutPanel1);
             Icon = (Icon)resources.GetObject("$this.Icon");
-            MinimumSize = new Size(427, 173);
+            MinimumSize = new Size(427, 192);
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "ML3D Installer";

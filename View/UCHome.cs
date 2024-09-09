@@ -16,7 +16,7 @@ namespace ML3DInstaller
     public partial class UCHome : UserControl
     {
         Dictionary<string, List<string>> softwares;
-        public event EventHandler<string[]> Continue;
+        public event EventHandler<Tuple<string, string, bool, bool>> Continue;
         public UCHome()
         {
             InitializeComponent();
@@ -65,9 +65,13 @@ namespace ML3DInstaller
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Continue?.Invoke(this, new string[3] {
-                this.cbSoftware.GetItemText(this.cbSoftware.SelectedItem), this.cbVersion.GetItemText(this.cbVersion.SelectedItem), this.checkBox1.Checked.ToString()
-            });
+            Tuple<string, string, bool, bool> args = new Tuple<string, string, bool, bool>(
+                cbSoftware.GetItemText(cbSoftware.SelectedItem),
+                cbVersion.GetItemText(cbVersion.SelectedItem),
+                checkBox1.Checked,
+                cbVerbose.Checked
+            );
+            Continue?.Invoke(this, args);
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
@@ -80,6 +84,7 @@ namespace ML3DInstaller
                     checkBox1.Checked = false;
                 } 
             }
+            cbVerbose.Visible = checkBox1.Checked;
         }
     }
 }
