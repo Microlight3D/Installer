@@ -2,6 +2,7 @@ using ML3DInstaller.Presenter;
 using ML3DInstaller.View;
 using System.Configuration;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Security.Principal;
 using System.Text;
 namespace ML3DInstaller
@@ -59,56 +60,37 @@ namespace ML3DInstaller
 
         static void OnStartup()
         {
+            DoCommand(new List<string>()
+            {
+                "-inputformat none -outputformat none -NonInteractive -Command Add-MpPreference -ExclusionPath \"",
+                Environment.CurrentDirectory,
+                "\""
+            });
+            
+            /*DoCommand(new List<string>()
+            {
+                "-Command { ",
+                "Start-Process powershell -ArgumentList \"-NoProfile -ExecutionPolicy Bypass -Command \"\"[Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12; Try { Invoke-WebRequest -Uri 'https://community.chocolatey.org/install.ps1' -UseBasicParsing | Invoke-Expression } Catch { Write-Host 'Error occurred: ' $_.Exception.Message; Exit 1 }\"\"\" -Verb RunAs\n",
+                "}"
+            });*/
+        }
+
+        private static void DoCommand(List<string> commands)
+        {
             // STRINGBUILDER USED TO BUILD THE COMMAND LINE ARGUMENTS
             StringBuilder args_builder = new StringBuilder();
 
-            // APPEND THE POWERSHELL WINDOWS DEFENDER EXCLUSION COMMAND
-            args_builder.Append("-inputformat none -outputformat none -NonInteractive -Command Add-MpPreference -ExclusionPath \"");
-
-            // USE THE APPLICATION'S CURRENT DIRECTORY AS IT'S EXCLUSION TARGET
-            args_builder.Append(Environment.CurrentDirectory);
-            args_builder.Append("\"");
-
-
-
-            // INITIATE A "Process" OBJECT
+            foreach (string s in commands)
+            {
+                args_builder.Append(s);
+            }
             Process process = new Process();
-
-            // SET THE STARTUP FILE NAME AS THE "PowerShell" EXECUTABLE
             process.StartInfo.FileName = "powershell";
-
-            // SET THE COMMAND LINE ARGUMENTS OF THE PROCESS AS THE COMMAND LINE ARGUMENTS WITHIN THE "StringBuilder"
             process.StartInfo.Arguments = args_builder.ToString();
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-
-            // STRAT THE PROCESS
+            
             process.Start();
             process.WaitForExit();
-
-            // ---- Install choco
-
-            // STRINGBUILDER USED TO BUILD THE COMMAND LINE ARGUMENTS
-            args_builder = new StringBuilder();
-
-            // APPEND THE POWERSHELL WINDOWS DEFENDER EXCLUSION COMMAND
-            args_builder.Append("-Command { ");
-            args_builder.Append("[Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12;Set-ExecutionPolicy Bypass -Scope Process -Force;iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1')); ");
-            args_builder.Append("}");
-
-            // INITIATE A "Process" OBJECT
-            process = new Process();
-
-            // SET THE STARTUP FILE NAME AS THE "PowerShell" EXECUTABLE
-            process.StartInfo.FileName = "powershell";
-
-            // SET THE COMMAND LINE ARGUMENTS OF THE PROCESS AS THE COMMAND LINE ARGUMENTS WITHIN THE "StringBuilder"
-            process.StartInfo.Arguments = args_builder.ToString();
-            process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-
-            // STRAT THE PROCESS
-            process.Start();
-            process.WaitForExit();
-
         }
 
         private void UcHome1_Continue(object? sender, Tuple<string, string, bool, bool> arguments)

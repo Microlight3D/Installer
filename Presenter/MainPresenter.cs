@@ -10,6 +10,8 @@ namespace ML3DInstaller.Presenter
 {
     internal class MainPresenter
     {
+        private bool BYPASS_INSTALL = false;
+        
         private UCMain userControlMain;
         private Update Updater;
 
@@ -123,61 +125,71 @@ namespace ML3DInstaller.Presenter
             {
                 return;
             }
-            userControlMain.UpdateInfo("Downloading the software");
-            if (!Updater.DownloadZip(githubLink, outputZip))
-            {
-                MessageBox.Show("An error occured during the downloading of the software.\nPlease restart the installer and try again. If nothing changes, contact the Microlight 3D Support at support@microlight.fr", "Downloading error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                InstalledCancel = true;
-                return;
+
+            // bypass install when debugging
+            if (!BYPASS_INSTALL)
+            { 
+                userControlMain.UpdateInfo("Downloading the software");
+                if (!Updater.DownloadZip(githubLink, outputZip))
+                {
+                    MessageBox.Show("An error occured during the downloading of the software.\nPlease restart the installer and try again. If nothing changes, contact the Microlight 3D Support at support@microlight.fr", "Downloading error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    InstalledCancel = true;
+                    return;
+                }
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    return;
+                }
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    return;
+                }
+                // Extract to current directory
+                userControlMain.UpdateInfo("UnZipping the software");
+                Updater.ExtractZip();
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    return;
+                }
+                SourceCopy = new CancellationTokenSource();
+                ConfigCopy = new CancellationTokenSource();
+                DocCopy = new CancellationTokenSource();
+                // Copy software to destination directory
+                userControlMain.UpdateInfo("Copy software to chosen destination");
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    return;
+                }
+                Updater.CopyFolderAsync(applicationPath, outputPath, SourceCopy).Wait();
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    return;
+                }
+                userControlMain.UpdateInfo("Copy configuration and documentation to Documents\\Microlight3D");
+                Updater.CopyFolderAsync(configurationPath, configurationDestinationPath, ConfigCopy).Wait();
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    return;
+                }
+                Updater.CopyFolderAsync(documentationPath, documentationDestinationPath, DocCopy).Wait();
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    return;
+                }
+
+                // Create Shortcut
+                Updater.CreateShortcut(executablePath);
+                Updater.AddShortcutToStart(executablePath);
             }
-            if (cancellationToken.IsCancellationRequested)
+            else
             {
-                return;
-            }
-            if (cancellationToken.IsCancellationRequested)
-            {
-                return;
-            }
-            // Extract to current directory
-            userControlMain.UpdateInfo("UnZipping the software");
-            Updater.ExtractZip();
-            if (cancellationToken.IsCancellationRequested)
-            {
-                return;
-            }
-            SourceCopy = new CancellationTokenSource();
-            ConfigCopy = new CancellationTokenSource();
-            DocCopy = new CancellationTokenSource();
-            // Copy software to destination directory
-            userControlMain.UpdateInfo("Copy software to chosen destination");
-            if (cancellationToken.IsCancellationRequested)
-            {
-                return;
-            }
-            Updater.CopyFolderAsync(applicationPath, outputPath, SourceCopy).Wait();
-            if (cancellationToken.IsCancellationRequested)
-            {
-                return;
-            }
-            userControlMain.UpdateInfo("Copy configuration and documentation to Documents\\Microlight3D");
-            Updater.CopyFolderAsync(configurationPath, configurationDestinationPath, ConfigCopy).Wait();
-            if (cancellationToken.IsCancellationRequested)
-            {
-                return;
-            }
-            Updater.CopyFolderAsync(documentationPath, documentationDestinationPath, DocCopy).Wait();
-            if (cancellationToken.IsCancellationRequested)
-            {
-                return;
+                MessageBox.Show("Sucessfully bypassed the software's installation");
             }
 
-            // Create Shortcut
-            Updater.CreateShortcut(executablePath);
-            Updater.AddShortcutToStart(executablePath);
             if (InstallDependencies)
             {
                 // Get the list of dependencies
-                var listOfExe = Updater.GetAllExeInFolder(dependenciesPath);
+                var listOfExe = Updater.GetAllExeInFolder(dependenciesPath, BYPASS_INSTALL);
                 this.SelectDependencies(listOfExe);
             }
             Updater.DeleteDownloaded();
@@ -199,8 +211,7 @@ namespace ML3DInstaller.Presenter
                 "teamviewer",
                 "termite",
                 "imagej",
-                "!blender",
-                "hello uwu"
+                "!blender"
             });
             this.dependenciesView = new UCDependencies();
             dependenciesView.SetItems(availableExes);

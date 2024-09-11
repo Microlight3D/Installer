@@ -239,9 +239,13 @@ namespace ML3DInstaller.Presenter
         /// </summary>
         /// <param name="rootDependenciesFolder"></param>
         /// <returns></returns>
-        public string[] GetAllExeInFolder(string rootDependenciesFolder)
+        public string[] GetAllExeInFolder(string rootDependenciesFolder, bool bypass= false)
         {
             string path = Path.Combine(ExtractedZip, rootDependenciesFolder);
+            if (bypass)
+            {
+                return new string[] { };
+            }
             return Directory.GetFiles(path, "*.exe", SearchOption.AllDirectories);
         }
 
@@ -328,9 +332,15 @@ namespace ML3DInstaller.Presenter
         private void InstallChoco()
         {
             StringBuilder argsBuilder = new StringBuilder();
-            argsBuilder.Append("Set-ExecutionPolicy Bypass -Scope Process -Force;");
-            argsBuilder.Append("[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; ");
-            argsBuilder.Append("iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1')) ");
+            argsBuilder.Append("-NoProfile -ExecutionPolicy Bypass -Command ");
+            argsBuilder.Append("\"[Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12; ");
+            argsBuilder.Append("If (-Not (Get-Command choco -ErrorAction SilentlyContinue)) { ");
+            argsBuilder.Append("Try { Invoke-WebRequest -Uri 'https://community.chocolatey.org/install.ps1' -UseBasicParsing | Invoke-Expression; ");
+            argsBuilder.Append("$env:PATH += ';C:\\ProgramData\\chocolatey\\bin'; [Environment]::SetEnvironmentVariable('PATH', $env:PATH, [System.EnvironmentVariableTarget]::User); ");
+            argsBuilder.Append("Write-Host 'Chocolatey installed and PATH updated.' } ");
+            argsBuilder.Append("Catch { Write-Host 'Error occurred: ' $_.Exception.Message; Exit 1 } ");
+            argsBuilder.Append("} else { Write-Host 'Chocolatey is already installed.' }\"");
+            // ^---- overly complicated code to avoid right issues
 
             Process process = new Process();
             process.StartInfo.FileName = "powershell";
@@ -346,18 +356,18 @@ namespace ML3DInstaller.Presenter
             {
                 standardOutput.Append(outLine.Data);
             });
-            
+
             StringBuilder errorOutput = new StringBuilder();
             process.ErrorDataReceived += new DataReceivedEventHandler(delegate (Object sendingProcess, DataReceivedEventArgs outLine) 
             {
                 errorOutput.Append(outLine.Data);
             });
-                
-                
+
             process.Start();
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
             process.WaitForExit();
+
 
             if (process.ExitCode != 0)
             {
@@ -395,36 +405,37 @@ namespace ML3DInstaller.Presenter
         private Tuple<Process,StringBuilder,StringBuilder> RunChocoInstall(string package)
         {
             StringBuilder argsBuilder = new StringBuilder();
-            argsBuilder.Append("Set-ExecutionPolicy Bypass -Scope Process -Force;");
-            argsBuilder.Append(package);
+            argsBuilder.Append("-NoProfile -ExecutionPolicy Bypass -Command ");
+            argsBuilder.Append("\"" + package + "\"");
 
-            Process process = new Process();
-            process.StartInfo.FileName = "powershell";
-            process.StartInfo.Arguments = argsBuilder.ToString();
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.RedirectStandardOutput = true;
-            process.StartInfo.RedirectStandardError = true;
-            process.StartInfo.Verb = "runas";  // 'runas' to run as administrator
-            process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;  
-            
-            StringBuilder standardOutput = new StringBuilder();
-            process.OutputDataReceived += new DataReceivedEventHandler(delegate (Object sendingProcess, DataReceivedEventArgs outLine) 
+            Process process = new Process
             {
-                standardOutput.Append(outLine.Data);
-            });
-            
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = "powershell",
+                    Arguments = argsBuilder.ToString(),
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    Verb = "runas",  // 'runas' to run as administrator
+                    WindowStyle = ProcessWindowStyle.Hidden
+                }
+            };
+
+            StringBuilder standardOutput = new StringBuilder();
+            process.OutputDataReceived += (sendingProcess, outLine) => standardOutput.Append(outLine.Data);
+
             StringBuilder errorOutput = new StringBuilder();
-            process.ErrorDataReceived += new DataReceivedEventHandler(delegate (Object sendingProcess, DataReceivedEventArgs outLine) 
+            process.ErrorDataReceived += (sendingProcess, outLine) =>
             {
                 errorOutput.Append(outLine.Data);
-            });
-            
+            };
+
             process.Start();
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
             process.WaitForExit();
-            
-            
+
             return new Tuple<Process, StringBuilder, StringBuilder>(process,standardOutput,errorOutput);
         }
 
