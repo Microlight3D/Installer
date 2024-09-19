@@ -164,6 +164,15 @@ namespace ML3DInstaller.Presenter
             }
         }
 
+        public void CreateFolder(string destinationFolder)
+        {
+            if (!Directory.Exists(destinationFolder))
+            {
+                Directory.CreateDirectory(destinationFolder);
+            }
+        }
+
+
         public async Task CopyFolder(string sourceFolderPath, string destinationFolderPath, CancellationToken token)
         {
             var allFiles = Directory.GetFiles(sourceFolderPath, "*.*", SearchOption.AllDirectories);

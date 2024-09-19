@@ -78,11 +78,40 @@ namespace ML3DInstaller
             {
                 checkBox1.Checked = false;
             }
+
         }
 
         private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            checkedListBox1.SetItemChecked(checkedListBox1.SelectedIndex, !checkedListBox1.GetItemChecked(checkedListBox1.SelectedIndex));
+            /*
+            checkedListBox1.SetItemChecked(
+                 checkedListBox1.SelectedIndex,
+                 !checkedListBox1.GetItemChecked(checkedListBox1.SelectedIndex)
+                 );*/
+        }
+
+        /// <summary>
+        /// Makes it possibe to check a non-selected checkbox
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void checkedListBox1_MouseDown(object sender, MouseEventArgs e)
+        {
+            int index = checkedListBox1.IndexFromPoint(e.Location);
+
+            if (index != ListBox.NoMatches)
+            {
+                Rectangle checkboxRectangle = checkedListBox1.GetItemRectangle(index);
+                Point checkboxPoint = new Point(checkboxRectangle.Left + 15, checkboxRectangle.Top);
+
+                if (e.X >= checkboxRectangle.Left && e.X <= checkboxPoint.X)
+                {
+                    bool isChecked = checkedListBox1.GetItemChecked(index);
+                    checkedListBox1.SetItemChecked(index, !isChecked);
+
+                    checkedListBox1.SelectedIndex = -1;
+                }
+            }
         }
     }
 }

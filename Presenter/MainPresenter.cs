@@ -10,7 +10,7 @@ namespace ML3DInstaller.Presenter
 {
     internal class MainPresenter
     {
-        private bool BYPASS_INSTALL = false;
+        private bool BYPASS_INSTALL = true;
         
         private UCMain userControlMain;
         private Update Updater;
@@ -176,6 +176,8 @@ namespace ML3DInstaller.Presenter
                 {
                     return;
                 }
+                // Create Calibration design Folder
+                Updater.CreateFolder(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Calibration design"));
 
                 // Create Shortcut
                 Updater.CreateShortcut(executablePath);

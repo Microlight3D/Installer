@@ -112,6 +112,7 @@
             checkedListBox1.TabIndex = 1;
             checkedListBox1.Click += checkedListBox1_Click;
             checkedListBox1.SelectedIndexChanged += checkedListBox1_SelectedIndexChanged;
+            checkedListBox1.MouseDown += checkedListBox1_MouseDown;
             // 
             // btnCancel
             // 
