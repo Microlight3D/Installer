@@ -199,7 +199,7 @@ namespace ML3DInstaller.Presenter
             }
         }
 
-        public void CreateShortcut(string exeFilePath, string outputFolderPath="desktop")
+        public void CreateShortcut(string exeFilePath, string Software, string Version = "", string outputFolderPath="desktop")
         {
             if (!OperationCancelled)
             {
@@ -208,20 +208,25 @@ namespace ML3DInstaller.Presenter
                 {
                     destPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
                 }
-
-                string shortcutLocation = Path.Combine(destPath, Software + " " + Version + ".lnk");
+                string name = Software;
+                if (Version != "")
+                {
+                    name += " " + Version;
+                }
+                name += ".lnk";
+                string shortcutLocation = Path.Combine(destPath, name);
 
                 // Create a new WshShell object
                 WshShell shell = new WshShell();
                 IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(shortcutLocation);
                 shortcut.TargetPath = exeFilePath;
-                shortcut.WorkingDirectory = exeFilePath;
+                shortcut.WorkingDirectory = Path.GetDirectoryName(exeFilePath);
                 shortcut.Description = Software + " " + Version + "\nLocation: " + exeFilePath;
                 shortcut.Save();
             }
         }
 
-        public void AddShortcutToStart(string pathToExe, string pathToIcon="")
+        public void AddShortcutToStart(string pathToExe, string Software, string Version="",string pathToIcon="")
         {
             string commonStartMenuPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu);
             string appStartMenuPath = Path.Combine(commonStartMenuPath, "Programs", "Microlight 3D");
@@ -233,12 +238,11 @@ namespace ML3DInstaller.Presenter
             WshShell shell = new WshShell();
             IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(shortcutLocation);
 
-            shortcut.Description = "Microlight 3D Micro-Printing software\n"+Software+" v"+Version;
+            shortcut.Description = "Microlight 3D Micro-Printing software\n"+Software+" "+Version;
             if (!pathToIcon.Equals(""))
             {
                 shortcut.IconLocation = pathToIcon;
             }
-             //uncomment to set the icon of the shortcut
             shortcut.TargetPath = pathToExe;
             shortcut.Save();
         }

@@ -10,7 +10,7 @@ namespace ML3DInstaller.Presenter
 {
     internal class MainPresenter
     {
-        private bool BYPASS_INSTALL = true;
+        private bool BYPASS_INSTALL = false;
         
         private UCMain userControlMain;
         private Update Updater;
@@ -70,12 +70,13 @@ namespace ML3DInstaller.Presenter
 
         bool InstalledCancel = false;
 
-        private async void UserControlMain_InstallSoftware(object? sender, string outputPath)
+        private async void UserControlMain_InstallSoftware(string outputPath, bool bypass)
         {
             CancelInstall = new CancellationTokenSource();
             var CancelToken = CancelInstall.Token;
+            BYPASS_INSTALL = bypass;
 
-            
+
             userControlMain.SetMode("Loading");
             try
             {
@@ -111,6 +112,7 @@ namespace ML3DInstaller.Presenter
             string outputZip = Software + "_" + Version + ".zip";
 
             string applicationPath =  Software + "-" + Version;
+            string sftConverterPath = "SFTConverter";
             string configurationPath = "Configuration";
             string documentationPath = "Documentation";
             string dependenciesPath = "Dependencies";
@@ -155,7 +157,7 @@ namespace ML3DInstaller.Presenter
                 ConfigCopy = new CancellationTokenSource();
                 DocCopy = new CancellationTokenSource();
                 // Copy software to destination directory
-                userControlMain.UpdateInfo("Copy software to chosen destination");
+                userControlMain.UpdateInfo("Install software to chosen destination");
                 if (cancellationToken.IsCancellationRequested)
                 {
                     return;
@@ -165,6 +167,19 @@ namespace ML3DInstaller.Presenter
                 {
                     return;
                 }
+                // if Phaos, also copy SFTConverter
+                if (Software.Equals("Phaos"))
+                {
+                    userControlMain.UpdateInfo("Install SFTConverter to chosen destination");
+                    string basedir = Directory.GetParent(Directory.GetParent(outputPath).FullName).FullName;
+                    string sftPath = Path.Combine(basedir, sftConverterPath);
+                    Updater.CopyFolderAsync(sftConverterPath, sftPath, SourceCopy).Wait();
+                    string exePath = Path.Combine(sftPath, "SFTConverter.exe");
+                    Updater.CreateShortcut(exePath, sftConverterPath);
+                    Updater.AddShortcutToStart(exePath, sftConverterPath);
+
+                }
+
                 userControlMain.UpdateInfo("Copy configuration and documentation to Documents\\Microlight3D");
                 Updater.CopyFolderAsync(configurationPath, configurationDestinationPath, ConfigCopy).Wait();
                 if (cancellationToken.IsCancellationRequested)
@@ -180,8 +195,8 @@ namespace ML3DInstaller.Presenter
                 Updater.CreateFolder(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Calibration design"));
 
                 // Create Shortcut
-                Updater.CreateShortcut(executablePath);
-                Updater.AddShortcutToStart(executablePath);
+                Updater.CreateShortcut(executablePath, Software, Version);
+                Updater.AddShortcutToStart(executablePath, Software, Version);
             }
             else
             {

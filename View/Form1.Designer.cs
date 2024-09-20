@@ -76,10 +76,13 @@
             ClientSize = new Size(415, 153);
             Controls.Add(tableLayoutPanel1);
             Icon = (Icon)resources.GetObject("$this.Icon");
+            KeyPreview = true;
             MinimumSize = new Size(427, 192);
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "ML3D Installer";
+            KeyDown += Form1_KeyDown;
+            KeyUp += Form1_KeyUp;
             tableLayoutPanel1.ResumeLayout(false);
             ResumeLayout(false);
         }

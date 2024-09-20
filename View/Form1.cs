@@ -21,7 +21,7 @@ namespace ML3DInstaller
             Debug.WriteLine(destPath);
             ucMain1.ExitApp += UcMain1_ExitApp;
             ucHome1.Continue += UcHome1_Continue;
-            
+
             SwitchMode("Home");
         }
 
@@ -66,7 +66,7 @@ namespace ML3DInstaller
                 Environment.CurrentDirectory,
                 "\""
             });
-            
+
             /*DoCommand(new List<string>()
             {
                 "-Command { ",
@@ -88,7 +88,7 @@ namespace ML3DInstaller
             process.StartInfo.FileName = "powershell";
             process.StartInfo.Arguments = args_builder.ToString();
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            
+
             process.Start();
             process.WaitForExit();
         }
@@ -99,7 +99,7 @@ namespace ML3DInstaller
             MainPresenter mp;
             string software = arguments.Item1;
             string version = arguments.Item2.Replace("latest (", "").Replace(")", "");
-                mp = new MainPresenter(ucMain1,software, version, arguments.Item3, arguments.Item4);
+            mp = new MainPresenter(ucMain1, software, version, arguments.Item3, arguments.Item4);
         }
 
         private void SwitchMode(string mode)
@@ -109,7 +109,8 @@ namespace ML3DInstaller
             {
                 tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
                 tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 0F));
-            } else
+            }
+            else
             {
                 tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 0));
                 tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
@@ -119,6 +120,17 @@ namespace ML3DInstaller
         private void UcMain1_ExitApp(object? sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            ucMain1.KeyDown(sender, e);
+        }
+
+        private void Form1_KeyUp(object sender, KeyEventArgs e)
+        {
+            ucMain1.KeyUp(sender, e);
+
         }
     }
 }
