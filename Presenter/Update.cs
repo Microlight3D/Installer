@@ -243,6 +243,7 @@ namespace ML3DInstaller.Presenter
             {
                 shortcut.IconLocation = pathToIcon;
             }
+            shortcut.WorkingDirectory = Path.GetDirectoryName(pathToExe);
             shortcut.TargetPath = pathToExe;
             shortcut.Save();
         }
