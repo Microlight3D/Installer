@@ -75,6 +75,7 @@ namespace ML3DInstaller
             btnInstall.Enabled = mode == "Init";
 
             btnCancelLeft.Text = (mode == "Init" ? "Back" : "Cancel");
+            btnCancelLeft.Visible = mode == "Init";
             progressBar.Visible = mode == "Loading";
 
             this.Mode = mode;
