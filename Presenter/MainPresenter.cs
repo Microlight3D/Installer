@@ -178,21 +178,45 @@ namespace ML3DInstaller.Presenter
                     Updater.CreateShortcut(exePath, sftConverterPath);
                     Updater.AddShortcutToStart(exePath, sftConverterPath);
 
+                    string calibrationDesignOutputPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Microlight3D\Calibration Designs");
+
+                    try
+                    {
+                        // Copy Calbiration Design
+                        // Create Calibration design Folder
+                        Updater.CreateFolder(calibrationDesignOutputPath);
+                        Updater.CopyFolderAsync("Calibration Designs", calibrationDesignOutputPath, SourceCopy).Wait();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("An error occured with the creation of the Calibration Designs directory. Continuing installation ...");
+                    }
+                    
+                } else if (Software.Equals("Luminis"))
+                {
+                    // Copy configuration in luminis 
+                    Updater.CopyFolderAsync(configurationPath, configurationDestinationPath, ConfigCopy).Wait();
+                    if (cancellationToken.IsCancellationRequested)
+                    {
+                        return;
+                    }
+                    Updater.CopyFolderAsync(documentationPath, documentationDestinationPath, DocCopy).Wait();
+                    if (cancellationToken.IsCancellationRequested)
+                    {
+                        return;
+                    }
                 }
 
+                // Copy user manuals 
+
                 userControlMain.UpdateInfo("Copy configuration and documentation to Documents\\Microlight3D");
-                Updater.CopyFolderAsync(configurationPath, configurationDestinationPath, ConfigCopy).Wait();
+                Updater.CopyFolderByFileTypeAsync("", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Microlight3D"), ".pdf", SourceCopy).Wait();
                 if (cancellationToken.IsCancellationRequested)
                 {
                     return;
                 }
-                Updater.CopyFolderAsync(documentationPath, documentationDestinationPath, DocCopy).Wait();
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    return;
-                }
-                // Create Calibration design Folder
-                Updater.CreateFolder(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Calibration design"));
+
+                
 
                 // Create Shortcut
                 Updater.CreateShortcut(executablePath, Software, Version);

@@ -164,6 +164,26 @@ namespace ML3DInstaller.Presenter
             }
         }
 
+        public async Task CopyFolderByFileTypeAsync(string sourceFolderPath, string destinationFolderPath, string fileType, CancellationTokenSource cancellationTokenSource)
+        {
+            if (!OperationCancelled)
+            {
+                Task copyTask = CopyFolderByFileType(Path.Combine(ExtractedZip, sourceFolderPath), destinationFolderPath, fileType, cancellationTokenSource.Token);
+                try
+                {
+                    await copyTask;
+                }
+                catch (OperationCanceledException)
+                {
+                    OperationCancelled = true;
+                }
+                catch (Exception ex)
+                {
+                    OperationCancelled = true;
+                }
+            }
+        }
+
         public void CreateFolder(string destinationFolder)
         {
             if (!Directory.Exists(destinationFolder))
@@ -198,6 +218,32 @@ namespace ML3DInstaller.Presenter
                 copiedFiles++;
             }
         }
+
+        public async Task CopyFolderByFileType(string sourceFolderPath, string destinationFolderPath, string fileType, CancellationToken token)
+        {
+            var filesToCopy = Directory.GetFiles(sourceFolderPath, $"*{fileType}", SearchOption.TopDirectoryOnly);
+            int totalFiles = filesToCopy.Length;
+            int copiedFiles = 0;
+
+            foreach (var filePath in filesToCopy)
+            {
+                token.ThrowIfCancellationRequested(); // Check if cancellation is requested
+
+                var fileName = Path.GetFileName(filePath);
+                var destFilePath = Path.Combine(destinationFolderPath, fileName);
+
+                var destDir = Path.GetDirectoryName(destFilePath);
+                if (!Directory.Exists(destDir))
+                {
+                    Directory.CreateDirectory(destDir);
+                }
+
+                System.IO.File.Copy(filePath, destFilePath, true);
+
+                copiedFiles++;
+            }
+        }
+
 
         public void CreateShortcut(string exeFilePath, string Software, string Version = "", string outputFolderPath="desktop")
         {
