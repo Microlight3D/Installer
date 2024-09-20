@@ -73,7 +73,6 @@
             // 
             btnCancelLeft.BackColor = Color.FromArgb(255, 192, 192);
             btnCancelLeft.Dock = DockStyle.Fill;
-            btnCancelLeft.Enabled = false;
             btnCancelLeft.Location = new Point(3, 101);
             btnCancelLeft.Name = "btnCancelLeft";
             btnCancelLeft.Size = new Size(118, 33);

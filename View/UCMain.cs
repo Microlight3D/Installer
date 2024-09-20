@@ -17,6 +17,8 @@ namespace ML3DInstaller
         private string software;
         private string version;
 
+        private string Mode = "Init";
+
         /// <summary>
         /// App needs to be exited
         /// </summary>
@@ -30,6 +32,7 @@ namespace ML3DInstaller
         /// Cancel the installation (copy)
         /// </summary>
         public event EventHandler CancelInstall;
+        public event EventHandler BackToHome;
 
         public UCMain()
         {
@@ -58,7 +61,7 @@ namespace ML3DInstaller
             lblTitle.Text = "Installing " + software + " version " + version;
             PathTB.Text = DefaultPath;
             btnInstall.Text = "Install " + software;
-            btnCancelLeft.Visible = false;
+            btnCancelLeft.Visible = true;
         }
         /// <summary>
         /// Set mode to initialization or loading view
@@ -71,8 +74,10 @@ namespace ML3DInstaller
             defaultPathCb.Visible = mode == "Init";
             btnInstall.Enabled = mode == "Init";
 
-            btnCancelLeft.Enabled = mode == "Loading";
+            btnCancelLeft.Text = (mode == "Init" ? "Back" : "Cancel");
             progressBar.Visible = mode == "Loading";
+
+            this.Mode = mode;
 
         }
 
@@ -124,6 +129,10 @@ namespace ML3DInstaller
         private void btnCancelLeft_Click(object sender, EventArgs e)
         {
             // CancelInstall?.Invoke(this, EventArgs.Empty);
+            if (Mode == "Init")
+            {
+                BackToHome?.Invoke(this, null);
+            }
         }
 
 

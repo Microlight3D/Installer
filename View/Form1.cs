@@ -20,10 +20,13 @@ namespace ML3DInstaller
             string destPath = AppDomain.CurrentDomain.BaseDirectory;
             Debug.WriteLine(destPath);
             ucMain1.ExitApp += UcMain1_ExitApp;
+            ucMain1.BackToHome += UcMain1_BackToHome;
             ucHome1.Continue += UcHome1_Continue;
 
             SwitchMode("Home");
         }
+
+
 
         private void BeforeAnything()
         {
@@ -100,6 +103,11 @@ namespace ML3DInstaller
             string software = arguments.Item1;
             string version = arguments.Item2.Replace("latest (", "").Replace(")", "");
             mp = new MainPresenter(ucMain1, software, version, arguments.Item3, arguments.Item4);
+        }
+
+        private void UcMain1_BackToHome(object? sender, EventArgs e)
+        {
+            SwitchMode("Home");
         }
 
         private void SwitchMode(string mode)
