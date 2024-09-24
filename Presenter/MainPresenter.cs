@@ -221,6 +221,9 @@ namespace ML3DInstaller.Presenter
                 // Create Shortcut
                 Updater.CreateShortcut(executablePath, Software, Version, "desktop");
                 Updater.CreateShortcut(executablePath, Software, Version, "startmenu");
+
+                // Refresh desktop to remove old shortcuts 
+                RefreshDesktop();
             }
             else
             {
@@ -235,6 +238,16 @@ namespace ML3DInstaller.Presenter
             }
             Updater.DeleteDownloaded();
             this.userControlMain.End();
+        }
+
+        [System.Runtime.InteropServices.DllImport("Shell32.dll")]
+        private static extern int SHChangeNotify(int eventId, int flags, IntPtr item1, IntPtr item2);
+        /// <summary>
+        /// Same as a Desktop -> Right click -> Refresh 
+        /// </summary>
+        private void RefreshDesktop()
+        {
+            SHChangeNotify(0x8000000, 0x1000, IntPtr.Zero, IntPtr.Zero);
         }
 
         private Form DependenciesForm;
