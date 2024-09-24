@@ -175,8 +175,8 @@ namespace ML3DInstaller.Presenter
                     string sftPath = Path.Combine(basedir, sftConverterPath);
                     Updater.CopyFolderAsync(sftConverterPath, sftPath, SourceCopy).Wait();
                     string exePath = Path.Combine(sftPath, "SFTConverter.exe");
-                    Updater.CreateShortcut(exePath, sftConverterPath);
-                    Updater.AddShortcutToStart(exePath, sftConverterPath);
+                    Updater.CreateShortcut(exePath, sftConverterPath,"", "desktop");
+                    Updater.CreateShortcut(exePath, sftConverterPath, "", "startmenu");
 
                     string calibrationDesignOutputPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Microlight3D\Calibration Designs");
 
@@ -219,8 +219,8 @@ namespace ML3DInstaller.Presenter
                 
 
                 // Create Shortcut
-                Updater.CreateShortcut(executablePath, Software, Version);
-                Updater.AddShortcutToStart(executablePath, Software, Version);
+                Updater.CreateShortcut(executablePath, Software, Version, "desktop");
+                Updater.CreateShortcut(executablePath, Software, Version, "startmenu");
             }
             else
             {

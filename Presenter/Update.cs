@@ -328,66 +328,78 @@ namespace ML3DInstaller.Presenter
         }
 
         /// <summary>
-        /// Create a shortcut on the desktop to an executable
+        /// Create a shortcut to either the Desktop or Start Menu
         /// </summary>
-        /// <param name="exeFilePath"></param>
-        /// <param name="Software"></param>
-        /// <param name="Version"></param>
-        /// <param name="outputFolderPath"></param>
-        public void CreateShortcut(string exeFilePath, string Software, string Version = "", string outputFolderPath="desktop")
+        /// <param name="exeFilePath">Path to the executable</param>
+        /// <param name="softwareName">Name of the software</param>
+        /// <param name="version">Version of the software (optional)</param>
+        /// <param name="outputLocation">Location for the shortcut: "desktop" or "startmenu" (desktop by default)</param>
+        /// <param name="iconPath">Path to the icon (optional)</param>
+        public void CreateShortcut(string exeFilePath, string softwareName, string version = "", string outputLocation = "desktop", string iconPath = "")
         {
-            if (!OperationCancelled)
+            if (OperationCancelled)
             {
-                string destPath = outputFolderPath;
-                if (outputFolderPath == "desktop")
-                {
-                    destPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-                }
-                string name = Software;
-                if (Version != "")
-                {
-                    name += " " + Version;
-                }
-                name += ".lnk";
-                string shortcutLocation = Path.Combine(destPath, name);
-
-                // Create a new WshShell object
-                WshShell shell = new WshShell();
-                IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(shortcutLocation);
-                shortcut.TargetPath = exeFilePath;
-                shortcut.WorkingDirectory = Path.GetDirectoryName(exeFilePath);
-                shortcut.Description = Software + " " + Version + "\nLocation: " + exeFilePath;
-                shortcut.Save();
+                return;
             }
-        }
-        /// <summary>
-        /// Create a shortcut to the start menu
-        /// </summary>
-        /// <param name="pathToExe"></param>
-        /// <param name="Software"></param>
-        /// <param name="Version"></param>
-        /// <param name="pathToIcon"></param>
-        public void AddShortcutToStart(string pathToExe, string Software, string Version="",string pathToIcon="")
-        {
-            string commonStartMenuPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu);
-            string appStartMenuPath = Path.Combine(commonStartMenuPath, "Programs", "Microlight 3D");
 
-            if (!Directory.Exists(appStartMenuPath))
-                Directory.CreateDirectory(appStartMenuPath);
+            string shortcutFolderPath;
 
-            string shortcutLocation = Path.Combine(appStartMenuPath, Software + ".lnk");
+            // Determine the destination folder based on the outputLocation parameter
+            if (outputLocation == "desktop")
+            {
+                shortcutFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+            }
+            else if (outputLocation == "startmenu")
+            {
+                string commonStartMenuPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu);
+                shortcutFolderPath = Path.Combine(commonStartMenuPath, "Programs", "Microlight 3D");
+
+                if (!Directory.Exists(shortcutFolderPath))
+                {
+                    Directory.CreateDirectory(shortcutFolderPath);
+                }
+            }
+            else
+            {
+                // invalid output location
+                return;
+            }
+
+            // Build the shortcut name
+            string shortcutName = softwareName;
+            if (!string.IsNullOrEmpty(version))
+            {
+                shortcutName += " " + version;
+            }
+            shortcutName += ".lnk";
+
+            // Create the full shortcut path
+            string shortcutLocation = Path.Combine(shortcutFolderPath, shortcutName);
+
+            // Delete any existing shortcut with same name
+            string shortcutPattern = softwareName + " *.lnk";
+            string[] existingShortcuts = Directory.GetFiles(shortcutFolderPath, shortcutPattern);
+
+            foreach (string shortcutToRm in existingShortcuts)
+            {
+                System.IO.File.Delete(shortcutToRm);
+            }
+
+            // Create the shortcut
             WshShell shell = new WshShell();
             IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(shortcutLocation);
+            shortcut.TargetPath = exeFilePath;
+            shortcut.WorkingDirectory = Path.GetDirectoryName(exeFilePath);
+            shortcut.Description = softwareName + " " + version + "\nLocation: " + exeFilePath;
 
-            shortcut.Description = "Microlight 3D Micro-Printing software\n"+Software+" "+Version;
-            if (!pathToIcon.Equals(""))
+            if (!string.IsNullOrEmpty(iconPath))
             {
-                shortcut.IconLocation = pathToIcon;
+                shortcut.IconLocation = iconPath;
             }
-            shortcut.WorkingDirectory = Path.GetDirectoryName(pathToExe);
-            shortcut.TargetPath = pathToExe;
+
             shortcut.Save();
         }
+
 
         /// <summary>
         /// Get the list of all Executables in a folder, recursively
