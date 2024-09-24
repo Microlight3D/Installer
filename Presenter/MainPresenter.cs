@@ -148,7 +148,7 @@ namespace ML3DInstaller.Presenter
                 }
                 // Extract to current directory
                 userControlMain.UpdateInfo("UnZipping the software");
-                Updater.ExtractZip();
+                Updater.ExtractZip(outputZip);
                 if (cancellationToken.IsCancellationRequested)
                 {
                     return;

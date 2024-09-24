@@ -7,6 +7,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -66,6 +67,10 @@ namespace ML3DInstaller.Presenter
             TempDirectory = GetTemporaryDirectory();
         }
 
+        /// <summary>
+        /// Get a temporary directory in C:\Users\USERNAME\AppData\Local\Temp\
+        /// </summary>
+        /// <returns></returns>
         public string GetTemporaryDirectory()
         {
             string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
@@ -81,6 +86,9 @@ namespace ML3DInstaller.Presenter
             }
         }
 
+        /// <summary>
+        /// Cancel the installation using the installation token
+        /// </summary>
         public void CancelInstall()
         {
             CopyCancellationTokenSource.Cancel();
@@ -118,32 +126,61 @@ namespace ML3DInstaller.Presenter
         }
 
         private string DownloadedZip = "";
-
+        /// <summary>
+        /// Download a .zip file from the internet.
+        /// The zip file will be written inside the TempDirectory 
+        /// </summary>
+        /// <param name="zipUrl">url to download</param>
+        /// <param name="zipName">output file name (without path)</param>
+        /// <returns></returns>
         public bool DownloadZip(string zipUrl, string zipName)
         {
             try
             {
                 DownloadedZip = TempDirectory + "\\" + zipName;
-                WebClient webClient = new WebClient();
-                webClient.Headers.Add("Accept: text/html, application/xhtml+xml, */*");
-                webClient.Headers.Add("User-Agent: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)");
-                webClient.DownloadFile(new Uri(zipUrl), DownloadedZip);
-            } catch
+
+                // Create an instance of HttpClient
+                using (HttpClient client = new HttpClient { Timeout = TimeSpan.FromMinutes(30) })
+                {
+                    // Header to reduce risk of being flagged as a bot
+                    client.DefaultRequestHeaders.Add("Accept", "text/html, application/xhtml+xml, */*");
+                    client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)");
+
+                    // Download using HttpClient
+                    HttpResponseMessage response = client.GetAsync(zipUrl).Result;
+                    response.EnsureSuccessStatusCode();
+                    byte[] fileBytes = response.Content.ReadAsByteArrayAsync().Result;
+
+                    // Save the file to the specified path
+                    System.IO.File.WriteAllBytes(DownloadedZip, fileBytes);
+                }
+            }
+            catch
             {
                 return false;
             }
+
             return true;
-            
         }
 
         private string ExtractedZip = "";
 
-        public void ExtractZip()
+        /// <summary>
+        /// Extract zip file (name without a path, the path is the tempdirectory)
+        /// </summary>
+        public void ExtractZip(string zipName)
         {
-            ExtractedZip = Path.Combine(TempDirectory, Software + "-" + Version);
+            ExtractedZip = Path.Combine(TempDirectory, "");
             ZipFile.ExtractToDirectory(DownloadedZip, ExtractedZip);
         }
 
+        /// <summary>
+        /// Launches a Task to copy full directory to destination
+        /// </summary>
+        /// <param name="sourceFolder"></param>
+        /// <param name="destinationFolder"></param>
+        /// <param name="cancellationTokenSource"></param>
+        /// <returns></returns>
         public async Task CopyFolderAsync(string sourceFolder, string destinationFolder, CancellationTokenSource cancellationTokenSource)
         {
             if (!OperationCancelled)
@@ -164,6 +201,14 @@ namespace ML3DInstaller.Presenter
             }
         }
 
+        /// <summary>
+        /// Launches a Task to copy only certain files, non-recursively, to a folder
+        /// </summary>
+        /// <param name="sourceFolderPath"></param>
+        /// <param name="destinationFolderPath"></param>
+        /// <param name="fileType"></param>
+        /// <param name="cancellationTokenSource"></param>
+        /// <returns></returns>
         public async Task CopyFolderByFileTypeAsync(string sourceFolderPath, string destinationFolderPath, string fileType, CancellationTokenSource cancellationTokenSource)
         {
             if (!OperationCancelled)
@@ -184,6 +229,29 @@ namespace ML3DInstaller.Presenter
             }
         }
 
+        /// <summary>
+        /// Grants everyone access to all files in directory
+        /// </summary>
+        /// <param name="directoryPath">directory to fully authorize</param>
+        void GrantFullControl(string directoryPath)
+        {
+            DirectoryInfo directoryInfo = new DirectoryInfo(directoryPath);
+            DirectorySecurity directorySecurity = directoryInfo.GetAccessControl();
+
+            // Add the "Everyone" group with full control permissions
+            directorySecurity.AddAccessRule(new FileSystemAccessRule(
+                "Everyone",
+                FileSystemRights.FullControl,
+                InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit,
+                PropagationFlags.None,
+                AccessControlType.Allow));
+
+            directoryInfo.SetAccessControl(directorySecurity);
+        }
+        /// <summary>
+        /// Create folder at certain destination
+        /// </summary>
+        /// <param name="destinationFolder"></param>
         public void CreateFolder(string destinationFolder)
         {
             if (!Directory.Exists(destinationFolder))
@@ -192,7 +260,13 @@ namespace ML3DInstaller.Presenter
             }
         }
 
-
+        /// <summary>
+        /// Copy Folder to different folder, then grants everyone access to all files in folder. 
+        /// </summary>
+        /// <param name="sourceFolderPath"></param>
+        /// <param name="destinationFolderPath"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
         public async Task CopyFolder(string sourceFolderPath, string destinationFolderPath, CancellationToken token)
         {
             var allFiles = Directory.GetFiles(sourceFolderPath, "*.*", SearchOption.AllDirectories);
@@ -217,8 +291,16 @@ namespace ML3DInstaller.Presenter
 
                 copiedFiles++;
             }
+            GrantFullControl(destinationPath);
         }
-
+        /// <summary>
+        /// Copies files to different folder, then grants everyone access to all files in folder. 
+        /// </summary>
+        /// <param name="sourceFolderPath"></param>
+        /// <param name="destinationFolderPath"></param>
+        /// <param name="fileType"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
         public async Task CopyFolderByFileType(string sourceFolderPath, string destinationFolderPath, string fileType, CancellationToken token)
         {
             var filesToCopy = Directory.GetFiles(sourceFolderPath, $"*{fileType}", SearchOption.TopDirectoryOnly);
@@ -242,9 +324,16 @@ namespace ML3DInstaller.Presenter
 
                 copiedFiles++;
             }
+            GrantFullControl(destinationFolderPath);
         }
 
-
+        /// <summary>
+        /// Create a shortcut on the desktop to an executable
+        /// </summary>
+        /// <param name="exeFilePath"></param>
+        /// <param name="Software"></param>
+        /// <param name="Version"></param>
+        /// <param name="outputFolderPath"></param>
         public void CreateShortcut(string exeFilePath, string Software, string Version = "", string outputFolderPath="desktop")
         {
             if (!OperationCancelled)
@@ -271,7 +360,13 @@ namespace ML3DInstaller.Presenter
                 shortcut.Save();
             }
         }
-
+        /// <summary>
+        /// Create a shortcut to the start menu
+        /// </summary>
+        /// <param name="pathToExe"></param>
+        /// <param name="Software"></param>
+        /// <param name="Version"></param>
+        /// <param name="pathToIcon"></param>
         public void AddShortcutToStart(string pathToExe, string Software, string Version="",string pathToIcon="")
         {
             string commonStartMenuPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu);
@@ -335,6 +430,10 @@ namespace ML3DInstaller.Presenter
             RunChocoInstallList(chocoInstalls);
         }
 
+        /// <summary>
+        /// Launch the executable at the given path
+        /// </summary>
+        /// <param name="exeFilePath"></param>
         private void ExeInstall(string exeFilePath)
         {
             var process = new Process
@@ -348,6 +447,10 @@ namespace ML3DInstaller.Presenter
             process.WaitForExit();
         }
 
+        /// <summary>
+        /// Install all chocos in list of choco
+        /// </summary>
+        /// <param name="packagesList"></param>
         private void RunChocoInstallList(List<string> packagesList)
         {
             StringBuilder errorOutput = new StringBuilder();
@@ -499,6 +602,9 @@ namespace ML3DInstaller.Presenter
             return new Tuple<Process, StringBuilder, StringBuilder>(process,standardOutput,errorOutput);
         }
 
+        /// <summary>
+        /// Delete downloaded zip and extracted files 
+        /// </summary>
         public void DeleteDownloaded()
         {
             string zipPath = Path.Combine(TempDirectory, Software + "_" + Version + ".zip");
