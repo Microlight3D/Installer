@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "ML3D Installer"
-#define MyAppVersion "1.4"
+#define MyAppVersion "1.5"
 #define MyAppPublisher "Microlight 3D"
 #define MyAppURL "https://www.microlight3d.com/"
 #define MyAppExeName "ML3DInstaller.exe"
