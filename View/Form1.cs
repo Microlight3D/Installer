@@ -23,10 +23,21 @@ namespace ML3DInstaller
             ucMain1.BackToHome += UcMain1_BackToHome;
             ucHome1.Continue += UcHome1_Continue;
 
+            this.KeyDown += Form1_KeyDown1;
+
             SwitchMode("Home");
         }
 
-
+        private void Form1_KeyDown1(object? sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.F1)
+            {
+               About about = new About();
+                about.StartPosition = FormStartPosition.CenterParent;
+                about.SetVersion(Program.GetVersion());
+                about.Show(this);
+            }
+        }
 
         private void BeforeAnything()
         {
