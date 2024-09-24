@@ -7,6 +7,7 @@ using System.Text;
 using static System.Formats.Asn1.AsnWriter;
 using System.Windows.Forms;
 using ML3DInstaller.View;
+using System.Reflection;
 
 namespace ML3DInstaller
 {
@@ -32,8 +33,15 @@ namespace ML3DInstaller
             
         }
 
-        
-
-        
+        public static string GetVersion()
+        {
+            FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
+            string versionString = fileVersionInfo.FileVersion;
+            while (versionString.EndsWith(".0"))
+            {
+                versionString = versionString.Substring(0, versionString.Length - 2);
+            }
+            return versionString;
+        }
     }
 }
