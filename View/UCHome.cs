@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ML3DInstaller.Presenter;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,14 +16,14 @@ namespace ML3DInstaller
 {
     public partial class UCHome : UserControl
     {
-        Dictionary<string, List<string>> softwares;
+        Dictionary<string, List<Release>> softwares;
         public event EventHandler<Tuple<string, string, bool, bool>> Continue;
         public UCHome()
         {
             InitializeComponent();
         }
 
-        public void SetSoftwares(Dictionary<string, List<string>> softwares)
+        public void SetSoftwares(Dictionary<string, List<Release>> softwares)
         {
             this.softwares = softwares;
             foreach (string key in softwares.Keys)
@@ -48,12 +49,11 @@ namespace ML3DInstaller
         
         private void UpdateVersions()
         {
-            List<string> versions = softwares[this.cbSoftware.GetItemText(this.cbSoftware.SelectedItem)];
+            List<Release> versions = softwares[this.cbSoftware.GetItemText(this.cbSoftware.SelectedItem)];
             cbVersion.Items.Clear();
-            cbVersion.Items.Add("latest (" + versions[0] + ")");
-            for (int i=1; i<versions.Count; i++)
+            for (int i=0; i<versions.Count; i++)
             {
-                cbVersion.Items.Add(versions[i]);
+                cbVersion.Items.Add(versions[i].StringVersion);
             }
             cbVersion.SelectedIndex = 0;
         }
