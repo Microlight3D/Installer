@@ -145,47 +145,9 @@ namespace ML3DInstaller
         private async void btnInstall_Click(object sender, EventArgs e)
         {
             bool bypass = false;
-            if (ctrlPressed && shiftPressed)
-            {
-                // bypass mode
-                DialogResult bypassInstall = MessageBox.Show("Bypass Installation ?\nWarning: the software won't be downloaded. SFTConverter won't be downloaded. Any .exe dependency will be ignored.\nThe installation process will go directly to dependencies.", "Bypass Installation?", MessageBoxButtons.YesNo);
-                if (bypassInstall == DialogResult.Yes)
-                {
-                    bypass = true;
-                }
-            }
-
             btnInstall.Visible = false;
             btnCancelLeft.Enabled = true;
             InstallSoftware?.Invoke(PathTB.Text, bypass);
-        }
-        private bool ctrlPressed = false;
-        private bool shiftPressed = false;
-        public void KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Control || e.KeyCode == Keys.ControlKey)
-            {
-                Debug.WriteLine("Ctrl ..");
-                ctrlPressed = true;
-            }
-            if (e.KeyCode == Keys.Shift || e.KeyCode == Keys.ShiftKey)
-            {
-                Debug.WriteLine("Shift ..");
-                shiftPressed = true;
-            }
-            
-        }
-
-        public void KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Control || e.KeyCode == Keys.ControlKey)
-            {
-                ctrlPressed = false;
-            }
-            if (e.KeyCode == Keys.Shift || e.KeyCode == Keys.ShiftKey)
-            {
-                shiftPressed = false;
-            }
         }
 
         public void UpdateInfo(string text)

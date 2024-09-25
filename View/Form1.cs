@@ -23,21 +23,9 @@ namespace ML3DInstaller
             ucMain1.BackToHome += UcMain1_BackToHome;
             ucHome1.Continue += UcHome1_Continue;
 
-            this.KeyDown += Form1_KeyDown1;
-
             SwitchMode("Home");
         }
 
-        private void Form1_KeyDown1(object? sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.F1)
-            {
-               About about = new About();
-                about.StartPosition = FormStartPosition.CenterParent;
-                about.SetVersion(Program.GetVersion());
-                about.Show(this);
-            }
-        }
 
         private void BeforeAnything()
         {
@@ -141,15 +129,18 @@ namespace ML3DInstaller
             Application.Exit();
         }
 
-        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ucMain1.KeyDown(sender, e);
+           UCSettings uCSettings = new UCSettings();
+            
         }
 
-        private void Form1_KeyUp(object sender, KeyEventArgs e)
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ucMain1.KeyUp(sender, e);
-
+            About about = new About();
+            about.StartPosition = FormStartPosition.CenterParent;
+            about.SetVersion(Program.GetVersion());
+            about.Show(this);
         }
     }
 }

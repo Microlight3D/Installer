@@ -13,26 +13,22 @@ namespace ML3DInstaller.Presenter
 {
     internal class HomePresenter
     {
-        List<Release> LuminisVersions;
-        List<Release> PhaosVersions;
-        List<Release> TestVersions;
-
         UCHome UCHome;
         public HomePresenter(UCHome uchome)
         {
             UCHome = uchome;
-            // Fetch the release for phaos and luminis
-            // Currently, the correct url are not used, but "guessed".
-            LuminisVersions = GetRelease("Luminis");
-            PhaosVersions = GetRelease("Phaos");
-            TestVersions = GetRelease("Test");
-
             Dictionary<string, List<Release>> softwares = new Dictionary<string, List<Release>>();
-            softwares["Luminis"] = LuminisVersions;
-            softwares["Phaos"] = PhaosVersions;
-            softwares["Test"] = TestVersions;
-
+            softwares["Luminis"] = GetRelease("Luminis");
+            softwares["Phaos"] = GetRelease("Phaos");
+            if (Properties.Settings.Default.ViewTestProject)
+            {
+                softwares["Test"] = GetRelease("Test");
+            }
             UCHome.SetSoftwares(softwares);
+        }
+
+        private void AddSoftware(string software)
+        {
 
         }
 
@@ -142,7 +138,12 @@ namespace ML3DInstaller.Presenter
                         release.StringVersion += " (latest)";
                     }
 
-                    releases.Add(release);
+                    if (Properties.Settings.Default.ReleaseOnly && release.Type == ReleaseType.Release || !Properties.Settings.Default.ReleaseOnly)
+                    {
+                        releases.Add(release);
+                    }
+
+                    
                 }
             }
 

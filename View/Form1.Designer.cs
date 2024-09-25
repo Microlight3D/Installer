@@ -28,11 +28,17 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             tableLayoutPanel1 = new TableLayoutPanel();
             ucMain1 = new UCMain();
             ucHome1 = new UCHome();
+            contextMenuStrip1 = new ContextMenuStrip(components);
+            menuStrip1 = new MenuStrip();
+            settingsToolStripMenuItem = new ToolStripMenuItem();
+            aboutToolStripMenuItem = new ToolStripMenuItem();
             tableLayoutPanel1.SuspendLayout();
+            menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -69,22 +75,54 @@
             ucHome1.Size = new Size(343, 147);
             ucHome1.TabIndex = 2;
             // 
+            // contextMenuStrip1
+            // 
+            contextMenuStrip1.Name = "contextMenuStrip1";
+            contextMenuStrip1.Size = new Size(61, 4);
+            // 
+            // menuStrip1
+            // 
+            menuStrip1.BackColor = SystemColors.ButtonHighlight;
+            menuStrip1.Items.AddRange(new ToolStripItem[] { settingsToolStripMenuItem, aboutToolStripMenuItem });
+            menuStrip1.Location = new Point(0, 0);
+            menuStrip1.Name = "menuStrip1";
+            menuStrip1.Size = new Size(415, 24);
+            menuStrip1.TabIndex = 2;
+            menuStrip1.Text = "menuStrip1";
+            // 
+            // settingsToolStripMenuItem
+            // 
+            settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
+            settingsToolStripMenuItem.Size = new Size(61, 20);
+            settingsToolStripMenuItem.Text = "Settings";
+            settingsToolStripMenuItem.Click += settingsToolStripMenuItem_Click;
+            // 
+            // aboutToolStripMenuItem
+            // 
+            aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            aboutToolStripMenuItem.Size = new Size(52, 20);
+            aboutToolStripMenuItem.Text = "About";
+            aboutToolStripMenuItem.Click += aboutToolStripMenuItem_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(415, 153);
+            Controls.Add(menuStrip1);
             Controls.Add(tableLayoutPanel1);
             Icon = (Icon)resources.GetObject("$this.Icon");
             KeyPreview = true;
+            MainMenuStrip = menuStrip1;
             MinimumSize = new Size(427, 192);
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "ML3D Installer";
-            KeyDown += Form1_KeyDown;
-            KeyUp += Form1_KeyUp;
             tableLayoutPanel1.ResumeLayout(false);
+            menuStrip1.ResumeLayout(false);
+            menuStrip1.PerformLayout();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -92,5 +130,9 @@
         private TableLayoutPanel tableLayoutPanel1;
         private UCMain ucMain1;
         private UCHome ucHome1;
+        private ContextMenuStrip contextMenuStrip1;
+        private MenuStrip menuStrip1;
+        private ToolStripMenuItem settingsToolStripMenuItem;
+        private ToolStripMenuItem aboutToolStripMenuItem;
     }
 }
