@@ -36,24 +36,105 @@ namespace ML3DInstaller.Presenter
         private Dictionary<string, string> GetRelease(string software)
         {
             Dictionary<string, string> versionURL = new Dictionary<string, string>();
+            List<Release> releases = new List<Release>();
 
             string jsonUrl = "https://api.github.com/repos/Microlight3D/" + software + "Redistribuable/releases";
-            WebClient webClient = new WebClient();
-            webClient.Headers.Add("Accept: application/json");
-            webClient.Headers.Add("User-Agent: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)");
 
-            string jsonString = webClient.DownloadString(new Uri(jsonUrl));
-            JsonDocument jsonObject = JsonDocument.Parse(jsonString);
-
-            foreach (var release in jsonObject.RootElement.EnumerateArray())
+            using (HttpClient client = new HttpClient())
             {
-                var name = release.GetProperty("name").GetString()?.Replace("v", "");
-                var downloadUrl = release.GetProperty("assets")[0].GetProperty("browser_download_url").GetString();
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+                client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)");
 
-                versionURL[name] = downloadUrl;
+                HttpResponseMessage response = client.GetAsync(jsonUrl).Result;
+                response.EnsureSuccessStatusCode();
+
+                string jsonString = response.Content.ReadAsStringAsync().Result;
+                JsonDocument jsonObject = JsonDocument.Parse(jsonString);
+
+                foreach (var releasejs in jsonObject.RootElement.EnumerateArray())
+                {
+                    var name = releasejs.GetProperty("name").GetString()?.Replace("v", "");
+                    var tag = releasejs.GetProperty("tag_name").GetString();
+                    var isPrerelease = releasejs.GetProperty("prerelease").GetBoolean();
+                    var isLatest = releasejs.GetProperty("id").Equals(jsonObject.RootElement[0].GetProperty("id"));  // Detecting latest by checking the first entry
+                    string downloadUrl = releasejs.GetProperty("assets")[0].GetProperty("browser_download_url").GetString();
+
+                    Debug.WriteLine($"Release Name: {name}, Tag: {tag}, Is Prerelease: {isPrerelease}, Is Latest: {isLatest}");
+                    versionURL[name] = downloadUrl;
+
+                    Release release = new Release();
+
+                    string[] tagSeparated = tag.Split("-");
+                    if (tagSeparated.Length == 2) // if it's not exactly 2, the format is not supported
+                    {
+                        release.Prefix = tagSeparated[0];
+                        string type = tagSeparated[0].ToLower();
+                        switch (type)
+                        {
+                            case "release":
+                                release.Type = ReleaseType.Release;
+                                break;
+                            case "preview":
+                            case "prerelease":
+                                release.Type = ReleaseType.Preview;
+                                break;
+                            case "develop":
+                                release.Type = ReleaseType.Develop;
+                                break;
+                            case "test":
+                                release.Type = ReleaseType.Test;
+                                break;
+                            default:
+                                break;
+                        }
+                        string version = tagSeparated[1];
+                    }
+                    if (release.Type == ReleaseType.None)
+                    {
+                        break; // not supported
+                    }
+
+                    release.FullName = name;
+                    release.FullTag = tag;
+                    release.IsLatest = isLatest;
+                    release.IsPreview = isPrerelease;
+                    release.URL = downloadUrl;
+
+                    releases.Add(release);
+                }
             }
-            var sorterVersions = versionURL.OrderByDescending(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
-            return sorterVersions;
+
+            var sortedVersions = versionURL.OrderByDescending(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
+            return sortedVersions;
         }
+
+
+    }
+
+    public struct Release
+    {
+        public string FullName;
+        public string FullTag;
+        public string Prefix; // detected string prefix
+        public string URL; // download url
+        public bool IsLatest;
+        public bool IsPreview;
+        public ReleaseType Type; // <= anything other than that is ignored. Case unsensitive
+
+        public Release()
+        {
+            IsLatest = false;
+            IsPreview = false;
+            Type = ReleaseType.None;
+        }
+    }
+
+    public enum ReleaseType
+    {
+        Release, 
+        Preview,
+        Test,
+        Develop,
+        None
     }
 }
