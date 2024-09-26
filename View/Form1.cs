@@ -26,7 +26,9 @@ namespace ML3DInstaller
             SwitchMode("Home");
         }
 
-
+        /// <summary>
+        /// Execute powershell functions before anything else in the execution
+        /// </summary>
         private void BeforeAnything()
         {
             FormPleaseWait fpw = new FormPleaseWait();
@@ -60,6 +62,9 @@ namespace ML3DInstaller
             // see https://aka.ms/applicationconfiguration.
         }
 
+        /// <summary>
+        /// Execute command(s) on startup
+        /// </summary>
         static void OnStartup()
         {
             DoCommand(new List<string>()
@@ -68,15 +73,12 @@ namespace ML3DInstaller
                 Environment.CurrentDirectory,
                 "\""
             });
-
-            /*DoCommand(new List<string>()
-            {
-                "-Command { ",
-                "Start-Process powershell -ArgumentList \"-NoProfile -ExecutionPolicy Bypass -Command \"\"[Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12; Try { Invoke-WebRequest -Uri 'https://community.chocolatey.org/install.ps1' -UseBasicParsing | Invoke-Expression } Catch { Write-Host 'Error occurred: ' $_.Exception.Message; Exit 1 }\"\"\" -Verb RunAs\n",
-                "}"
-            });*/
         }
 
+        /// <summary>
+        ///  Execute a powershell command in a process, and waits for it to exit
+        /// </summary>
+        /// <param name="commands"></param>
         private static void DoCommand(List<string> commands)
         {
             // STRINGBUILDER USED TO BUILD THE COMMAND LINE ARGUMENTS
@@ -94,7 +96,11 @@ namespace ML3DInstaller
             process.Start();
             process.WaitForExit();
         }
-
+        /// <summary>
+        /// Continue to installation
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="arguments">software name, software version, installDependencies, isVerbose</param>
         private void UcHome1_Continue(object? sender, Tuple<string, string, bool, bool> arguments)
         {
             SwitchMode("Install");
@@ -103,12 +109,19 @@ namespace ML3DInstaller
             string version = arguments.Item2.Replace("latest (", "").Replace(")", "");
             mp = new MainPresenter(ucMain1, software, version, arguments.Item3, arguments.Item4);
         }
-
+        /// <summary>
+        /// Move from install mode to home mode
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void UcMain1_BackToHome(object? sender, EventArgs e)
         {
             SwitchMode("Home");
         }
-
+        /// <summary>
+        /// Switch the visible elements in this form
+        /// </summary>
+        /// <param name="mode"></param>
         private void SwitchMode(string mode)
         {
             tableLayoutPanel1.ColumnStyles.Clear();
@@ -123,18 +136,48 @@ namespace ML3DInstaller
                 tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             }
         }
-
+        /// <summary>
+        /// Exit the software
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void UcMain1_ExitApp(object? sender, EventArgs e)
         {
             Application.Exit();
         }
-
+        /// <summary>
+        /// Open settings by clicking on the menu item
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-           UCSettings uCSettings = new UCSettings();
-            
+            UCSettings uCSettings = new UCSettings();
+            uCSettings.Dock = DockStyle.Fill;
+            Form form = new Form();
+            form.Controls.Add(uCSettings);
+            //form.Parent = this;
+            form.StartPosition = FormStartPosition.CenterParent;
+            form.MinimumSize = new Size(367, 185);
+            form.MaximumSize = new Size(367, 185);
+            form.SizeChanged += (object? sender, EventArgs e) =>
+            {
+                Debug.WriteLine("Size : " + form.Size.ToString());
+            };
+            uCSettings.Exit += (object? sender, EventArgs e) =>
+            {
+                form.Close();
+            };
+
+            form.ShowDialog(this);
+               
         }
 
+        /// <summary>
+        /// Open about by clicking on the menu item
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             About about = new About();

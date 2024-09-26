@@ -65,9 +65,11 @@ namespace ML3DInstaller
 
         private void button1_Click(object sender, EventArgs e)
         {
+            string[] versionSplit = cbVersion.GetItemText(cbVersion.SelectedItem).Split(" ");
+            string version = versionSplit[0];
             Tuple<string, string, bool, bool> args = new Tuple<string, string, bool, bool>(
                 cbSoftware.GetItemText(cbSoftware.SelectedItem),
-                cbVersion.GetItemText(cbVersion.SelectedItem),
+                version,
                 checkBox1.Checked,
                 cbVerbose.Checked
             );

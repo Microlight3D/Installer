@@ -42,12 +42,6 @@ namespace ML3DInstaller.Presenter
             {
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
                 client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)");
-                if(software == "Test")
-                {
-                    string auth = "Bearer " + Properties.Settings.Default.GithubApiToken;
-                    client.DefaultRequestHeaders.Add("Authorization", auth);
-                    // client.DefaultRequestHeaders.Add("X-GitHub-Api-Version", "2022-11-28");
-                }
 
                 HttpResponseMessage response = client.GetAsync(jsonUrl).Result;
                 response.EnsureSuccessStatusCode();
@@ -101,8 +95,9 @@ namespace ML3DInstaller.Presenter
                                 break; // only allow a max of X.X.X.X (no X.X.X.X.X +)
                             }
                         }
-                        release.Version = versionInt;
-                        release.StringVersion = version;
+                        release.VersionInt = versionInt; // to compare the values
+                        release.StringVersion = version; // to see the attributes of this version
+                        release.Version = version; // plain text version
 
                         switch (type)
                         {
@@ -150,7 +145,7 @@ namespace ML3DInstaller.Presenter
             // Create a sorted list, decreasing, by version
             List<Release> sortedList = releases
                 .Where(r => r.Type != ReleaseType.None)
-                .OrderByDescending(r => r.Version)
+                .OrderByDescending(r => r.VersionInt)
                 .ToList();
 
             // Assert that there is a latest release (should always be the case)
@@ -177,8 +172,9 @@ namespace ML3DInstaller.Presenter
         public bool IsLatest;
         public bool IsPreview;
         public ReleaseType Type; // <= anything other than that is ignored. Case unsensitive
-        public int Version; // A.B.C.D : D + C*100 + B*10,000 + A*1,000,000 
-        public string StringVersion;
+        public int VersionInt; // A.B.C.D : D + C*100 + B*10,000 + A*1,000,000 
+        public string StringVersion; // X.X.X.X (latest) (Test)
+        public string Version; // str(X.X.X.X)
 
         public Release()
         {
