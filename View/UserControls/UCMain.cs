@@ -62,6 +62,12 @@ namespace ML3DInstaller
             PathTB.Text = DefaultPath;
             btnInstall.Text = "Install " + software;
             btnCancelLeft.Visible = true;
+
+            if (version == "Support")
+            {
+                btnInstall.Visible = false;
+                btnCancelLeft.Enabled = true;
+            }
         }
         /// <summary>
         /// Set mode to initialization or loading view

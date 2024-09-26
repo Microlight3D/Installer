@@ -43,6 +43,11 @@ namespace ML3DInstaller.Presenter
             this.InstallDependencies = installDependencies;
 
             Updater = new Update(software, version, installDependencies, IsVerbose);
+
+            if (version == "Support")
+            {
+                UserControlMain_InstallSoftware("", true);
+            }
         }
 
         
@@ -227,7 +232,7 @@ namespace ML3DInstaller.Presenter
             }
             else
             {
-                MessageBox.Show("Sucessfully bypassed the software's installation");
+                MessageBox.Show("Sucessfully bypassed the software's installation", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
             }
 
             if (InstallDependencies)

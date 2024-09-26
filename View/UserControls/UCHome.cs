@@ -55,6 +55,7 @@ namespace ML3DInstaller
             {
                 cbVersion.Items.Add(versions[i].StringVersion);
             }
+            cbVersion.Items.Add("Support only");
             cbVersion.SelectedIndex = 0;
         }
 
