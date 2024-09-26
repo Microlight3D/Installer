@@ -10,6 +10,7 @@ using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static ML3DInstaller.Presenter.GithubAPI;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace ML3DInstaller

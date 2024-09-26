@@ -16,7 +16,7 @@ namespace ML3DInstaller.Presenter
     /// <summary>
     /// Evertyhing needed to update a software
     /// </summary>
-    internal class Update
+    public class Updater
     {
         private readonly string Software;
         private readonly string Version;
@@ -41,7 +41,7 @@ namespace ML3DInstaller.Presenter
         /// </summary>
         /// <param name="software">Software name eg: "Phaos"</param>
         /// <param name="version">Version number eg: "2.2.6.5"</param>
-        public Update(string software, string version, bool installDependencies, bool verboeInstall) 
+        public Updater(string software, string version, bool installDependencies, bool verboeInstall) 
         { 
             this.Software = software;
             this.Version = version;
@@ -101,17 +101,11 @@ namespace ML3DInstaller.Presenter
         /// <param name="timeoutMs"></param>
         /// <param name="url"></param>
         /// <returns></returns>
-        public bool CheckForInternetConnection(int timeoutMs = 10000, string url = null)
+        public static bool CheckForInternetConnection(int timeoutMs = 10000, string url = null)
         {
             try
             {
-                url ??= CultureInfo.InstalledUICulture switch
-                {
-                    { Name: var n } when n.StartsWith("zh") => // China
-                        "http://www.baidu.com",
-                    _ =>
-                        "http://www.gstatic.com/generate_204",
-                };
+                url = "https://github.com/Microlight3D/PhaosRedistribuable"; // always check github anyways
 
                 var request = (HttpWebRequest)WebRequest.Create(url);
                 request.KeepAlive = false;

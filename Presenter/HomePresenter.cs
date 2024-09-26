@@ -7,6 +7,7 @@ using System.Net;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using static ML3DInstaller.Presenter.GithubAPI;
 using static System.Net.WebRequestMethods;
 
 namespace ML3DInstaller.Presenter
@@ -25,11 +26,6 @@ namespace ML3DInstaller.Presenter
                 softwares["Test"] = GetRelease("Test");
             }
             UCHome.SetSoftwares(softwares);
-        }
-
-        private void AddSoftware(string software)
-        {
-
         }
 
         private List<Release> GetRelease(string software)
@@ -163,33 +159,7 @@ namespace ML3DInstaller.Presenter
 
     }
 
-    public struct Release
-    {
-        public string FullName;
-        public string FullTag;
-        public string Prefix; // detected string prefix
-        public string URL; // download url
-        public bool IsLatest;
-        public bool IsPreview;
-        public ReleaseType Type; // <= anything other than that is ignored. Case unsensitive
-        public int VersionInt; // A.B.C.D : D + C*100 + B*10,000 + A*1,000,000 
-        public string StringVersion; // X.X.X.X (latest) (Test)
-        public string Version; // str(X.X.X.X)
+   
 
-        public Release()
-        {
-            IsLatest = false;
-            IsPreview = false;
-            Type = ReleaseType.None;
-        }
-    }
-
-    public enum ReleaseType
-    {
-        Release, 
-        Preview,
-        Test,
-        Develop,
-        None
-    }
+    
 }

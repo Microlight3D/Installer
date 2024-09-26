@@ -5,6 +5,8 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Security.Principal;
 using System.Text;
+using System.Text.Json;
+using static ML3DInstaller.Presenter.GithubAPI;
 namespace ML3DInstaller
 {
     public partial class Form1 : Form
@@ -54,12 +56,78 @@ namespace ML3DInstaller
                 Environment.Exit(0);
             }
 
+            // Check for access to github
+            if (!GithubAPI.IsGithubAccessible())
+            {
+                MessageBox.Show("No access to github was detected. Please chez your internet connection or contact the support. ");
+                Environment.Exit(0);
+            }
+
+            // Check for updates
+            Release latestRelease = GithubAPI.GetML3DLatest("Installer");
+            if (latestRelease.Type == ReleaseType.Release)
+            {
+                int version = latestRelease.VersionInt;
+                int current = GithubAPI.VersionToInt(Program.GetVersion());
+                DialogResult dr = MessageBox.Show("Test auto-update ?", "Debug", MessageBoxButtons.OKCancel);
+                if (dr == DialogResult.OK)
+                {
+                    current = 0;
+                }
+                if (current < version)
+                {
+
+                    // an update is available
+                    DialogResult dialogResult = MessageBox.Show(
+                        "A new version of the installer is available. Installing it is recommended to fix bugs and properly install latest versions. \nDo you wish to install it ?",
+                        "Update Available",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Information,
+                        MessageBoxDefaultButton.Button1
+                    );
+                    if (dialogResult == DialogResult.Yes)
+                    {
+                        AutoUpdate("https://github.com/Microlight3D/Installer/releases/latest/download/ML3DInstallerSetup.exe");
+                    }
+                }
+            }
+
+
             OnStartup();
             fpw.Hide();
             // NOTIFY THAT THE EXCLUSION HAD BEEN ADDED
             Console.WriteLine("[ Windows Defender exclusion added ]");
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
+        }
+
+        private void AutoUpdate(string downloadUrl)
+        {
+            string tempFilePath = Path.Combine(Path.GetTempPath(), "ML3DInstallerSetup.exe");
+
+            using (HttpClient httpClient = new HttpClient())
+            {
+                try
+                {
+                    Debug.WriteLine("Downloading installer...");
+                    byte[] installerData = httpClient.GetByteArrayAsync(downloadUrl).GetAwaiter().GetResult();
+                    File.WriteAllBytes(tempFilePath, installerData);
+                    Debug.WriteLine("Download completed.");
+
+                    // Launch the installer in the background
+                    Process installerProcess = new Process();
+                    installerProcess.StartInfo.FileName = tempFilePath;
+                    installerProcess.StartInfo.UseShellExecute = true; 
+                    installerProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                    installerProcess.Start();
+
+                    Environment.Exit(0);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error: {ex.Message}");
+                }
+            }
         }
 
         /// <summary>

@@ -13,7 +13,7 @@ namespace ML3DInstaller.Presenter
         private bool BYPASS_INSTALL = false;
         
         private UCMain userControlMain;
-        private Update Updater;
+        private Updater Updater;
 
         private string Software;
         private string Version;
@@ -42,7 +42,7 @@ namespace ML3DInstaller.Presenter
             this.Version = version;
             this.InstallDependencies = installDependencies;
 
-            Updater = new Update(software, version, installDependencies, IsVerbose);
+            Updater = new Updater(software, version, installDependencies, IsVerbose);
 
             if (version == "Support")
             {
