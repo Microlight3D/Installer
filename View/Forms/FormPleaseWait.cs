@@ -91,6 +91,7 @@ namespace ML3DInstaller.View
                 BeginInvoke(new Action(() =>
                 {
                     label1.Refresh();
+                    progressBar1.Update();
                     progressBar1.Refresh();
                     this.Refresh();
                     Application.DoEvents();
@@ -99,6 +100,7 @@ namespace ML3DInstaller.View
             else
             {
                 label1.Refresh();
+                progressBar1.Update();
                 progressBar1.Refresh();
                 this.Refresh();
                 Application.DoEvents();

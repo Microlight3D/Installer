@@ -2,6 +2,7 @@
 using ML3DInstaller.View;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -654,30 +655,44 @@ namespace ML3DInstaller.Presenter
                         {
                             Directory.CreateDirectory(tempDirPath);
                         }
+
                         FormPleaseWait progressForm = new FormPleaseWait();
                         progressForm.StartPosition = FormStartPosition.CenterScreen;
-                        progressForm.Show();
+                        progressForm.SetLoadingMode(true); // Assuming this method exists
 
                         FileDownloader downloader = new FileDownloader();
-                        downloader.DownloadFileWithProgress("https://github.com/Microlight3D/Installer/releases/latest/download/ML3DInstallerSetup.exe", tempFilePath, progressForm).Wait();
 
-                        Properties.Settings.Default.DeleteInstaller = true; // delete installer on next launch
-                        Properties.Settings.Default.Save();
-
-                        progressForm.Close();
-
-                        // Launch the installer in the background
-                        Process installerProcess = new Process
+                        // Attach to the RunWorkerCompleted event to know when the download is finished
+                        downloader.DownloadFileWithProgress("https://github.com/Microlight3D/Installer/releases/latest/download/ML3DInstallerSetup.exe", tempFilePath, progressForm);
+                        downloader.WorkerCompleted += (s, e) =>
                         {
-                            StartInfo =
+                            RunWorkerCompletedEventArgs e2 = (RunWorkerCompletedEventArgs)e;
+                            if (e2.Error != null)
                             {
-                                FileName = tempFilePath,
-                                UseShellExecute = true,
-                                WindowStyle = ProcessWindowStyle.Hidden
+                                MessageBox.Show($"Error encountered during Update download: {e2.Error.Message}");
+                            }
+                            else
+                            {
+                                // Delete installer on next launch
+                                Properties.Settings.Default.DeleteInstaller = true; 
+                                Properties.Settings.Default.Save();
+
+                                // Launch the installer
+                                Process installerProcess = new Process
+                                {
+                                    StartInfo =
+                                    {
+                                        FileName = tempFilePath,
+                                        UseShellExecute = true,
+                                        WindowStyle = ProcessWindowStyle.Hidden
+                                    }
+                                };
+                                installerProcess.Start();
+                                Environment.Exit(0);
                             }
                         };
-                        installerProcess.Start();
-                        Environment.Exit(0);
+
+                        progressForm.ShowDialog();
                     }
                 }
             }
