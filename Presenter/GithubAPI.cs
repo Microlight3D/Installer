@@ -137,6 +137,11 @@ namespace ML3DInstaller.Presenter
             {
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
                 client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)");
+                if (Properties.Settings.Default.DeveloperMode && Properties.Settings.Default.UseGitPAT)
+                {
+                    // Authorization: Bearer YOUR-TOKEN"
+                    client.DefaultRequestHeaders.Add("Authorization", "Bearer "+Properties.Settings.Default.GithubApiToken);
+                }
 
                 HttpResponseMessage response = client.GetAsync(requestUrl).Result;
                 response.EnsureSuccessStatusCode();

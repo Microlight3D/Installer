@@ -36,14 +36,7 @@ namespace ML3DInstaller.Presenter
 
             using (HttpClient client = new HttpClient())
             {
-                client.DefaultRequestHeaders.Add("Accept", "application/json");
-                client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)");
-
-                HttpResponseMessage response = client.GetAsync(jsonUrl).Result;
-                response.EnsureSuccessStatusCode();
-
-                string jsonString = response.Content.ReadAsStringAsync().Result;
-                JsonDocument jsonObject = JsonDocument.Parse(jsonString);
+                JsonDocument jsonObject = GithubAPI.MakeRequest(jsonUrl);
 
                 foreach (var releasejs in jsonObject.RootElement.EnumerateArray())
                 {
@@ -59,7 +52,7 @@ namespace ML3DInstaller.Presenter
                         downloadUrl = assets[0].GetProperty("browser_download_url").GetString();
                     } else
                     {
-                        MessageBox.Show("Warning : " + software + " " + name + " doesn't have a zip file to its name, using a Phaos instead.");
+                        // MessageBox.Show("Warning : " + software + " " + name + " doesn't have a zip file to its name, using a Phaos instead.");
                         downloadUrl = "https://github.com/Microlight3D/PhaosRedistribuable/releases/download/Release-2.5/Phaos.zip";
                     }
                     

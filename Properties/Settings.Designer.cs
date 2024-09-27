@@ -58,5 +58,41 @@ namespace ML3DInstaller.Properties {
                 this["ReleaseOnly"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DeveloperMode {
+            get {
+                return ((bool)(this["DeveloperMode"]));
+            }
+            set {
+                this["DeveloperMode"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UseGitPAT {
+            get {
+                return ((bool)(this["UseGitPAT"]));
+            }
+            set {
+                this["UseGitPAT"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DeleteInstaller {
+            get {
+                return ((bool)(this["DeleteInstaller"]));
+            }
+            set {
+                this["DeleteInstaller"] = value;
+            }
+        }
     }
 }

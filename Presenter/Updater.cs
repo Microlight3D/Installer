@@ -1,4 +1,5 @@
 ﻿using IWshRuntimeLibrary;
+using ML3DInstaller.View;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -7,9 +8,11 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
+using System.Runtime.CompilerServices;
 using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
+using static ML3DInstaller.Presenter.GithubAPI;
 
 namespace ML3DInstaller.Presenter
 {
@@ -622,6 +625,61 @@ namespace ML3DInstaller.Presenter
             if (Directory.Exists(folderPath))
             {
                 Directory.Delete(folderPath, true);
+            }
+        }
+
+        public static void AutoUpdate(int currentVersion)
+        {
+            // Check for updates
+            Release latestRelease = GithubAPI.GetML3DLatest("Installer");
+            if (latestRelease.Type == ReleaseType.Release)
+            {
+                int version = latestRelease.VersionInt;
+                int current = currentVersion;
+                if (current < version)
+                {
+                    // an update is available
+                    DialogResult dialogResult = MessageBox.Show(
+                        "A new version of the installer is available. Installing it is recommended to fix bugs and properly install latest versions. \nDo you wish to install it ?",
+                        "Update Available",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Information,
+                        MessageBoxDefaultButton.Button1
+                    );
+                    if (dialogResult == DialogResult.Yes)
+                    {
+                        string tempFilePath = Path.Combine(Path.GetTempPath(), @"Microlight3D_TempVars\ML3DInstallerSetup.exe");
+                        string tempDirPath = Path.Combine(Path.GetTempPath(), @"Microlight3D_TempVars\");
+                        if (!Directory.Exists(tempDirPath))
+                        {
+                            Directory.CreateDirectory(tempDirPath);
+                        }
+                        FormPleaseWait progressForm = new FormPleaseWait();
+                        progressForm.StartPosition = FormStartPosition.CenterScreen;
+                        progressForm.Show();
+
+                        FileDownloader downloader = new FileDownloader();
+                        downloader.DownloadFileWithProgress("https://github.com/Microlight3D/Installer/releases/latest/download/ML3DInstallerSetup.exe", tempFilePath, progressForm).Wait();
+
+                        Properties.Settings.Default.DeleteInstaller = true; // delete installer on next launch
+                        Properties.Settings.Default.Save();
+
+                        progressForm.Close();
+
+                        // Launch the installer in the background
+                        Process installerProcess = new Process
+                        {
+                            StartInfo =
+                            {
+                                FileName = tempFilePath,
+                                UseShellExecute = true,
+                                WindowStyle = ProcessWindowStyle.Hidden
+                            }
+                        };
+                        installerProcess.Start();
+                        Environment.Exit(0);
+                    }
+                }
             }
         }
     }

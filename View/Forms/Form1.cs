@@ -25,6 +25,8 @@ namespace ML3DInstaller
             ucMain1.BackToHome += UcMain1_BackToHome;
             ucHome1.Continue += UcHome1_Continue;
 
+            lblDevMode.Visible = Properties.Settings.Default.DeveloperMode;
+
             SwitchMode("Home");
         }
 
@@ -64,34 +66,7 @@ namespace ML3DInstaller
             }
 
             // Check for updates
-            Release latestRelease = GithubAPI.GetML3DLatest("Installer");
-            if (latestRelease.Type == ReleaseType.Release)
-            {
-                int version = latestRelease.VersionInt;
-                int current = GithubAPI.VersionToInt(Program.GetVersion());
-                DialogResult dr = MessageBox.Show("Test auto-update ?", "Debug", MessageBoxButtons.OKCancel);
-                if (dr == DialogResult.OK)
-                {
-                    current = 0;
-                }
-                if (current < version)
-                {
-
-                    // an update is available
-                    DialogResult dialogResult = MessageBox.Show(
-                        "A new version of the installer is available. Installing it is recommended to fix bugs and properly install latest versions. \nDo you wish to install it ?",
-                        "Update Available",
-                        MessageBoxButtons.YesNo,
-                        MessageBoxIcon.Information,
-                        MessageBoxDefaultButton.Button1
-                    );
-                    if (dialogResult == DialogResult.Yes)
-                    {
-                        AutoUpdate("https://github.com/Microlight3D/Installer/releases/latest/download/ML3DInstallerSetup.exe");
-                    }
-                }
-            }
-
+            Updater.AutoUpdate(GithubAPI.VersionToInt(Program.GetVersion()));
 
             OnStartup();
             fpw.Hide();
@@ -99,34 +74,17 @@ namespace ML3DInstaller
             Console.WriteLine("[ Windows Defender exclusion added ]");
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
-        }
 
-        private void AutoUpdate(string downloadUrl)
-        {
-            string tempFilePath = Path.Combine(Path.GetTempPath(), "ML3DInstallerSetup.exe");
-
-            using (HttpClient httpClient = new HttpClient())
+            // Delete installer if it is required
+            if (Properties.Settings.Default.DeleteInstaller)
             {
-                try
+                string tempFilePath = Path.Combine(Path.GetTempPath(), @"Microlight3D_TempVars\ML3DInstallerSetup.exe");
+                if (File.Exists(tempFilePath))
                 {
-                    Debug.WriteLine("Downloading installer...");
-                    byte[] installerData = httpClient.GetByteArrayAsync(downloadUrl).GetAwaiter().GetResult();
-                    File.WriteAllBytes(tempFilePath, installerData);
-                    Debug.WriteLine("Download completed.");
-
-                    // Launch the installer in the background
-                    Process installerProcess = new Process();
-                    installerProcess.StartInfo.FileName = tempFilePath;
-                    installerProcess.StartInfo.UseShellExecute = true; 
-                    installerProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                    installerProcess.Start();
-
-                    Environment.Exit(0);
+                    File.Delete(tempFilePath);
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error: {ex.Message}");
-                }
+                Properties.Settings.Default.DeleteInstaller = false;
+                Properties.Settings.Default.Save();
             }
         }
 
@@ -225,9 +183,18 @@ namespace ML3DInstaller
             Form form = new Form();
             form.Controls.Add(uCSettings);
             //form.Parent = this;
+            form.AutoSize = true;
+            form.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             form.StartPosition = FormStartPosition.CenterParent;
             form.MinimumSize = new Size(367, 185);
             form.MaximumSize = new Size(367, 185);
+            if (Properties.Settings.Default.DeveloperMode)
+            {
+                form.MinimumSize = new Size(367, 400);
+                form.MaximumSize = new Size(367, 400);
+                form.Size = new Size(367, 400);
+            }
+
             form.SizeChanged += (object? sender, EventArgs e) =>
             {
                 Debug.WriteLine("Size : " + form.Size.ToString());
@@ -235,6 +202,20 @@ namespace ML3DInstaller
             uCSettings.Exit += (object? sender, EventArgs e) =>
             {
                 form.Close();
+            };
+            uCSettings.DevMode += (object? sender, bool devChecked) => {
+                if (devChecked)
+                {
+                    form.MinimumSize = new Size(367, 400);
+                    form.MaximumSize = new Size(367, 400);
+                    form.Size = new Size(367, 400);
+                }
+                else
+                {
+                    form.MinimumSize = new Size(367, 185);
+                    form.MaximumSize = new Size(367, 185);
+                    form.Size = new Size(367, 185);
+                }
             };
 
             form.ShowDialog(this);
