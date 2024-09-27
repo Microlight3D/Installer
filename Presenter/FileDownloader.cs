@@ -1,20 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
+using System.Net;
 
 namespace ML3DInstaller.Presenter
 {
     /// <summary>
-    /// Download Files, makes it possible to see progress and continue unfinished download
+    /// Download files with progress reporting and support for resuming unfinished downloads.
     /// </summary>
     public class FileDownloader
     {
-        public async Task DownloadFileWithProgress(string url, string tempFilePath, View.FormPleaseWait formPleaseWait)
+        private BackgroundWorker worker;
+        public event EventHandler WorkerCompleted;
+
+        /// <summary>
+        /// Bufferized download of a file, defined by its url, to a certain path.
+        /// 
+        /// Progress updated in real time in a FormPleaseWait.
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="tempFilePath"></param>
+        /// <param name="formPleaseWait"></param>
+        public void DownloadFileWithProgress(string url, string tempFilePath, View.FormPleaseWait formPleaseWait)
         {
-            using (HttpClient httpClient = new HttpClient())
+            // use worker to update the ui while working
+            worker = new BackgroundWorker();
+            worker.WorkerReportsProgress = true;
+            worker.WorkerSupportsCancellation = false;
+
+            worker.DoWork += (sender, e) =>
             {
                 try
                 {
@@ -25,74 +40,80 @@ namespace ML3DInstaller.Presenter
                     {
                         FileInfo fileInfo = new FileInfo(tempFilePath);
                         existingFileSize = fileInfo.Length;
-                        Debug.WriteLine("Existing size : " + existingFileSize);
+                        Debug.WriteLine("Existing size: " + existingFileSize);
                     }
 
-                    // Set up the range request if file is partially downloaded
-                    var request = new HttpRequestMessage(HttpMethod.Get, url);
+                    // Prepare the request
+                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                    request.Method = "GET";
+
                     if (existingFileSize > 0)
                     {
-                        request.Headers.Range = new System.Net.Http.Headers.RangeHeaderValue(existingFileSize, null);
+                        request.AddRange(existingFileSize);
                     }
 
-                    using (HttpResponseMessage response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
+                    // Download the file, taking into consideration what has already been downloaded
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                     {
-                        response.EnsureSuccessStatusCode();
+                        long totalBytes = response.ContentLength + existingFileSize;
+                        long totalBytesRead = existingFileSize;
+                        int oldProgress = 0;
 
-                        long? totalBytes = response.Content.Headers.ContentLength;
-                        if (totalBytes.HasValue)
+                        using (Stream responseStream = response.GetResponseStream())
+                        using (FileStream fileStream = new FileStream(tempFilePath, FileMode.Append, FileAccess.Write, FileShare.None))
                         {
-                            totalBytes += existingFileSize;
-                        }
+                            // Might need to upgrade this size later, it makes a lot of updates, no need for that much. 
+                            byte[] buffer = new byte[8192]; // Update downloaded file after 8kb
+                            int bytesRead;
 
-                        // Stream the content to the file
-                        using (var contentStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
-                        {
-                            SaveFileWithProgress(tempFilePath, contentStream, totalBytes, existingFileSize, formPleaseWait).Wait() ;
+                            while ((bytesRead = responseStream.Read(buffer, 0, buffer.Length)) > 0)
+                            {
+                                fileStream.Write(buffer, 0, bytesRead);
+                                totalBytesRead += bytesRead;
+
+                                int progress = (int)((totalBytesRead * 100) / totalBytes);
+                                if (progress > oldProgress)
+                                {
+                                    oldProgress = progress;
+                                    worker.ReportProgress(progress, new Tuple<long, long>(totalBytesRead, totalBytes));
+                                }
+                            }
                         }
                     }
                 }
                 catch (Exception ex)
                 {
+                    // Report the error via RunWorkerCompleted event
+                    e.Result = ex;
+                }
+            };
+            formPleaseWait.SetMaximum(100);
+            worker.ProgressChanged += (sender, e) =>
+            {
+                int progressPercentage = e.ProgressPercentage;
+                Tuple<long, long> bytesInfo = (Tuple<long, long>)e.UserState;
+                long bytesReceived = bytesInfo.Item1;
+                long totalBytes = bytesInfo.Item2;
+
+                // Update the progress bar
+                formPleaseWait.UpdateProgress(progressPercentage, bytesReceived, totalBytes);
+            };
+
+            worker.RunWorkerCompleted += (sender, e) =>
+            {
+                if (e.Result is Exception ex)
+                {
                     MessageBox.Show($"Error: {ex.Message}");
                 }
-            }
+
+                formPleaseWait.Close();
+
+                // Trigger an event or callback if needed
+                WorkerCompleted?.Invoke(this, e);
+            };
+
+            // Start the download
+            worker.RunWorkerAsync();
         }
-
-
-        private async Task SaveFileWithProgress(string filePath, Stream contentStream, long? totalBytes, long existingFileSize, View.FormPleaseWait formPleaseWait)
-        {
-            byte[] buffer = new byte[8192]; // should make this settable in settings (must be 2 power)
-            long totalBytesRead = existingFileSize;
-            int bytesRead;
-
-            formPleaseWait.SetLoadingMode(true);
-            formPleaseWait.SetMaximum(totalBytes.HasValue ? (int)totalBytes.Value : 100);
-
-            // Open the file in append mode to continue downloading
-            using (FileStream fileStream = new FileStream(filePath, FileMode.Append, FileAccess.Write, FileShare.None, 8192, true))
-            {
-                while ((bytesRead = await contentStream.ReadAsync(buffer, 0, buffer.Length).ConfigureAwait(false)) > 0)
-                {
-                    await fileStream.WriteAsync(buffer, 0, bytesRead).ConfigureAwait(false);
-                    totalBytesRead += bytesRead;
-
-                    if (totalBytes.HasValue)
-                    {
-                        int progress = (int)((totalBytesRead * 100) / totalBytes.Value);
-                        formPleaseWait.UpdateProgress(progress, totalBytesRead, totalBytes.Value);
-                    }
-                    else
-                    {
-                        formPleaseWait.UpdateProgress((int)totalBytesRead, totalBytesRead, totalBytes.Value);
-                    }
-
-                    Debug.WriteLine($"Bytes read: {totalBytesRead}/{totalBytes}");
-                }
-            }
-
-            Debug.WriteLine("File download completed.");
-        }
-
     }
 }
