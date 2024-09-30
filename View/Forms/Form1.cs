@@ -133,13 +133,11 @@ namespace ML3DInstaller
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="arguments">software name, software version, installDependencies, isVerbose</param>
-        private void UcHome1_Continue(object? sender, Tuple<string, string, bool, bool> arguments)
+        private void UcHome1_Continue(object? sender, Tuple<Release, bool, bool> arguments)
         {
             SwitchMode("Install");
-            MainPresenter mp;
-            string software = arguments.Item1;
-            string version = arguments.Item2.Replace("latest (", "").Replace(")", "");
-            mp = new MainPresenter(ucMain1, software, version, arguments.Item3, arguments.Item4);
+
+            MainPresenter mp = new MainPresenter(ucMain1, arguments.Item1, arguments.Item2, arguments.Item3);
         }
         /// <summary>
         /// Move from install mode to home mode

@@ -38,8 +38,13 @@
             btnInstall = new Button();
             progressBar = new ProgressBar();
             lblTitle = new Label();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            checkBox1 = new CheckBox();
+            label2 = new Label();
+            tlpDownloadableContent = new TableLayoutPanel();
             tableLayoutPanel2.SuspendLayout();
             tableLayoutPanel3.SuspendLayout();
+            tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
             // tableLayoutPanel2
@@ -48,13 +53,14 @@
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel2.Controls.Add(btnCancelLeft, 0, 5);
+            tableLayoutPanel2.Controls.Add(btnCancelLeft, 0, 6);
             tableLayoutPanel2.Controls.Add(label1, 0, 1);
             tableLayoutPanel2.Controls.Add(defaultPathCb, 2, 2);
             tableLayoutPanel2.Controls.Add(tableLayoutPanel3, 0, 2);
-            tableLayoutPanel2.Controls.Add(btnInstall, 1, 5);
+            tableLayoutPanel2.Controls.Add(btnInstall, 1, 6);
             tableLayoutPanel2.Controls.Add(progressBar, 0, 3);
             tableLayoutPanel2.Controls.Add(lblTitle, 0, 0);
+            tableLayoutPanel2.Controls.Add(tableLayoutPanel1, 0, 5);
             tableLayoutPanel2.Dock = DockStyle.Fill;
             tableLayoutPanel2.Location = new Point(0, 0);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -64,16 +70,16 @@
             tableLayoutPanel2.RowStyles.Add(new RowStyle());
             tableLayoutPanel2.RowStyles.Add(new RowStyle());
             tableLayoutPanel2.RowStyles.Add(new RowStyle());
-            tableLayoutPanel2.RowStyles.Add(new RowStyle());
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel2.Size = new Size(345, 135);
+            tableLayoutPanel2.RowStyles.Add(new RowStyle());
+            tableLayoutPanel2.Size = new Size(345, 261);
             tableLayoutPanel2.TabIndex = 2;
             // 
             // btnCancelLeft
             // 
             btnCancelLeft.BackColor = Color.FromArgb(255, 192, 192);
             btnCancelLeft.Dock = DockStyle.Fill;
-            btnCancelLeft.Location = new Point(3, 101);
+            btnCancelLeft.Location = new Point(3, 225);
             btnCancelLeft.Name = "btnCancelLeft";
             btnCancelLeft.Size = new Size(118, 33);
             btnCancelLeft.TabIndex = 7;
@@ -150,7 +156,7 @@
             // 
             tableLayoutPanel2.SetColumnSpan(btnInstall, 2);
             btnInstall.Dock = DockStyle.Fill;
-            btnInstall.Location = new Point(127, 101);
+            btnInstall.Location = new Point(127, 225);
             btnInstall.Name = "btnInstall";
             btnInstall.Size = new Size(215, 33);
             btnInstall.TabIndex = 4;
@@ -183,6 +189,66 @@
             lblTitle.Text = "Installing XXX version XXX";
             lblTitle.TextAlign = ContentAlignment.MiddleCenter;
             // 
+            // tableLayoutPanel1
+            // 
+            tableLayoutPanel1.ColumnCount = 2;
+            tableLayoutPanel2.SetColumnSpan(tableLayoutPanel1, 3);
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.Controls.Add(checkBox1, 0, 0);
+            tableLayoutPanel1.Controls.Add(label2, 1, 0);
+            tableLayoutPanel1.Controls.Add(tlpDownloadableContent, 0, 1);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(3, 101);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 2;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.Size = new Size(339, 118);
+            tableLayoutPanel1.TabIndex = 11;
+            // 
+            // checkBox1
+            // 
+            checkBox1.AutoSize = true;
+            checkBox1.Checked = true;
+            checkBox1.CheckState = CheckState.Checked;
+            checkBox1.FlatStyle = FlatStyle.Popup;
+            checkBox1.Location = new Point(3, 3);
+            checkBox1.Name = "checkBox1";
+            checkBox1.Size = new Size(114, 19);
+            checkBox1.TabIndex = 0;
+            checkBox1.Text = "Install Everything";
+            checkBox1.UseVisualStyleBackColor = true;
+            checkBox1.CheckedChanged += checkBox1_CheckedChanged;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Dock = DockStyle.Fill;
+            label2.ForeColor = Color.Gray;
+            label2.Location = new Point(123, 0);
+            label2.Name = "label2";
+            label2.Size = new Size(213, 25);
+            label2.TabIndex = 1;
+            label2.Text = "(Recommended)";
+            label2.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // tlpDownloadableContent
+            // 
+            tlpDownloadableContent.ColumnCount = 2;
+            tableLayoutPanel1.SetColumnSpan(tlpDownloadableContent, 2);
+            tlpDownloadableContent.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tlpDownloadableContent.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tlpDownloadableContent.Dock = DockStyle.Fill;
+            tlpDownloadableContent.Enabled = false;
+            tlpDownloadableContent.Location = new Point(3, 28);
+            tlpDownloadableContent.Name = "tlpDownloadableContent";
+            tlpDownloadableContent.RowCount = 1;
+            tlpDownloadableContent.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tlpDownloadableContent.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tlpDownloadableContent.Size = new Size(333, 87);
+            tlpDownloadableContent.TabIndex = 2;
+            // 
             // UCMain
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -190,11 +256,13 @@
             Controls.Add(tableLayoutPanel2);
             MinimumSize = new Size(345, 135);
             Name = "UCMain";
-            Size = new Size(345, 135);
+            Size = new Size(345, 261);
             tableLayoutPanel2.ResumeLayout(false);
             tableLayoutPanel2.PerformLayout();
             tableLayoutPanel3.ResumeLayout(false);
             tableLayoutPanel3.PerformLayout();
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel1.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -210,5 +278,9 @@
         private Button btnInstall;
         private ProgressBar progressBar;
         private Label lblTitle;
+        private TableLayoutPanel tableLayoutPanel1;
+        private CheckBox checkBox1;
+        private Label label2;
+        private TableLayoutPanel tlpDownloadableContent;
     }
 }

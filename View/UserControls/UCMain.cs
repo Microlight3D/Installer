@@ -7,6 +7,8 @@ using System.Windows.Forms;
 using System;
 using ML3DInstaller.View;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using ML3DInstaller.Presenter;
+using System.Security.Policy;
 
 
 namespace ML3DInstaller
@@ -18,8 +20,12 @@ namespace ML3DInstaller
 
         private string software;
         private string version;
+        private Release SoftwareRelease;
+        private string ZipBaseURL = "";
 
         private string Mode = "Init";
+
+        private List<CheckBox> checkBoxes = new List<CheckBox>();
 
         ManualResetEventSlim progressEvent = new ManualResetEventSlim(false);
 
@@ -54,10 +60,11 @@ namespace ML3DInstaller
         /// </summary>
         /// <param name="software"></param>
         /// <param name="version"></param>
-        public void Init(string software, string version)
+        public void Init(Release release)
         {
-            this.software = software;
-            this.version = version;
+            this.software = release.Software;
+            this.version = release.Version;
+            this.SoftwareRelease = release;
 
             DefaultPath = @"C:\Program Files (x86)\Microlight3D\" + software + @"\";
             ChosenPath = DefaultPath;
@@ -72,6 +79,61 @@ namespace ML3DInstaller
                 btnInstall.Visible = false;
                 btnCancelLeft.Enabled = true;
             }
+
+            // Fill downloadable options
+            var zips = release.Zips;
+            if (zips != null && zips.Count > 0)
+            {
+                var uri = new Uri(zips[0]);
+                ZipBaseURL = uri.GetLeftPart(UriPartial.Authority);
+
+                int nrows = zips.Count / 2;
+                this.tlpDownloadableContent.RowCount = nrows + 2;
+                int col = 0;
+                int row = 0;
+                int iteration = 0;
+                foreach (var zip in zips)
+                {
+                    if (iteration % 2 == 0)
+                    {
+                        col = 0;
+                        row++;
+                    }
+                    string zipNoExtension = zip.Split("/")[^1].Replace(".zip", "");
+
+                    if (!Properties.Settings.Default.ShowSupportOptions && zipNoExtension == "Dependencies")
+                    {
+                        // hide this one
+                    }
+                    else
+                    {
+                        CheckBox cb = new CheckBox();
+                        cb.Dock = DockStyle.Top;
+                        cb.Checked = true;
+                        cb.Text = zipNoExtension;
+                        cb.FlatStyle = FlatStyle.Popup;
+                        checkBoxes.Add(cb);
+                        tlpDownloadableContent.Controls.Add(cb, col, row);
+                        iteration++;
+                        col++;
+                    }
+                }
+                tlpDownloadableContent.RowStyles.Clear();
+                for (int i = 0; i < tlpDownloadableContent.RowCount; i++)
+                {
+                    if (i < tlpDownloadableContent.RowCount - 1)
+                    {
+                        tlpDownloadableContent.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+                    }
+                    else
+                    {
+                        tlpDownloadableContent.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+                    }
+                }
+            }
+
+
+
         }
         /// <summary>
         /// Set mode to initialization or loading view
@@ -253,7 +315,7 @@ namespace ML3DInstaller
                 BeginInvoke(new Action(() =>
                 {
                     progressBar.Value = progress;
-                    label1.Text = "Downloading ... ("+ progress + "%)";
+                    label1.Text = "Downloading ... (" + progress + "%)";
                 }));
             }
             else
@@ -333,12 +395,12 @@ namespace ML3DInstaller
                 this.Refresh();
                 Application.DoEvents();
             }
-        
+
         }
 
         public void UpdateProgress(double progress)
         {
-            if ( progress != progressBar.Value)
+            if (progress != progressBar.Value)
             {
                 if (InvokeRequired)
                 {
@@ -355,7 +417,7 @@ namespace ML3DInstaller
                 }
                 RefreshNow();
             }
-            
+
         }
 
         public void EndProgress()
@@ -380,5 +442,14 @@ namespace ML3DInstaller
             progressEvent.Wait();
         }
         #endregion
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            foreach (CheckBox checkBox in checkBoxes)
+            {
+                checkBox.Checked = checkBox1.Checked;
+            }
+            tlpDownloadableContent.Enabled = !checkBox1.Checked;
+        }
     }
 }

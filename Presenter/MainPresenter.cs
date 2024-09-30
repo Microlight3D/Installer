@@ -18,6 +18,8 @@ namespace ML3DInstaller.Presenter
         private string Software;
         private string Version;
 
+        private Release CurrentRelease;
+
         private bool InstallDependencies;
 
         private CancellationTokenSource CancelInstall;
@@ -29,25 +31,20 @@ namespace ML3DInstaller.Presenter
         private UCDependencies dependenciesView;
 
         private bool InstallBlender = false;
-        public MainPresenter(UCMain uCMain, string software, string version, bool installDependencies, bool IsVerbose) {
+        public MainPresenter(UCMain uCMain, Release release, bool installDependencies, bool IsVerbose) {
 
             userControlMain = uCMain;
-            userControlMain.Init(software, version);
+            userControlMain.Init(release);
 
             userControlMain.ExitApp += UserControlMain_ExitApp;
             userControlMain.InstallSoftware += UserControlMain_InstallSoftware;
             userControlMain.CancelInstall += UserControlMain_CancelInstall;
 
-            this.Software = software;
-            this.Version = version;
+            this.Software = release.Software;
+            this.Version = release.Version;
             this.InstallDependencies = installDependencies;
 
-            Updater = new Updater(software, version, installDependencies, IsVerbose);
-
-            if (version == "Support")
-            {
-                UserControlMain_InstallSoftware("", true);
-            }
+            Updater = new Updater(release, installDependencies, IsVerbose);
         }
 
         

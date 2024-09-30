@@ -21,7 +21,7 @@ namespace ML3DInstaller.Presenter
         /// </summary>
         /// <param name="projectReleaseURL"></param>
         /// <returns></returns>
-        public List<Release> GetReleases(string projectReleaseURL)
+        public static List<Release> GetReleases(string projectReleaseURL)
         {
             List<Release> releases = new List<Release>();
             JsonDocument jsonObject = MakeRequest(projectReleaseURL);
@@ -29,7 +29,9 @@ namespace ML3DInstaller.Presenter
             JsonDocument latestReleaseJson = MakeRequest($"{projectReleaseURL}/latest");
             var latestReleaseId = latestReleaseJson.RootElement.GetProperty("id").GetInt64();
 
-                
+            var urlComponents = projectReleaseURL.Split('/');
+            string softwareName = urlComponents[^2].Replace("Redistribuable", "");
+
             foreach (var releasejs in jsonObject.RootElement.EnumerateArray())
             {
                 Release release = new Release();
@@ -41,6 +43,7 @@ namespace ML3DInstaller.Presenter
                 var isLatest = releaseId == latestReleaseId;
                 var assets = releasejs.GetProperty("assets");
                 var body = releasejs.GetProperty("body").GetString();
+
                 Debug.WriteLine($"Release Name: {name}, Tag: {tag}, Is Prerelease: {isPrerelease}, Is Latest: {isLatest}");
 
                 string downloadUrl;
@@ -51,13 +54,14 @@ namespace ML3DInstaller.Presenter
                 }
                 if (assets.GetArrayLength() == 0)
                 {
-                    MessageBox.Show("Warning : Test " + name + " doesn't have a zip file to its name, using a Phaos instead.");
+                    // MessageBox.Show("Warning : Test " + name + " doesn't have a zip file to its name, using a Phaos instead.");
                     downloadUrl = "https://github.com/Microlight3D/PhaosRedistribuable/releases/download/Release-2.5/Phaos.zip";
                 }
                 
                 release.FullName = name;
                 release.FullTag = tag;
                 release.IsLatest = isLatest;
+                release.Software = softwareName;
 
                 release.IsPreview = isPrerelease;
                 release.URL = projectReleaseURL;
@@ -128,7 +132,7 @@ namespace ML3DInstaller.Presenter
 
         public static List<Release> GetML3DReleases(string softwareName)
         {
-            return GetML3DReleases("https://api.github.com/repos/Microlight3D/" + softwareName + "/releases");
+            return GithubAPI.GetReleases("https://api.github.com/repos/Microlight3D/" + softwareName + "/releases");
         }
 
         public static JsonDocument MakeRequest(string requestUrl)
@@ -195,8 +199,7 @@ namespace ML3DInstaller.Presenter
         public static Release GetLatest(string projectURL)
         {
             Release releaseLatest = new Release();
-            GithubAPI githubAPI = new GithubAPI();
-            List<Release> releases = githubAPI.GetReleases(projectURL);
+            List<Release> releases = GetReleases(projectURL);
             foreach (Release release in releases)
             {
                 if (release.IsLatest)
@@ -212,29 +215,20 @@ namespace ML3DInstaller.Presenter
             return GetLatest("https://api.github.com/repos/Microlight3D/" + softwareName + "/releases");
         }
 
-        public struct Release
+        public static Release GetReleaseByVersion(List<Release> releases, string version)
         {
-            public string FullName;
-            public string FullTag;
-            public string Prefix; // detected string prefix
-            public string URL; // download url
-            public bool IsLatest;
-            public bool IsPreview;
-            public ReleaseType Type; // <= anything other than that is ignored. Case unsensitive
-            public int VersionInt; // A.B.C.D : D + C*100 + B*10,000 + A*1,000,000 
-            public string StringVersion; // X.X.X.X (latest) (Test)
-            public string Version; // str(X.X.X.X)
-            public List<string> Zips;
-            public System.Int64 ReleaseID;
-
-            public Release()
+            Release r = new Release();
+            foreach (Release release in releases)
             {
-                IsLatest = false;
-                IsPreview = false;
-                Type = ReleaseType.None;
-                Zips = new List<string>();
+                if (release.Version == version)
+                {
+                    r = release;
+                }
             }
+            return r;
         }
+
+        
 
     }
     public enum ReleaseType
@@ -244,5 +238,30 @@ namespace ML3DInstaller.Presenter
         Test,
         Develop,
         None
+    }
+
+    public struct Release
+    {
+        public string FullName;
+        public string FullTag;
+        public string Software; // software name
+        public string Prefix; // detected string prefix
+        public string URL; // download url
+        public bool IsLatest;
+        public bool IsPreview;
+        public ReleaseType Type; // <= anything other than that is ignored. Case unsensitive
+        public int VersionInt; // A.B.C.D : D + C*100 + B*10,000 + A*1,000,000 
+        public string StringVersion; // X.X.X.X (latest) (Test)
+        public string Version; // str(X.X.X.X)
+        public List<string> Zips;
+        public System.Int64 ReleaseID;
+
+        public Release()
+        {
+            IsLatest = false;
+            IsPreview = false;
+            Type = ReleaseType.None;
+            Zips = new List<string>();
+        }
     }
 }

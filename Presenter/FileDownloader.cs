@@ -26,6 +26,8 @@ namespace ML3DInstaller.Presenter
         /// <param name="formPleaseWait"></param>
         public void DownloadFileWithProgress(string url, string tempFilePath, ProgressBarAPI formPleaseWait)
         {
+            int downloadBlockSize = Properties.Settings.Default.DownloadBlockSize;
+
             // use worker to update the ui while working
             worker = new BackgroundWorker();
             worker.WorkerReportsProgress = true;
@@ -66,7 +68,7 @@ namespace ML3DInstaller.Presenter
                             using (FileStream fileStream = new FileStream(tempFilePath, FileMode.Append, FileAccess.Write, FileShare.None))
                             {
                                 // Might need to upgrade this size later, it makes a lot of updates, no need for that much. 
-                                byte[] buffer = new byte[8192]; // Update downloaded file after 8kb
+                                byte[] buffer = new byte[downloadBlockSize]; // Update downloaded file after 8kb
                                 int bytesRead;
 
                                 while ((bytesRead = responseStream.Read(buffer, 0, buffer.Length)) > 0)

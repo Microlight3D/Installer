@@ -17,8 +17,8 @@ namespace ML3DInstaller
 {
     public partial class UCHome : UserControl
     {
-        Dictionary<string, List<Release>> softwares;
-        public event EventHandler<Tuple<string, string, bool, bool>> Continue;
+        Dictionary<string, List<Release>> Softwares;
+        public event EventHandler<Tuple<Release, bool, bool>> Continue;
         public UCHome()
         {
             InitializeComponent();
@@ -26,7 +26,7 @@ namespace ML3DInstaller
 
         public void SetSoftwares(Dictionary<string, List<Release>> softwares)
         {
-            this.softwares = softwares;
+            this.Softwares = softwares;
             foreach (string key in softwares.Keys)
             {
                 cbSoftware.Items.Add(key);
@@ -50,14 +50,18 @@ namespace ML3DInstaller
         
         private void UpdateVersions()
         {
-            List<Release> versions = softwares[this.cbSoftware.GetItemText(this.cbSoftware.SelectedItem)];
+            List<Release> versions = Softwares[this.cbSoftware.GetItemText(this.cbSoftware.SelectedItem)];
             cbVersion.Items.Clear();
+            int latestIndex = 0;
             for (int i=0; i<versions.Count; i++)
             {
                 cbVersion.Items.Add(versions[i].StringVersion);
+                if (versions[i].IsLatest)
+                {
+                    latestIndex = i;
+                }
             }
-            cbVersion.Items.Add("Support only");
-            cbVersion.SelectedIndex = 0;
+            cbVersion.SelectedIndex = latestIndex;
         }
 
         private void cbSoftware_SelectedIndexChanged(object sender, EventArgs e)
@@ -69,13 +73,20 @@ namespace ML3DInstaller
         {
             string[] versionSplit = cbVersion.GetItemText(cbVersion.SelectedItem).Split(" ");
             string version = versionSplit[0];
-            Tuple<string, string, bool, bool> args = new Tuple<string, string, bool, bool>(
-                cbSoftware.GetItemText(cbSoftware.SelectedItem),
-                version,
-                checkBox1.Checked,
-                cbVerbose.Checked
-            );
-            Continue?.Invoke(this, args);
+
+            List<Release> currentSoftwareReleases = Softwares[cbSoftware.GetItemText(cbSoftware.SelectedItem)];
+            // get release by version
+            Release currentRelease = GithubAPI.GetReleaseByVersion(currentSoftwareReleases, version);
+            if (currentRelease.Type != ReleaseType.None)
+            {
+                Tuple<Release, bool, bool> args = new Tuple<Release, bool, bool>(
+                    currentRelease,
+                    checkBox1.Checked,
+                    cbVerbose.Checked
+                );
+                Continue?.Invoke(this, args);
+            }
+            
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)

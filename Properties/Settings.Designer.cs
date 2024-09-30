@@ -118,5 +118,29 @@ namespace ML3DInstaller.Properties {
                 this["CurrentlyDownloadingDestPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("8192")]
+        public int DownloadBlockSize {
+            get {
+                return ((int)(this["DownloadBlockSize"]));
+            }
+            set {
+                this["DownloadBlockSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowSupportOptions {
+            get {
+                return ((bool)(this["ShowSupportOptions"]));
+            }
+            set {
+                this["ShowSupportOptions"] = value;
+            }
+        }
     }
 }

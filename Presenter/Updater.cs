@@ -24,6 +24,7 @@ namespace ML3DInstaller.Presenter
     {
         private readonly string Software;
         private readonly string Version;
+        private readonly Release CurrentRelease;
 
         private readonly string SourceSoftwarePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "PhaosRedistribuable\\Phaos-2.2.6.5");
         private readonly string SourceConfigPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "PhaosRedistribuable\\Configuration");
@@ -45,10 +46,10 @@ namespace ML3DInstaller.Presenter
         /// </summary>
         /// <param name="software">Software name eg: "Phaos"</param>
         /// <param name="version">Version number eg: "2.2.6.5"</param>
-        public Updater(string software, string version, bool installDependencies, bool verboeInstall) 
+        public Updater(Release release, bool installDependencies, bool verboeInstall) 
         { 
-            this.Software = software;
-            this.Version = version;
+            this.Software = release.Software;
+            this.Version = release.Version;
             this.installDependencies = installDependencies;
             if (installDependencies)
             {
@@ -59,11 +60,11 @@ namespace ML3DInstaller.Presenter
                 this.installVerbose = false;
             }
             
-            string softwarePath = software + "Redistribuable-" + version + "\\" + software + "-" + version;
+            string softwarePath = Software + "Redistribuable-" + Version + "\\" + Software + "-" + Version;
             SourceSoftwarePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, softwarePath);
 
-            SourceConfigPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, software + "Redistribuable-" + version + "\\Configuration");
-            SourceDocumentationPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, software + "Redistribuable-" + version + "\\Documentation");
+            SourceConfigPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Software + "Redistribuable-" + Version + "\\Configuration");
+            SourceDocumentationPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Software + "Redistribuable-" + Version + "\\Documentation");
 
             CopyCancellationTokenSource = new CancellationTokenSource();
             ZipDownloadCancellationTokenSourceTask = new TaskCompletionSource<bool>();
@@ -611,16 +612,11 @@ namespace ML3DInstaller.Presenter
         /// </summary>
         public void DeleteDownloaded()
         {
-            string zipPath = Path.Combine(TempDirectory, Software + "_" + Version + ".zip");
-            string folderPath = Path.Combine(TempDirectory, Software + "-" + Version);
-            if (System.IO.File.Exists(zipPath)) 
+            if (Directory.Exists(TempDirectory))
             {
-                System.IO.File.Delete(zipPath);
+                Directory.Delete(TempDirectory, true);
             }
-            if (Directory.Exists(folderPath))
-            {
-                Directory.Delete(folderPath, true);
-            }
+            Directory.CreateDirectory(TempDirectory);
         }
 
         public static bool AutoUpdate(int currentVersion)
