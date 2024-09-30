@@ -338,20 +338,24 @@ namespace ML3DInstaller
 
         public void UpdateProgress(double progress)
         {
-            if (InvokeRequired)
+            if ( progress != progressBar.Value)
             {
-                BeginInvoke(new Action(() =>
+                if (InvokeRequired)
+                {
+                    BeginInvoke(new Action(() =>
+                    {
+                        progressBar.Value = (int)progress;
+                        label1.Text = "Downloading ... (" + progress + "%)";
+                    }));
+                }
+                else
                 {
                     progressBar.Value = (int)progress;
                     label1.Text = "Downloading ... (" + progress + "%)";
-                }));
+                }
+                RefreshNow();
             }
-            else
-            {
-                progressBar.Value = (int)progress;
-                label1.Text = "Downloading ... (" + progress + "%)";
-            }
-            RefreshNow();
+            
         }
 
         public void EndProgress()

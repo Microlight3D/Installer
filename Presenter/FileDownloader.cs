@@ -62,20 +62,22 @@ namespace ML3DInstaller.Presenter
                         int oldProgress = 0;
 
                         using (Stream responseStream = response.GetResponseStream())
-                        using (FileStream fileStream = new FileStream(tempFilePath, FileMode.Append, FileAccess.Write, FileShare.None))
                         {
-                            // Might need to upgrade this size later, it makes a lot of updates, no need for that much. 
-                            byte[] buffer = new byte[8192]; // Update downloaded file after 8kb
-                            int bytesRead;
-
-                            while ((bytesRead = responseStream.Read(buffer, 0, buffer.Length)) > 0)
+                            using (FileStream fileStream = new FileStream(tempFilePath, FileMode.Append, FileAccess.Write, FileShare.None))
                             {
-                                fileStream.Write(buffer, 0, bytesRead);
-                                totalBytesRead += bytesRead;
+                                // Might need to upgrade this size later, it makes a lot of updates, no need for that much. 
+                                byte[] buffer = new byte[8192]; // Update downloaded file after 8kb
+                                int bytesRead;
 
-                                int progress = (int)((totalBytesRead * 100) / totalBytes);
-                                oldProgress = progress;
-                                worker.ReportProgress(progress, new Tuple<long, long>(totalBytesRead, totalBytes));
+                                while ((bytesRead = responseStream.Read(buffer, 0, buffer.Length)) > 0)
+                                {
+                                    fileStream.Write(buffer, 0, bytesRead);
+                                    totalBytesRead += bytesRead;
+
+                                    int progress = (int)((totalBytesRead * 100) / totalBytes);
+                                    oldProgress = progress;
+                                    worker.ReportProgress(progress, new Tuple<long, long>(totalBytesRead, totalBytes));
+                                }
                             }
                         }
                     }
@@ -87,7 +89,7 @@ namespace ML3DInstaller.Presenter
                 }
             };
             formPleaseWait.SetMaximum(100);
-            double previousPercentage = 0;
+            int previousPercentage = 0;
             worker.ProgressChanged += (sender, e) =>
             {
                 int progressPercentage = e.ProgressPercentage;
@@ -97,12 +99,12 @@ namespace ML3DInstaller.Presenter
 
                 double value = ((double)bytesReceived / (double)totalBytes) * 100;
 
-                double percentage = Math.Round(value, 1);
+                int toIntPercentage = (int)value;
 
-                if (percentage > previousPercentage)
+                if (toIntPercentage > previousPercentage)
                 {
-                    formPleaseWait.UpdateProgress(percentage);
-                    Debug.WriteLine("Progress : " + bytesReceived+" / "+totalBytes + " - "+ percentage + "%");
+                    formPleaseWait.UpdateProgress(toIntPercentage);
+                    Debug.WriteLine("Progress : " + bytesReceived+" / "+totalBytes + " - "+ value + "%");
                 }
                 previousPercentage = progressPercentage;
             };
