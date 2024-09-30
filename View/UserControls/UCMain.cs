@@ -5,11 +5,13 @@ using System.Net;
 using System.IO.Compression;
 using System.Windows.Forms;
 using System;
+using ML3DInstaller.View;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 
 namespace ML3DInstaller
 {
-    public partial class UCMain : UserControl
+    public partial class UCMain : UserControl, ProgressBarAPI
     {
         private string DefaultPath = @"C:\Program Files (x86)\Microlight3D\Phaos\";
         private string ChosenPath = @"C:\Program Files (x86)\Microlight3D\Phaos\";
@@ -18,6 +20,8 @@ namespace ML3DInstaller
         private string version;
 
         private string Mode = "Init";
+
+        ManualResetEventSlim progressEvent = new ManualResetEventSlim(false);
 
         /// <summary>
         /// App needs to be exited
@@ -222,6 +226,155 @@ namespace ML3DInstaller
 
         }
 
+        private float MaxProgressValue = 0;
+        #region progress bar api
+        public void SetMaximum(int value)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(() =>
+                {
+                    progressBar.Maximum = value;
+                    MaxProgressValue = (float)value;
+                }));
+            }
+            else
+            {
+                progressBar.Maximum = value;
+                MaxProgressValue = (float)value;
+            }
+            RefreshNow();
+        }
+
+        public void UpdateProgress(int progress)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(() =>
+                {
+                    progressBar.Value = progress;
+                    label1.Text = "Downloading ... ("+ progress + "%)";
+                }));
+            }
+            else
+            {
+                progressBar.Value = progress;
+                label1.Text = "Downloading ... (" + progress + "%)";
+            }
+            RefreshNow();
+        }
+
+        public void UpdateProgress(float progress)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(() =>
+                {
+                    progressBar.Value = (int)progress;
+                    label1.Text = "Downloading ... (" + progress + "%)";
+                }));
+            }
+            else
+            {
+                progressBar.Value = (int)progress;
+                label1.Text = "Downloading ... (" + progress + "%)";
+            }
+            RefreshNow();
+        }
+
+        public void SetLoadingMode(bool loadingMode)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(() =>
+                {
+                    if (loadingMode)
+                    {
+                        progressBar.Style = ProgressBarStyle.Continuous;
+                    }
+                    else
+                    {
+                        progressBar.Style = ProgressBarStyle.Marquee;
+                    }
+                }));
+            }
+            else
+            {
+                if (loadingMode)
+                {
+                    progressBar.Style = ProgressBarStyle.Continuous;
+                }
+                else
+                {
+                    progressBar.Style = ProgressBarStyle.Marquee;
+                }
+            }
+            RefreshNow();
+        }
+
+        public void RefreshNow()
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(() =>
+                {
+                    label1.Refresh();
+                    progressBar.Update();
+                    progressBar.Refresh();
+                    this.Refresh();
+                    Application.DoEvents();
+                }));
+            }
+            else
+            {
+                label1.Refresh();
+                progressBar.Update();
+                progressBar.Refresh();
+                this.Refresh();
+                Application.DoEvents();
+            }
         
+        }
+
+        public void UpdateProgress(double progress)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(() =>
+                {
+                    progressBar.Value = (int)progress;
+                    label1.Text = "Downloading ... (" + progress + "%)";
+                }));
+            }
+            else
+            {
+                progressBar.Value = (int)progress;
+                label1.Text = "Downloading ... (" + progress + "%)";
+            }
+            RefreshNow();
+        }
+
+        public void EndProgress()
+        {
+            progressEvent.Set();
+        }
+
+        public void StartProgress()
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(() =>
+                {
+                    progressBar.Value = 0;
+                }));
+            }
+            else
+            {
+                progressBar.Value = 0;
+            }
+            RefreshNow();
+            progressEvent.Wait();
+        }
+        #endregion
     }
 }

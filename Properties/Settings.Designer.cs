@@ -94,5 +94,29 @@ namespace ML3DInstaller.Properties {
                 this["DeleteInstaller"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CurrentlyDownloadingURL {
+            get {
+                return ((string)(this["CurrentlyDownloadingURL"]));
+            }
+            set {
+                this["CurrentlyDownloadingURL"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CurrentlyDownloadingDestPath {
+            get {
+                return ((string)(this["CurrentlyDownloadingDestPath"]));
+            }
+            set {
+                this["CurrentlyDownloadingDestPath"] = value;
+            }
+        }
     }
 }

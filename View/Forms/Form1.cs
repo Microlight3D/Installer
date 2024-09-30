@@ -86,6 +86,12 @@ namespace ML3DInstaller
                 Properties.Settings.Default.DeleteInstaller = false;
                 Properties.Settings.Default.Save();
             }
+
+            // Check if a download was currently ongoing
+            if (Properties.Settings.Default.CurrentlyDownloadingDestPath != null && Properties.Settings.Default.CurrentlyDownloadingDestPath != "")
+            {
+                Utils.InfoBox("An interrupted download has been detected. Restart the download with the same settings and the process will continue.", "Download pending ..");
+            }
         }
 
         /// <summary>

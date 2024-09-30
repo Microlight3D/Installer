@@ -68,20 +68,21 @@ namespace ML3DInstaller.Presenter
             CopyCancellationTokenSource = new CancellationTokenSource();
             ZipDownloadCancellationTokenSourceTask = new TaskCompletionSource<bool>();
 
-            TempDirectory = GetTemporaryDirectory();
+            TempDirectory = GetDownloadDirectory();
         }
 
         /// <summary>
         /// Get a temporary directory in C:\Users\USERNAME\AppData\Local\Temp\
         /// </summary>
         /// <returns></returns>
-        public string GetTemporaryDirectory()
+        public string GetDownloadDirectory()
         {
-            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            // Microlight3D_TempVars\Installer\
+            string tempDirectory = Path.Combine(Path.GetTempPath(), @"Microlight3D_TempVars\");
 
             if (System.IO.File.Exists(tempDirectory))
             {
-                return GetTemporaryDirectory();
+                return GetDownloadDirectory();
             }
             else
             {
@@ -123,7 +124,7 @@ namespace ML3DInstaller.Presenter
             }
         }
 
-        private string DownloadedZip = "";
+        private string DownloadedZipFilePath = "";
         /// <summary>
         /// Download a .zip file from the internet.
         /// The zip file will be written inside the TempDirectory 
@@ -131,30 +132,23 @@ namespace ML3DInstaller.Presenter
         /// <param name="zipUrl">url to download</param>
         /// <param name="zipName">output file name (without path)</param>
         /// <returns></returns>
-        public bool DownloadZip(string zipUrl, string zipName)
+        public bool DownloadZip(string zipUrl, string zipName, ProgressBarAPI progressBar)
         {
+            // TODO : use DownloadFile
             try
             {
-                DownloadedZip = TempDirectory + "\\" + zipName;
+                DownloadedZipFilePath = TempDirectory + "\\" + zipName;
 
-                // Create an instance of HttpClient
-                using (HttpClient client = new HttpClient { Timeout = TimeSpan.FromMinutes(30) })
-                {
-                    // Header to reduce risk of being flagged as a bot
-                    client.DefaultRequestHeaders.Add("Accept", "text/html, application/xhtml+xml, */*");
-                    client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)");
-
-                    // Download using HttpClient
-                    HttpResponseMessage response = client.GetAsync(zipUrl).Result;
-                    response.EnsureSuccessStatusCode();
-                    byte[] fileBytes = response.Content.ReadAsByteArrayAsync().Result;
-
-                    // Save the file to the specified path
-                    System.IO.File.WriteAllBytes(DownloadedZip, fileBytes);
-                }
+                DownloadFile(zipUrl, DownloadedZipFilePath, progressBar);
             }
-            catch
+            catch (DirectoryNotFoundException)
             {
+                Utils.ErrorBox("The destination directory : " + DownloadedZipFilePath + " was not found.\nPlease contact Microlight3D's support in About->Contact support", "Directory not found");
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Utils.ErrorBox("Exception caught \n" + ex, "Exception caught during zip download");
                 return false;
             }
 
@@ -169,7 +163,7 @@ namespace ML3DInstaller.Presenter
         public void ExtractZip(string zipName)
         {
             ExtractedZip = Path.Combine(TempDirectory, "");
-            ZipFile.ExtractToDirectory(DownloadedZip, ExtractedZip);
+            ZipFile.ExtractToDirectory(DownloadedZipFilePath, ExtractedZip);
         }
 
         /// <summary>
@@ -629,7 +623,7 @@ namespace ML3DInstaller.Presenter
             }
         }
 
-        public static void AutoUpdate(int currentVersion)
+        public static bool AutoUpdate(int currentVersion)
         {
             // Check for updates
             Release latestRelease = GithubAPI.GetML3DLatest("Installer");
@@ -649,53 +643,110 @@ namespace ML3DInstaller.Presenter
                     );
                     if (dialogResult == DialogResult.Yes)
                     {
-                        string tempFilePath = Path.Combine(Path.GetTempPath(), @"Microlight3D_TempVars\ML3DInstallerSetup.exe");
-                        string tempDirPath = Path.Combine(Path.GetTempPath(), @"Microlight3D_TempVars\");
+                        string tempFilePath = Path.Combine(Path.GetTempPath(), @"Microlight3D_TempVars\Installer\ML3DInstallerSetup.exe");
+                        string tempDirPath = Path.Combine(Path.GetTempPath(), @"Microlight3D_TempVars\Installer\");
                         if (!Directory.Exists(tempDirPath))
                         {
                             Directory.CreateDirectory(tempDirPath);
                         }
-
-                        FormPleaseWait progressForm = new FormPleaseWait();
-                        progressForm.StartPosition = FormStartPosition.CenterScreen;
-                        progressForm.SetLoadingMode(true); // Assuming this method exists
-
-                        FileDownloader downloader = new FileDownloader();
-
-                        // Attach to the RunWorkerCompleted event to know when the download is finished
-                        downloader.DownloadFileWithProgress("https://github.com/Microlight3D/Installer/releases/latest/download/ML3DInstallerSetup.exe", tempFilePath, progressForm);
-                        downloader.WorkerCompleted += (s, e) =>
+                        try
                         {
-                            RunWorkerCompletedEventArgs e2 = (RunWorkerCompletedEventArgs)e;
-                            if (e2.Error != null)
-                            {
-                                MessageBox.Show($"Error encountered during Update download: {e2.Error.Message}");
-                            }
-                            else
-                            {
-                                // Delete installer on next launch
-                                Properties.Settings.Default.DeleteInstaller = true; 
-                                Properties.Settings.Default.Save();
+                            DownloadFile("https://github.com/Microlight3D/Installer/releases/latest/download/ML3DInstallerSetup.exe", tempFilePath, null);
+                        }
+                        catch (DirectoryNotFoundException)
+                        {
+                            MessageBox.Show("Error: the destination directory for storing the ml3dinstaller.exe was not found. Was this software launched with administrator privilege ?", "Directory not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return false;
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Error encountered during the downloading of the file "+Path.GetFileName(tempFilePath), "Download failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return false;
+                        }
+                        // Delete installer on next launch
+                        Properties.Settings.Default.DeleteInstaller = true;
+                        Properties.Settings.Default.Save();
 
-                                // Launch the installer
-                                Process installerProcess = new Process
-                                {
-                                    StartInfo =
+                        // Launch the installer
+                        Process installerProcess = new Process
+                        {
+                            StartInfo =
                                     {
                                         FileName = tempFilePath,
                                         UseShellExecute = true,
                                         WindowStyle = ProcessWindowStyle.Hidden
                                     }
-                                };
-                                installerProcess.Start();
-                                Environment.Exit(0);
-                            }
                         };
-
-                        progressForm.ShowDialog();
+                        installerProcess.Start();
+                        Environment.Exit(0);
+                        return true;
                     }
                 }
+                else
+                {
+                    Console.WriteLine("No update needed : current version is greater or equal than the available one");
+                }
+               
             }
+            else {
+                Console.WriteLine("No update done, latest release is not a \"Release\" type ");
+            }
+            return true; // true if no update done, 
+
+        }
+
+        /// <summary>
+        /// Download a file by url and puts it at a specific destination
+        /// 
+        ///  /!\ destination file path must exist
+        /// </summary>
+        /// <param name="url">url of the file to download</param>
+        /// <param name="destinationFilePath">full destination path, containing filename and file extension</param>
+        /// <returns></returns>
+        /// <exception cref="DirectoryNotFoundException">thrown when directory of the destinationFilePath doesn't exist</exception>
+        /// <exception cref="Exception">thrown if the downloading ends badly</exception>
+        private static bool DownloadFile(string url, string destinationFilePath, ProgressBarAPI progressForm)
+        {
+            if (!Directory.Exists(Path.GetDirectoryName(destinationFilePath)))
+            {
+                throw new DirectoryNotFoundException(Path.GetDirectoryName(destinationFilePath));
+            }
+            bool useSemaphore = true;
+            if (progressForm == null)
+            {
+                progressForm = new FormPleaseWait();
+                progressForm.SetLoadingMode(true);
+                useSemaphore = false;
+            }
+            progressForm.SetLoadingMode(true);
+            //
+
+            FileDownloader downloader = new FileDownloader();
+
+            downloader.DownloadFileWithProgress(url, destinationFilePath, progressForm);
+            downloader.WorkerCompleted += (s, e) =>
+            {
+                RunWorkerCompletedEventArgs e2 = (RunWorkerCompletedEventArgs)e;
+                if (e2.Error != null)
+                {
+                    throw new Exception($"Error encountered during Update download: {e2.Error.Message}");
+                }
+                else
+                {
+                    progressForm.EndProgress();
+                }
+            };
+
+            Properties.Settings.Default.CurrentlyDownloadingURL = url;
+            Properties.Settings.Default.CurrentlyDownloadingDestPath = destinationFilePath;
+            Properties.Settings.Default.Save();
+
+            progressForm.StartProgress();
+
+            Properties.Settings.Default.CurrentlyDownloadingURL = "";
+            Properties.Settings.Default.CurrentlyDownloadingDestPath = "";
+            Properties.Settings.Default.Save();
+            return true;
         }
     }
 }

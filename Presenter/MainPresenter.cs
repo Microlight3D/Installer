@@ -137,7 +137,7 @@ namespace ML3DInstaller.Presenter
             if (!BYPASS_INSTALL)
             { 
                 userControlMain.UpdateInfo("Downloading the software");
-                if (!Updater.DownloadZip(githubLink, outputZip))
+                if (!Updater.DownloadZip(githubLink, outputZip, userControlMain))
                 {
                     MessageBox.Show("An error occured during the downloading of the software.\nPlease restart the installer and try again. If nothing changes, contact the Microlight 3D Support at support@microlight.fr", "Downloading error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     InstalledCancel = true;

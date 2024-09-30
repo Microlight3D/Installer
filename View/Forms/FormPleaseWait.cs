@@ -13,11 +13,12 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace ML3DInstaller.View
 {
-    public partial class FormPleaseWait : Form
+    public partial class FormPleaseWait : Form, ProgressBarAPI
     {
         public FormPleaseWait()
         {
             InitializeComponent();
+            this.StartPosition = FormStartPosition.CenterScreen;
         }
 
         public void SetMaximum(int value)
@@ -36,20 +37,34 @@ namespace ML3DInstaller.View
             RefreshNow();
         }
 
-        public void UpdateProgress(int progress, long bytesRead, long totalBytes)
+        public void UpdateProgress(int progress)
         {
             if (InvokeRequired)
             {
                 BeginInvoke(new Action(() =>
                 {
                     progressBar1.Value = progress;
-                    label1.Text = $"Downloaded {bytesRead} of {totalBytes} bytes.";
                 }));
             }
             else
             {
                 progressBar1.Value = progress;
-                label1.Text = $"Downloaded {bytesRead} of {totalBytes} bytes.";
+            }
+            RefreshNow();
+        }
+
+        public void UpdateProgress(float progress)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(() =>
+                {
+                    progressBar1.Value = (int)progress;
+                }));
+            }
+            else
+            {
+                progressBar1.Value = (int)progress;
             }
             RefreshNow();
         }
@@ -84,7 +99,7 @@ namespace ML3DInstaller.View
             RefreshNow();
         }
 
-        private void RefreshNow()
+        public void RefreshNow()
         {
             if (InvokeRequired)
             {
@@ -105,6 +120,32 @@ namespace ML3DInstaller.View
                 this.Refresh();
                 Application.DoEvents();
             }
+        }
+
+        public void UpdateProgress(double progress)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(() =>
+                {
+                    progressBar1.Value = (int)progress;
+                }));
+            }
+            else
+            {
+                progressBar1.Value = (int)progress;
+            }
+            RefreshNow();
+        }
+
+        public void EndProgress()
+        {
+            this.Close();
+        }
+
+        public void StartProgress()
+        {
+            this.ShowDialog();
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.VisualBasic.Logging;
+using ML3DInstaller.View;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -22,7 +24,7 @@ namespace ML3DInstaller.Presenter
         /// <param name="url"></param>
         /// <param name="tempFilePath"></param>
         /// <param name="formPleaseWait"></param>
-        public void DownloadFileWithProgress(string url, string tempFilePath, View.FormPleaseWait formPleaseWait)
+        public void DownloadFileWithProgress(string url, string tempFilePath, ProgressBarAPI formPleaseWait)
         {
             // use worker to update the ui while working
             worker = new BackgroundWorker();
@@ -72,11 +74,8 @@ namespace ML3DInstaller.Presenter
                                 totalBytesRead += bytesRead;
 
                                 int progress = (int)((totalBytesRead * 100) / totalBytes);
-                                if (progress > oldProgress)
-                                {
-                                    oldProgress = progress;
-                                    worker.ReportProgress(progress, new Tuple<long, long>(totalBytesRead, totalBytes));
-                                }
+                                oldProgress = progress;
+                                worker.ReportProgress(progress, new Tuple<long, long>(totalBytesRead, totalBytes));
                             }
                         }
                     }
@@ -88,6 +87,7 @@ namespace ML3DInstaller.Presenter
                 }
             };
             formPleaseWait.SetMaximum(100);
+            double previousPercentage = 0;
             worker.ProgressChanged += (sender, e) =>
             {
                 int progressPercentage = e.ProgressPercentage;
@@ -95,8 +95,16 @@ namespace ML3DInstaller.Presenter
                 long bytesReceived = bytesInfo.Item1;
                 long totalBytes = bytesInfo.Item2;
 
-                // Update the progress bar
-                formPleaseWait.UpdateProgress(progressPercentage, bytesReceived, totalBytes);
+                double value = ((double)bytesReceived / (double)totalBytes) * 100;
+
+                double percentage = Math.Round(value, 1);
+
+                if (percentage > previousPercentage)
+                {
+                    formPleaseWait.UpdateProgress(percentage);
+                    Debug.WriteLine("Progress : " + bytesReceived+" / "+totalBytes + " - "+ percentage + "%");
+                }
+                previousPercentage = progressPercentage;
             };
 
             worker.RunWorkerCompleted += (sender, e) =>
@@ -106,7 +114,7 @@ namespace ML3DInstaller.Presenter
                     MessageBox.Show($"Error: {ex.Message}");
                 }
 
-                formPleaseWait.Close();
+                formPleaseWait.EndProgress();
 
                 // Trigger an event or callback if needed
                 WorkerCompleted?.Invoke(this, e);
