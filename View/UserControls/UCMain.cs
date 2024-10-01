@@ -149,6 +149,8 @@ namespace ML3DInstaller
             btnCancelLeft.Text = (mode == "Init" ? "Back" : "Cancel");
             btnCancelLeft.Visible = mode == "Init";
             progressBar.Visible = mode == "Loading";
+            tlpDownloadableContent.Visible = mode != "Loading";
+            tlpInstallEverything.Visible = mode != "Loading";
 
             this.Mode = mode;
 

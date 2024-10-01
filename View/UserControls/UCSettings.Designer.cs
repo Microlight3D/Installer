@@ -36,6 +36,9 @@
             label2 = new Label();
             cbDevMode = new CheckBox();
             tlpDevMode = new TableLayoutPanel();
+            tableLayoutPanel5 = new TableLayoutPanel();
+            label5 = new Label();
+            cbChunkSize = new ComboBox();
             tableLayoutPanel3 = new TableLayoutPanel();
             btnLaunchUpdate = new Button();
             label4 = new Label();
@@ -47,19 +50,18 @@
             lblGitPat = new Label();
             tbGitPAT = new TextBox();
             cbUsePAT = new CheckBox();
+            cbSupportOptions = new CheckBox();
             tableLayoutPanel4 = new TableLayoutPanel();
             btnSave = new Button();
             button1 = new Button();
-            tableLayoutPanel5 = new TableLayoutPanel();
-            label5 = new Label();
-            cbChunkSize = new ComboBox();
+            label6 = new Label();
             tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
             tlpDevMode.SuspendLayout();
+            tableLayoutPanel5.SuspendLayout();
             tableLayoutPanel3.SuspendLayout();
             tlpGitPat.SuspendLayout();
             tableLayoutPanel4.SuspendLayout();
-            tableLayoutPanel5.SuspendLayout();
             SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -68,22 +70,23 @@
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tableLayoutPanel1.Controls.Add(label1, 0, 0);
             tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 0, 1);
-            tableLayoutPanel1.Controls.Add(cbDevMode, 0, 3);
-            tableLayoutPanel1.Controls.Add(tlpDevMode, 0, 4);
-            tableLayoutPanel1.Controls.Add(tableLayoutPanel4, 0, 6);
-            tableLayoutPanel1.Controls.Add(tableLayoutPanel5, 0, 2);
+            tableLayoutPanel1.Controls.Add(cbDevMode, 0, 2);
+            tableLayoutPanel1.Controls.Add(tlpDevMode, 0, 5);
+            tableLayoutPanel1.Controls.Add(tableLayoutPanel4, 0, 7);
+            tableLayoutPanel1.Controls.Add(label6, 0, 3);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 7;
+            tableLayoutPanel1.RowCount = 8;
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 1F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 35F));
-            tableLayoutPanel1.Size = new Size(372, 399);
+            tableLayoutPanel1.Size = new Size(372, 444);
             tableLayoutPanel1.TabIndex = 0;
             // 
             // label1
@@ -158,7 +161,7 @@
             // cbDevMode
             // 
             cbDevMode.AutoSize = true;
-            cbDevMode.Location = new Point(8, 102);
+            cbDevMode.Location = new Point(8, 73);
             cbDevMode.Margin = new Padding(8, 3, 3, 3);
             cbDevMode.Name = "cbDevMode";
             cbDevMode.Size = new Size(113, 19);
@@ -171,26 +174,74 @@
             // 
             tlpDevMode.AutoSize = true;
             tlpDevMode.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tlpDevMode.CellBorderStyle = TableLayoutPanelCellBorderStyle.Single;
             tlpDevMode.ColumnCount = 1;
             tlpDevMode.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tlpDevMode.Controls.Add(tableLayoutPanel5, 0, 6);
             tlpDevMode.Controls.Add(tableLayoutPanel3, 0, 3);
             tlpDevMode.Controls.Add(btnClumsy, 0, 2);
             tlpDevMode.Controls.Add(cbShowTest, 0, 1);
             tlpDevMode.Controls.Add(label3, 0, 0);
             tlpDevMode.Controls.Add(tlpGitPat, 0, 5);
             tlpDevMode.Controls.Add(cbUsePAT, 0, 4);
-            tlpDevMode.Dock = DockStyle.Fill;
-            tlpDevMode.Location = new Point(3, 127);
+            tlpDevMode.Controls.Add(cbSupportOptions, 0, 7);
+            tlpDevMode.Dock = DockStyle.Top;
+            tlpDevMode.Location = new Point(3, 99);
             tlpDevMode.Name = "tlpDevMode";
-            tlpDevMode.RowCount = 6;
+            tlpDevMode.RowCount = 9;
             tlpDevMode.RowStyles.Add(new RowStyle());
             tlpDevMode.RowStyles.Add(new RowStyle());
             tlpDevMode.RowStyles.Add(new RowStyle());
             tlpDevMode.RowStyles.Add(new RowStyle());
             tlpDevMode.RowStyles.Add(new RowStyle());
             tlpDevMode.RowStyles.Add(new RowStyle());
-            tlpDevMode.Size = new Size(366, 189);
+            tlpDevMode.RowStyles.Add(new RowStyle());
+            tlpDevMode.RowStyles.Add(new RowStyle());
+            tlpDevMode.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tlpDevMode.Size = new Size(366, 249);
             tlpDevMode.TabIndex = 13;
+            // 
+            // tableLayoutPanel5
+            // 
+            tableLayoutPanel5.AutoSize = true;
+            tableLayoutPanel5.ColumnCount = 2;
+            tableLayoutPanel5.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel5.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel5.Controls.Add(label5, 0, 0);
+            tableLayoutPanel5.Controls.Add(cbChunkSize, 1, 0);
+            tableLayoutPanel5.Dock = DockStyle.Top;
+            tableLayoutPanel5.Location = new Point(9, 195);
+            tableLayoutPanel5.Margin = new Padding(8, 0, 0, 0);
+            tableLayoutPanel5.Name = "tableLayoutPanel5";
+            tableLayoutPanel5.RowCount = 1;
+            tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel5.Size = new Size(356, 26);
+            tableLayoutPanel5.TabIndex = 16;
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Dock = DockStyle.Top;
+            label5.Location = new Point(3, 5);
+            label5.Margin = new Padding(3, 5, 3, 0);
+            label5.Name = "label5";
+            label5.Size = new Size(172, 15);
+            label5.TabIndex = 0;
+            label5.Text = "Size of chunks";
+            label5.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // cbChunkSize
+            // 
+            cbChunkSize.Dock = DockStyle.Top;
+            cbChunkSize.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbChunkSize.FormattingEnabled = true;
+            cbChunkSize.Items.AddRange(new object[] { "8,192", "16,384", "32,768", "65,536", "131,072", "262,144", "524,288" });
+            cbChunkSize.Location = new Point(181, 3);
+            cbChunkSize.Margin = new Padding(3, 3, 3, 0);
+            cbChunkSize.Name = "cbChunkSize";
+            cbChunkSize.Size = new Size(172, 23);
+            cbChunkSize.TabIndex = 1;
             // 
             // tableLayoutPanel3
             // 
@@ -203,13 +254,13 @@
             tableLayoutPanel3.Controls.Add(label4, 1, 0);
             tableLayoutPanel3.Controls.Add(tbCurrentVersion, 1, 1);
             tableLayoutPanel3.Dock = DockStyle.Top;
-            tableLayoutPanel3.Location = new Point(8, 85);
+            tableLayoutPanel3.Location = new Point(9, 89);
             tableLayoutPanel3.Margin = new Padding(8, 5, 0, 0);
             tableLayoutPanel3.Name = "tableLayoutPanel3";
             tableLayoutPanel3.RowCount = 2;
             tableLayoutPanel3.RowStyles.Add(new RowStyle());
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel3.Size = new Size(358, 44);
+            tableLayoutPanel3.Size = new Size(356, 44);
             tableLayoutPanel3.TabIndex = 13;
             // 
             // btnLaunchUpdate
@@ -231,7 +282,7 @@
             label4.Dock = DockStyle.Top;
             label4.Location = new Point(123, 0);
             label4.Name = "label4";
-            label4.Size = new Size(232, 15);
+            label4.Size = new Size(230, 15);
             label4.TabIndex = 1;
             label4.Text = "Set Current Version";
             // 
@@ -240,7 +291,7 @@
             tbCurrentVersion.Dock = DockStyle.Top;
             tbCurrentVersion.Location = new Point(123, 18);
             tbCurrentVersion.Name = "tbCurrentVersion";
-            tbCurrentVersion.Size = new Size(232, 23);
+            tbCurrentVersion.Size = new Size(230, 23);
             tbCurrentVersion.TabIndex = 2;
             tbCurrentVersion.Text = "0.0";
             // 
@@ -248,7 +299,7 @@
             // 
             btnClumsy.AutoSize = true;
             btnClumsy.Dock = DockStyle.Left;
-            btnClumsy.Location = new Point(11, 52);
+            btnClumsy.Location = new Point(12, 55);
             btnClumsy.Margin = new Padding(11, 5, 3, 3);
             btnClumsy.Name = "btnClumsy";
             btnClumsy.Size = new Size(114, 25);
@@ -260,10 +311,10 @@
             // 
             cbShowTest.AutoSize = true;
             cbShowTest.Dock = DockStyle.Top;
-            cbShowTest.Location = new Point(8, 25);
+            cbShowTest.Location = new Point(9, 27);
             cbShowTest.Margin = new Padding(8, 5, 3, 3);
             cbShowTest.Name = "cbShowTest";
-            cbShowTest.Size = new Size(355, 19);
+            cbShowTest.Size = new Size(353, 19);
             cbShowTest.TabIndex = 5;
             cbShowTest.Text = "Show \"Test\" Project";
             cbShowTest.UseVisualStyleBackColor = true;
@@ -273,9 +324,9 @@
             label3.AutoSize = true;
             label3.Dock = DockStyle.Top;
             label3.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label3.Location = new Point(3, 0);
+            label3.Location = new Point(4, 1);
             label3.Name = "label3";
-            label3.Size = new Size(360, 20);
+            label3.Size = new Size(358, 20);
             label3.TabIndex = 4;
             label3.Text = "Developer Options";
             label3.TextAlign = ContentAlignment.TopCenter;
@@ -289,12 +340,12 @@
             tlpGitPat.Controls.Add(lblGitPat, 0, 0);
             tlpGitPat.Controls.Add(tbGitPAT, 1, 0);
             tlpGitPat.Dock = DockStyle.Fill;
-            tlpGitPat.Location = new Point(11, 159);
+            tlpGitPat.Location = new Point(12, 165);
             tlpGitPat.Margin = new Padding(11, 5, 0, 0);
             tlpGitPat.Name = "tlpGitPat";
             tlpGitPat.RowCount = 1;
             tlpGitPat.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tlpGitPat.Size = new Size(355, 30);
+            tlpGitPat.Size = new Size(353, 29);
             tlpGitPat.TabIndex = 14;
             // 
             // lblGitPat
@@ -304,7 +355,7 @@
             lblGitPat.Location = new Point(0, 0);
             lblGitPat.Margin = new Padding(0);
             lblGitPat.Name = "lblGitPat";
-            lblGitPat.Size = new Size(177, 30);
+            lblGitPat.Size = new Size(176, 29);
             lblGitPat.TabIndex = 0;
             lblGitPat.Text = "Github Private Access Token";
             lblGitPat.TextAlign = ContentAlignment.MiddleLeft;
@@ -312,23 +363,37 @@
             // tbGitPAT
             // 
             tbGitPAT.Dock = DockStyle.Top;
-            tbGitPAT.Location = new Point(180, 3);
+            tbGitPAT.Location = new Point(179, 3);
             tbGitPAT.Name = "tbGitPAT";
             tbGitPAT.PasswordChar = '*';
-            tbGitPAT.Size = new Size(172, 23);
+            tbGitPAT.Size = new Size(171, 23);
             tbGitPAT.TabIndex = 1;
             tbGitPAT.UseSystemPasswordChar = true;
             // 
             // cbUsePAT
             // 
             cbUsePAT.AutoSize = true;
-            cbUsePAT.Location = new Point(3, 132);
+            cbUsePAT.Location = new Point(9, 137);
+            cbUsePAT.Margin = new Padding(8, 3, 3, 3);
             cbUsePAT.Name = "cbUsePAT";
             cbUsePAT.Size = new Size(198, 19);
             cbUsePAT.TabIndex = 15;
             cbUsePAT.Text = "Use Github PAT (Recommended)";
             cbUsePAT.UseVisualStyleBackColor = true;
             cbUsePAT.CheckedChanged += cbUsePAT_CheckedChanged;
+            // 
+            // cbSupportOptions
+            // 
+            cbSupportOptions.AutoSize = true;
+            tlpDevMode.SetColumnSpan(cbSupportOptions, 2);
+            cbSupportOptions.Dock = DockStyle.Top;
+            cbSupportOptions.Location = new Point(9, 225);
+            cbSupportOptions.Margin = new Padding(8, 3, 3, 3);
+            cbSupportOptions.Name = "cbSupportOptions";
+            cbSupportOptions.Size = new Size(353, 19);
+            cbSupportOptions.TabIndex = 17;
+            cbSupportOptions.Text = "View \"Support Only\" options";
+            cbSupportOptions.UseVisualStyleBackColor = true;
             // 
             // tableLayoutPanel4
             // 
@@ -339,7 +404,7 @@
             tableLayoutPanel4.Controls.Add(btnSave, 0, 0);
             tableLayoutPanel4.Controls.Add(button1, 0, 0);
             tableLayoutPanel4.Dock = DockStyle.Top;
-            tableLayoutPanel4.Location = new Point(0, 364);
+            tableLayoutPanel4.Location = new Point(0, 409);
             tableLayoutPanel4.Margin = new Padding(0);
             tableLayoutPanel4.Name = "tableLayoutPanel4";
             tableLayoutPanel4.RowCount = 1;
@@ -376,46 +441,16 @@
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
             // 
-            // tableLayoutPanel5
+            // label6
             // 
-            tableLayoutPanel5.AutoSize = true;
-            tableLayoutPanel5.ColumnCount = 2;
-            tableLayoutPanel5.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel5.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel5.Controls.Add(label5, 0, 0);
-            tableLayoutPanel5.Controls.Add(cbChunkSize, 1, 0);
-            tableLayoutPanel5.Dock = DockStyle.Fill;
-            tableLayoutPanel5.Location = new Point(0, 70);
-            tableLayoutPanel5.Margin = new Padding(0);
-            tableLayoutPanel5.Name = "tableLayoutPanel5";
-            tableLayoutPanel5.RowCount = 1;
-            tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel5.Size = new Size(372, 29);
-            tableLayoutPanel5.TabIndex = 15;
-            // 
-            // label5
-            // 
-            label5.AutoSize = true;
-            label5.Dock = DockStyle.Fill;
-            label5.Location = new Point(3, 5);
-            label5.Margin = new Padding(3, 5, 3, 0);
-            label5.Name = "label5";
-            label5.Size = new Size(180, 24);
-            label5.TabIndex = 0;
-            label5.Text = "Size of chunks";
-            label5.TextAlign = ContentAlignment.MiddleLeft;
-            // 
-            // cbChunkSize
-            // 
-            cbChunkSize.Dock = DockStyle.Top;
-            cbChunkSize.DropDownStyle = ComboBoxStyle.DropDownList;
-            cbChunkSize.FormattingEnabled = true;
-            cbChunkSize.Items.AddRange(new object[] { "8192", "16,384", "32,768", "65,536", "131,072", "262,144", "524,288" });
-            cbChunkSize.Location = new Point(189, 3);
-            cbChunkSize.Name = "cbChunkSize";
-            cbChunkSize.Size = new Size(180, 23);
-            cbChunkSize.TabIndex = 1;
+            label6.AutoSize = true;
+            label6.BackColor = Color.Silver;
+            label6.Dock = DockStyle.Top;
+            label6.Location = new Point(8, 95);
+            label6.Margin = new Padding(8, 0, 8, 0);
+            label6.Name = "label6";
+            label6.Size = new Size(356, 1);
+            label6.TabIndex = 15;
             // 
             // UCSettings
             // 
@@ -423,7 +458,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(tableLayoutPanel1);
             Name = "UCSettings";
-            Size = new Size(372, 399);
+            Size = new Size(372, 444);
             Load += UCSettings_Load;
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
@@ -431,14 +466,14 @@
             tableLayoutPanel2.PerformLayout();
             tlpDevMode.ResumeLayout(false);
             tlpDevMode.PerformLayout();
+            tableLayoutPanel5.ResumeLayout(false);
+            tableLayoutPanel5.PerformLayout();
             tableLayoutPanel3.ResumeLayout(false);
             tableLayoutPanel3.PerformLayout();
             tlpGitPat.ResumeLayout(false);
             tlpGitPat.PerformLayout();
             tableLayoutPanel4.ResumeLayout(false);
             tableLayoutPanel4.PerformLayout();
-            tableLayoutPanel5.ResumeLayout(false);
-            tableLayoutPanel5.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -469,5 +504,7 @@
         private TableLayoutPanel tableLayoutPanel5;
         private Label label5;
         private ComboBox cbChunkSize;
+        private CheckBox cbSupportOptions;
+        private Label label6;
     }
 }

@@ -23,7 +23,10 @@ namespace ML3DInstaller.View
             cbDevMode.Checked = Properties.Settings.Default.DeveloperMode;
             cbUsePAT.Checked = Properties.Settings.Default.UseGitPAT;
             tbGitPAT.Text = Properties.Settings.Default.GithubApiToken;
-
+            cbSupportOptions.Checked = Properties.Settings.Default.ShowSupportOptions;
+            int selectedChunk = Properties.Settings.Default.DownloadBlockSize;
+            int cbChunkSizeIndex = cbChunkSize.Items.IndexOf(selectedChunk.ToString("N0"));
+            cbChunkSize.SelectedIndex = cbChunkSizeIndex;
             tlpDevMode.Visible = Properties.Settings.Default.DeveloperMode;
             init = true;
         }
@@ -46,11 +49,30 @@ namespace ML3DInstaller.View
 
         private bool SaveSettings()
         {
+            /*
+             * InitializeComponent();
+            rbShowProd.Checked = Properties.Settings.Default.ReleaseOnly;
+            rbShowall.Checked = !Properties.Settings.Default.ReleaseOnly;
+            cbShowTest.Checked = Properties.Settings.Default.ViewTestProject;
+            cbDevMode.Checked = Properties.Settings.Default.DeveloperMode;
+            cbUsePAT.Checked = Properties.Settings.Default.UseGitPAT;
+            tbGitPAT.Text = Properties.Settings.Default.GithubApiToken;
+            cbSupportOptions.Checked = Properties.Settings.Default.ShowSupportOptions;
+            int selectedChunk = Properties.Settings.Default.DownloadBlockSize;
+            int cbChunkSizeIndex = cbChunkSize.Items.IndexOf(selectedChunk.ToString("N0"));
+            cbChunkSize.SelectedIndex = cbChunkSizeIndex;
+            tlpDevMode.Visible = Properties.Settings.Default.DeveloperMode;
+            init = true;
+             * */
             Properties.Settings.Default.ReleaseOnly = rbShowProd.Checked;
             Properties.Settings.Default.ViewTestProject = cbShowTest.Checked;
             Properties.Settings.Default.DeveloperMode = cbDevMode.Checked;
             Properties.Settings.Default.UseGitPAT = cbUsePAT.Checked;
             Properties.Settings.Default.GithubApiToken = tbGitPAT.Text;
+            Properties.Settings.Default.ShowSupportOptions = cbSupportOptions.Checked;
+
+            string selected = this.cbChunkSize.GetItemText(this.cbChunkSize.SelectedItem);
+            Properties.Settings.Default.DownloadBlockSize = int.Parse(selected.Replace(",", ""));
 
             Properties.Settings.Default.Save();
             return true;

@@ -38,13 +38,13 @@
             btnInstall = new Button();
             progressBar = new ProgressBar();
             lblTitle = new Label();
-            tableLayoutPanel1 = new TableLayoutPanel();
+            tlpInstallEverything = new TableLayoutPanel();
             checkBox1 = new CheckBox();
             label2 = new Label();
             tlpDownloadableContent = new TableLayoutPanel();
             tableLayoutPanel2.SuspendLayout();
             tableLayoutPanel3.SuspendLayout();
-            tableLayoutPanel1.SuspendLayout();
+            tlpInstallEverything.SuspendLayout();
             SuspendLayout();
             // 
             // tableLayoutPanel2
@@ -60,7 +60,7 @@
             tableLayoutPanel2.Controls.Add(btnInstall, 1, 6);
             tableLayoutPanel2.Controls.Add(progressBar, 0, 3);
             tableLayoutPanel2.Controls.Add(lblTitle, 0, 0);
-            tableLayoutPanel2.Controls.Add(tableLayoutPanel1, 0, 5);
+            tableLayoutPanel2.Controls.Add(tlpInstallEverything, 0, 5);
             tableLayoutPanel2.Dock = DockStyle.Fill;
             tableLayoutPanel2.Location = new Point(0, 0);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -189,23 +189,23 @@
             lblTitle.Text = "Installing XXX version XXX";
             lblTitle.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // tableLayoutPanel1
+            // tlpInstallEverything
             // 
-            tableLayoutPanel1.ColumnCount = 2;
-            tableLayoutPanel2.SetColumnSpan(tableLayoutPanel1, 3);
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Controls.Add(checkBox1, 0, 0);
-            tableLayoutPanel1.Controls.Add(label2, 1, 0);
-            tableLayoutPanel1.Controls.Add(tlpDownloadableContent, 0, 1);
-            tableLayoutPanel1.Dock = DockStyle.Fill;
-            tableLayoutPanel1.Location = new Point(3, 101);
-            tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 2;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new Size(339, 118);
-            tableLayoutPanel1.TabIndex = 11;
+            tlpInstallEverything.ColumnCount = 2;
+            tableLayoutPanel2.SetColumnSpan(tlpInstallEverything, 3);
+            tlpInstallEverything.ColumnStyles.Add(new ColumnStyle());
+            tlpInstallEverything.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tlpInstallEverything.Controls.Add(checkBox1, 0, 0);
+            tlpInstallEverything.Controls.Add(label2, 1, 0);
+            tlpInstallEverything.Controls.Add(tlpDownloadableContent, 0, 1);
+            tlpInstallEverything.Dock = DockStyle.Fill;
+            tlpInstallEverything.Location = new Point(3, 101);
+            tlpInstallEverything.Name = "tlpInstallEverything";
+            tlpInstallEverything.RowCount = 2;
+            tlpInstallEverything.RowStyles.Add(new RowStyle());
+            tlpInstallEverything.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tlpInstallEverything.Size = new Size(339, 118);
+            tlpInstallEverything.TabIndex = 11;
             // 
             // checkBox1
             // 
@@ -236,7 +236,7 @@
             // tlpDownloadableContent
             // 
             tlpDownloadableContent.ColumnCount = 2;
-            tableLayoutPanel1.SetColumnSpan(tlpDownloadableContent, 2);
+            tlpInstallEverything.SetColumnSpan(tlpDownloadableContent, 2);
             tlpDownloadableContent.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tlpDownloadableContent.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tlpDownloadableContent.Dock = DockStyle.Fill;
@@ -261,8 +261,8 @@
             tableLayoutPanel2.PerformLayout();
             tableLayoutPanel3.ResumeLayout(false);
             tableLayoutPanel3.PerformLayout();
-            tableLayoutPanel1.ResumeLayout(false);
-            tableLayoutPanel1.PerformLayout();
+            tlpInstallEverything.ResumeLayout(false);
+            tlpInstallEverything.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -278,7 +278,7 @@
         private Button btnInstall;
         private ProgressBar progressBar;
         private Label lblTitle;
-        private TableLayoutPanel tableLayoutPanel1;
+        private TableLayoutPanel tlpInstallEverything;
         private CheckBox checkBox1;
         private Label label2;
         private TableLayoutPanel tlpDownloadableContent;

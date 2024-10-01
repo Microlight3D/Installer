@@ -23,11 +23,14 @@ namespace ML3DInstaller
             Debug.WriteLine(destPath);
             ucMain1.ExitApp += UcMain1_ExitApp;
             ucMain1.BackToHome += UcMain1_BackToHome;
+            ucMain1.InstallSoftware += UcMain1_InstallSoftware;
             ucHome1.Continue += UcHome1_Continue;
 
             lblDevMode.Visible = Properties.Settings.Default.DeveloperMode;
 
             SwitchMode("Home");
+
+            this.SizeChanged += Form1_SizeChanged;
         }
 
         /// <summary>
@@ -147,6 +150,7 @@ namespace ML3DInstaller
         private void UcMain1_BackToHome(object? sender, EventArgs e)
         {
             SwitchMode("Home");
+
         }
         /// <summary>
         /// Switch the visible elements in this form
@@ -159,11 +163,17 @@ namespace ML3DInstaller
             {
                 tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
                 tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 0F));
+                this.Size = new Size(427, 288);
             }
             else
             {
                 tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 0));
                 tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+                this.Size = new Size(427, 230);
+            }
+            if (!Properties.Settings.Default.DeveloperMode)
+            {
+                this.Size = new Size(this.Width, this.Height - 17); // remove the height associated with the "developer mode" banner
             }
         }
         /// <summary>
@@ -194,9 +204,9 @@ namespace ML3DInstaller
             form.MaximumSize = new Size(367, 185);
             if (Properties.Settings.Default.DeveloperMode)
             {
-                form.MinimumSize = new Size(367, 400);
-                form.MaximumSize = new Size(367, 400);
-                form.Size = new Size(367, 400);
+                form.MinimumSize = new Size(367, 450);
+                form.MaximumSize = new Size(367, 450);
+                form.Size = new Size(367, 450);
             }
 
             form.SizeChanged += (object? sender, EventArgs e) =>
@@ -210,9 +220,9 @@ namespace ML3DInstaller
             uCSettings.DevMode += (object? sender, bool devChecked) => {
                 if (devChecked)
                 {
-                    form.MinimumSize = new Size(367, 400);
-                    form.MaximumSize = new Size(367, 400);
-                    form.Size = new Size(367, 400);
+                    form.MinimumSize = new Size(367, 450);
+                    form.MaximumSize = new Size(367, 450);
+                    form.Size = new Size(367, 450);
                 }
                 else
                 {
@@ -237,6 +247,21 @@ namespace ML3DInstaller
             about.StartPosition = FormStartPosition.CenterParent;
             about.SetVersion(Program.GetVersion());
             about.Show(this);
+        }
+
+
+        private void UcMain1_InstallSoftware(string software, bool bypass)
+        {
+            this.Size = new Size(427, 120);
+            if (!Properties.Settings.Default.DeveloperMode)
+            {
+                this.Size = new Size(427, 103);
+            }
+        }
+
+        private void Form1_SizeChanged(object? sender, EventArgs e)
+        {
+            Debug.WriteLine("New size : " + this.Size.ToString());
         }
     }
 }
