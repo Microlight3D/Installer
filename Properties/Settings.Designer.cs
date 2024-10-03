@@ -166,5 +166,17 @@ namespace ML3DInstaller.Properties {
                 this["CurrentDownloadVersion"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Luminis")]
+        public string LastUsedSoftware {
+            get {
+                return ((string)(this["LastUsedSoftware"]));
+            }
+            set {
+                this["LastUsedSoftware"] = value;
+            }
+        }
     }
 }

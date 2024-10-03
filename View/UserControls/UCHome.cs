@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.Design.Serialization;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
@@ -26,12 +27,18 @@ namespace ML3DInstaller
 
         public void SetSoftwares(Dictionary<string, List<Release>> softwares)
         {
+            cbSoftware.Items.Clear();
             this.Softwares = softwares;
-            foreach (string key in softwares.Keys)
+            int selectedIndex = 0;
+            foreach (var key in softwares.Keys.Select((key, i) => new { i, key })) 
             {
-                cbSoftware.Items.Add(key);
+                cbSoftware.Items.Add(key.key);
+                if (key.key == Properties.Settings.Default.LastUsedSoftware)
+                {
+                    selectedIndex = key.i;
+                }
             }
-            cbSoftware.SelectedIndex = 0;
+            cbSoftware.SelectedIndex = selectedIndex;
             UpdateVersions();
         }
 
@@ -102,6 +109,8 @@ namespace ML3DInstaller
                     checkBox1.Checked,
                     cbVerbose.Checked
                 );
+                Properties.Settings.Default.LastUsedSoftware = cbSoftware.GetItemText(cbSoftware.SelectedItem);
+                Properties.Settings.Default.Save();
                 Continue?.Invoke(this, args);
             }
 

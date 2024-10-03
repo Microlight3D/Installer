@@ -38,5 +38,8 @@
     <Setting Name="CurrentDownloadVersion" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="LastUsedSoftware" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Luminis</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
