@@ -9,10 +9,10 @@ using System.Text.Json;
 using static ML3DInstaller.Presenter.GithubAPI;
 namespace ML3DInstaller
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         Dictionary<string, List<string>> softwares;
-        public Form1()
+        public MainForm()
         {
             BeforeAnything();
             InitializeComponent();
@@ -64,7 +64,7 @@ namespace ML3DInstaller
             // Check for access to github
             if (!GithubAPI.IsGithubAccessible())
             {
-                MessageBox.Show("No access to github was detected. Please chez your internet connection or contact the support. ");
+                Utils.ErrorBox("No access to github was detected. Please chez your internet connection or contact the support. \n\nNote: www.github.com's access is restricted in certain countries. If that is the case at your location, this installer is not a suitable way to install this software.", "No access to server");
                 Environment.Exit(0);
             }
 
