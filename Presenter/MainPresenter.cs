@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ML3DInstaller.Presenter
@@ -70,176 +71,114 @@ namespace ML3DInstaller.Presenter
             return true;
         }
 
+        public string GetTemporaryDirectory()
+        {
+            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+
+            if (File.Exists(tempDirectory))
+            {
+                return GetTemporaryDirectory();
+            }
+            else
+            {
+                Directory.CreateDirectory(tempDirectory);
+                return tempDirectory;
+            }
+        }
+
         bool InstalledCancel = false;
 
-        private async void UserControlMain_InstallSoftware(string outputPath, bool bypass)
+        private async void UserControlMain_InstallSoftware(List<string> zipsToProcess, string outputPath, bool bypass)
         {
             CancelInstall = new CancellationTokenSource();
             var CancelToken = CancelInstall.Token;
             BYPASS_INSTALL = bypass;
 
-
-            userControlMain.SetMode("Loading");
-            try
+            foreach (string zip in zipsToProcess)
             {
-                await Task.Run(() => InstallSoftware(outputPath, CancelToken), CancelToken);
+                string softwareName = zip.Split('/')[^1].Replace(".zip", "");
+                userControlMain.SetMode("Loading");
+                string thisZipOutputPath = Path.Combine(outputPath, softwareName);
+                if (softwareName == "Documentation")
+                {
+                    thisZipOutputPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Microlight3D");
+                }
+                try
+                {
+                    await Task.Run(() => OneZipProcess(zip, softwareName, thisZipOutputPath,CancelToken), CancelToken);
+                }
+                catch (OperationCanceledException)
+                {
+                    InstalledCancel = true;
+                }
+                if (Updater.OperationCancelled || InstalledCancel)
+                {
+                    MessageBox.Show("Installation Cancelled.");
+                    return;
+                }
             }
-            catch (OperationCanceledException)
-            {
-                InstalledCancel = true;
-            }
-            if (Updater.OperationCancelled || InstalledCancel)
-            {
-                MessageBox.Show("Installation Cancelled.");
-            } else
-            {
-                MessageBox.Show("Installation Complete");
-            }
+            Updater.DeleteZips();
             Application.Exit();
         }
 
-        private async void InstallSoftware(string outputPath, CancellationToken cancellationToken)
+        /// <summary>
+        /// Download a zip, unzip it, copy to correct path, create shortcut if necessary, and delete temp files
+        /// </summary>
+        /// <param name="downloadURL">url to download the zip</param>
+        /// <param name="softwareName">name of the software for GUI usages</param>
+        /// <param name="outputPath">location to copy content of the zip</param>
+        private async void OneZipProcess(string downloadURL, string softwareName, string outputPath, CancellationToken cancellationToken, string version="")
         {
-            // Check for internet connection
             if (!CheckInternet())
             {
-                MessageBox.Show("An internet connection is required to update this software.\nPlease connect to the internet before re-trying", "No Connection detected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-            if (cancellationToken.IsCancellationRequested)
-            {
-                return;
-            }
-            string githubLink = "https://github.com/Microlight3D/" + Software + "Redistribuable/releases/download/Release-" + Version + "/" + Software + ".zip";
-            string outputZip = Software + "_" + Version + ".zip";
-
-            string applicationPath =  Software + "-" + Version;
-            string sftConverterPath = "SFTConverter";
-            string configurationPath = "Configuration";
-            string documentationPath = "Documentation";
-            string dependenciesPath = "Dependencies";
-
-            string configurationDestinationPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Microlight3D\Configuration");
-            string documentationDestinationPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Microlight3D\Documentation");
-
-            string executablePath = Path.Combine(outputPath, Software + ".exe");
-
-            bool downloadGit = true;
-            if (cancellationToken.IsCancellationRequested)
-            {
+                MessageBox.Show("An internet connection is required to install "+softwareName+"\nPlease connect to the internet before re-trying", "No Connection detected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            // bypass install when debugging
-            if (!BYPASS_INSTALL)
-            { 
-                userControlMain.UpdateInfo("Downloading the software");
-                if (!Updater.DownloadZip(githubLink, outputZip, userControlMain))
-                {
-                    MessageBox.Show("An error occured during the downloading of the software.\nPlease restart the installer and try again. If nothing changes, contact the Microlight 3D Support at support@microlight.fr", "Downloading error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    InstalledCancel = true;
-                    return;
-                }
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    return;
-                }
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    return;
-                }
-                // Extract to current directory
-                userControlMain.UpdateInfo("UnZipping the software");
-                Updater.ExtractZip(outputZip);
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    return;
-                }
-                SourceCopy = new CancellationTokenSource();
-                ConfigCopy = new CancellationTokenSource();
-                DocCopy = new CancellationTokenSource();
-                // Copy software to destination directory
-                userControlMain.UpdateInfo("Install software to chosen destination");
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    return;
-                }
-                Updater.CopyFolderAsync(applicationPath, outputPath, SourceCopy).Wait();
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    return;
-                }
-                // if Phaos, also copy SFTConverter
-                if (Software.Equals("Phaos"))
-                {
-                    userControlMain.UpdateInfo("Install SFTConverter to chosen destination");
-                    string basedir = Directory.GetParent(Directory.GetParent(outputPath).FullName).FullName;
-                    string sftPath = Path.Combine(basedir, sftConverterPath);
-                    Updater.CopyFolderAsync(sftConverterPath, sftPath, SourceCopy).Wait();
-                    string exePath = Path.Combine(sftPath, "SFTConverter.exe");
-                    Updater.CreateShortcut(exePath, sftConverterPath,"", "desktop");
-                    Updater.CreateShortcut(exePath, sftConverterPath, "", "startmenu");
+            string zipName = softwareName + ".zip";
 
-                    string calibrationDesignOutputPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Microlight3D\Calibration Designs");
-
-                    try
-                    {
-                        // Copy Calbiration Design
-                        // Create Calibration design Folder
-                        Updater.CreateFolder(calibrationDesignOutputPath);
-                        Updater.CopyFolderAsync("Calibration Designs", calibrationDesignOutputPath, SourceCopy).Wait();
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("An error occured with the creation of the Calibration Designs directory. Continuing installation ...");
-                    }
-                    
-                } else if (Software.Equals("Luminis"))
-                {
-                    // Copy configuration in luminis 
-                    Updater.CopyFolderAsync(configurationPath, configurationDestinationPath, ConfigCopy).Wait();
-                    if (cancellationToken.IsCancellationRequested)
-                    {
-                        return;
-                    }
-                    Updater.CopyFolderAsync(documentationPath, documentationDestinationPath, DocCopy).Wait();
-                    if (cancellationToken.IsCancellationRequested)
-                    {
-                        return;
-                    }
-                }
-
-                // Copy user manuals 
-
-                userControlMain.UpdateInfo("Copy configuration and documentation to Documents\\Microlight3D");
-                Updater.CopyFolderByFileTypeAsync("", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Microlight3D"), ".pdf", SourceCopy).Wait();
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    return;
-                }
-
-                
-
-                // Create Shortcut
-                Updater.CreateShortcut(executablePath, Software, Version, "desktop");
-                Updater.CreateShortcut(executablePath, Software, Version, "startmenu");
-
-                // Refresh desktop to remove old shortcuts 
-                RefreshDesktop();
-            }
-            else
+            // if outputpath is "", find one in temp
+            if (outputPath == "")
             {
-                MessageBox.Show("Sucessfully bypassed the software's installation", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                outputPath = GetTemporaryDirectory();
             }
 
-            if (InstallDependencies)
+            // Download the zip
+            userControlMain.UpdateInfo("Downloading "+softwareName+" ...");
+            var ZipDownloadResult = Updater.DownloadZip(downloadURL, softwareName+".zip", userControlMain);
+            if (!ZipDownloadResult.Item1)
             {
-                // Get the list of dependencies
-                var listOfExe = Updater.GetAllExeInFolder(dependenciesPath, BYPASS_INSTALL);
+                MessageBox.Show("An error occured during the downloading of the software.\nPlease restart the installer and try again. If nothing changes, contact the Microlight 3D Support at support@microlight.fr", "Downloading error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                InstalledCancel = true;
+                return;
+            }
+
+            // Unzip the zip
+            userControlMain.UpdateInfo("UnZipping "+zipName+" ...");
+            Updater.ExtractZip(ZipDownloadResult.Item2, outputPath);
+
+            // Give all the rights to the destination folder
+            userControlMain.UpdateInfo("Grant access for execution");
+            Updater.GrantFullControl(outputPath);
+
+            // If software is "Dependencies", we need to launch all the processes
+            if (softwareName == "Dependencies")
+            {
+                var listOfExe = Updater.GetAllExeInFolder(outputPath);
                 this.SelectDependencies(listOfExe);
             }
-            Updater.DeleteDownloaded();
-            this.userControlMain.End();
+
+            // Create Shortcuts
+            userControlMain.UpdateInfo("Create shortcuts ...");
+            string exePath = outputPath + "\\" + softwareName + ".exe";
+            if (File.Exists(exePath))
+            {
+                Updater.CreateShortcut(exePath, softwareName, version, "desktop");
+                Updater.CreateShortcut(exePath, softwareName, version, "startmenu");
+            }
+
+            // Refresh desktop to add shortcuts
+            RefreshDesktop();
         }
 
         [System.Runtime.InteropServices.DllImport("Shell32.dll")]
@@ -311,8 +250,5 @@ namespace ML3DInstaller.Presenter
             userControlMain.Hide();
             
         }
-
-        
-
     }
 }

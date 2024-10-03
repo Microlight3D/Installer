@@ -91,9 +91,12 @@ namespace ML3DInstaller
             }
 
             // Check if a download was currently ongoing
-            if (Properties.Settings.Default.CurrentlyDownloadingDestPath != null && Properties.Settings.Default.CurrentlyDownloadingDestPath != "")
+            if (Properties.Settings.Default.CurrentlyDownloadingURL != null && Properties.Settings.Default.CurrentlyDownloadingURL != "")
             {
                 Utils.InfoBox("An interrupted download has been detected. Restart the download with the same settings and the process will continue.", "Download pending ..");
+            } else
+            {
+                Updater.DeleteTempDir();
             }
         }
 
@@ -169,7 +172,7 @@ namespace ML3DInstaller
             {
                 tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 0));
                 tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-                this.Size = new Size(427, 230);
+                this.Size = new Size(427, 520);
             }
             if (!Properties.Settings.Default.DeveloperMode)
             {
@@ -250,7 +253,7 @@ namespace ML3DInstaller
         }
 
 
-        private void UcMain1_InstallSoftware(string software, bool bypass)
+        private void UcMain1_InstallSoftware(List<string> zipsToProcess, string software, bool bypass)
         {
             this.Size = new Size(427, 120);
             if (!Properties.Settings.Default.DeveloperMode)

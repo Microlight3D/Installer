@@ -80,24 +80,30 @@ namespace ML3DInstaller.Presenter
         {
             // Microlight3D_TempVars\Installer\
             string tempDirectory = Path.Combine(Path.GetTempPath(), @"Microlight3D_TempVars\");
-
-            if (System.IO.File.Exists(tempDirectory))
-            {
-                return GetDownloadDirectory();
-            }
-            else
-            {
-                Directory.CreateDirectory(tempDirectory);
-                return tempDirectory;
-            }
+            Directory.CreateDirectory(tempDirectory);
+            return tempDirectory;
         }
 
         /// <summary>
-        /// Cancel the installation using the installation token
+        /// Delete downloaded zip and extracted files 
         /// </summary>
-        public void CancelInstall()
+        public void DeleteZips()
         {
-            CopyCancellationTokenSource.Cancel();
+            if (Directory.Exists(TempDirectory))
+            {
+                Directory.Delete(TempDirectory, true);
+            }
+            Directory.CreateDirectory(TempDirectory);
+        }
+
+        public static void DeleteTempDir()
+        {
+            string path = Path.Combine(Path.GetTempPath(), @"Microlight3D_TempVars\");
+            if (Directory.Exists(path))
+            {
+                Directory.Delete(path, true);
+            }
+            Directory.CreateDirectory(path);
         }
 
         /// <summary>
@@ -133,100 +139,44 @@ namespace ML3DInstaller.Presenter
         /// <param name="zipUrl">url to download</param>
         /// <param name="zipName">output file name (without path)</param>
         /// <returns></returns>
-        public bool DownloadZip(string zipUrl, string zipName, ProgressBarAPI progressBar)
+        public Tuple<bool, string> DownloadZip(string zipUrl, string zipName, ProgressBarAPI progressBar)
         {
-            // TODO : use DownloadFile
             try
             {
-                DownloadedZipFilePath = TempDirectory + "\\" + zipName;
+                DownloadedZipFilePath = Path.Combine(TempDirectory, zipName);
 
                 DownloadFile(zipUrl, DownloadedZipFilePath, progressBar);
             }
             catch (DirectoryNotFoundException)
             {
                 Utils.ErrorBox("The destination directory : " + DownloadedZipFilePath + " was not found.\nPlease contact Microlight3D's support in About->Contact support", "Directory not found");
-                return false;
+                return new Tuple<bool, string>(false, "");
             }
             catch (Exception ex)
             {
                 Utils.ErrorBox("Exception caught \n" + ex, "Exception caught during zip download");
-                return false;
+                return new Tuple<bool, string>(false, "");
             }
 
-            return true;
-        }
-
-        private string ExtractedZip = "";
-
-        /// <summary>
-        /// Extract zip file (name without a path, the path is the tempdirectory)
-        /// </summary>
-        public void ExtractZip(string zipName)
-        {
-            ExtractedZip = Path.Combine(TempDirectory, "");
-            ZipFile.ExtractToDirectory(DownloadedZipFilePath, ExtractedZip);
+            return new Tuple<bool, string>(true, DownloadedZipFilePath);
         }
 
         /// <summary>
-        /// Launches a Task to copy full directory to destination
+        /// Extract a zip to a specific destination
         /// </summary>
-        /// <param name="sourceFolder"></param>
-        /// <param name="destinationFolder"></param>
-        /// <param name="cancellationTokenSource"></param>
-        /// <returns></returns>
-        public async Task CopyFolderAsync(string sourceFolder, string destinationFolder, CancellationTokenSource cancellationTokenSource)
+        /// <param name="zipToUnzip">full path to the zip</param>
+        /// <param name="destinationFolder">full path to the folder into which the content of the zip will be unzipped.</param>
+        public void ExtractZip(string zipToUnzip, string destinationFolder)
         {
-            if (!OperationCancelled)
-            {
-                Task copyTask = CopyFolder(Path.Combine(ExtractedZip, sourceFolder), destinationFolder, cancellationTokenSource.Token);
-                try
-                {
-                    await copyTask;
-                }
-                catch (OperationCanceledException)
-                {
-                    OperationCancelled = true;
-                }
-                catch (Exception ex)
-                {
-                    OperationCancelled = true;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Launches a Task to copy only certain files, non-recursively, to a folder
-        /// </summary>
-        /// <param name="sourceFolderPath"></param>
-        /// <param name="destinationFolderPath"></param>
-        /// <param name="fileType"></param>
-        /// <param name="cancellationTokenSource"></param>
-        /// <returns></returns>
-        public async Task CopyFolderByFileTypeAsync(string sourceFolderPath, string destinationFolderPath, string fileType, CancellationTokenSource cancellationTokenSource)
-        {
-            if (!OperationCancelled)
-            {
-                Task copyTask = CopyFolderByFileType(Path.Combine(ExtractedZip, sourceFolderPath), destinationFolderPath, fileType, cancellationTokenSource.Token);
-                try
-                {
-                    await copyTask;
-                }
-                catch (OperationCanceledException)
-                {
-                    OperationCancelled = true;
-                }
-                catch (Exception ex)
-                {
-                    OperationCancelled = true;
-                }
-            }
+            // true for overwriting 
+            ZipFile.ExtractToDirectory(zipToUnzip, destinationFolder, true);
         }
 
         /// <summary>
         /// Grants everyone access to all files in directory
         /// </summary>
         /// <param name="directoryPath">directory to fully authorize</param>
-        void GrantFullControl(string directoryPath)
+        public void GrantFullControl(string directoryPath)
         {
             DirectoryInfo directoryInfo = new DirectoryInfo(directoryPath);
             DirectorySecurity directorySecurity = directoryInfo.GetAccessControl();
@@ -285,39 +235,6 @@ namespace ML3DInstaller.Presenter
                 copiedFiles++;
             }
             GrantFullControl(destinationPath);
-        }
-        /// <summary>
-        /// Copies files to different folder, then grants everyone access to all files in folder. 
-        /// </summary>
-        /// <param name="sourceFolderPath"></param>
-        /// <param name="destinationFolderPath"></param>
-        /// <param name="fileType"></param>
-        /// <param name="token"></param>
-        /// <returns></returns>
-        public async Task CopyFolderByFileType(string sourceFolderPath, string destinationFolderPath, string fileType, CancellationToken token)
-        {
-            var filesToCopy = Directory.GetFiles(sourceFolderPath, $"*{fileType}", SearchOption.TopDirectoryOnly);
-            int totalFiles = filesToCopy.Length;
-            int copiedFiles = 0;
-
-            foreach (var filePath in filesToCopy)
-            {
-                token.ThrowIfCancellationRequested(); // Check if cancellation is requested
-
-                var fileName = Path.GetFileName(filePath);
-                var destFilePath = Path.Combine(destinationFolderPath, fileName);
-
-                var destDir = Path.GetDirectoryName(destFilePath);
-                if (!Directory.Exists(destDir))
-                {
-                    Directory.CreateDirectory(destDir);
-                }
-
-                System.IO.File.Copy(filePath, destFilePath, true);
-
-                copiedFiles++;
-            }
-            GrantFullControl(destinationFolderPath);
         }
 
         /// <summary>
@@ -401,12 +318,11 @@ namespace ML3DInstaller.Presenter
         /// <returns></returns>
         public string[] GetAllExeInFolder(string rootDependenciesFolder, bool bypass= false)
         {
-            string path = Path.Combine(ExtractedZip, rootDependenciesFolder);
             if (bypass)
             {
                 return new string[] { };
             }
-            return Directory.GetFiles(path, "*.exe", SearchOption.AllDirectories);
+            return Directory.GetFiles(rootDependenciesFolder, "*.exe", SearchOption.AllDirectories);
         }
 
         public event EventHandler RunChocoInstalls; 
@@ -607,17 +523,7 @@ namespace ML3DInstaller.Presenter
             return new Tuple<Process, StringBuilder, StringBuilder>(process,standardOutput,errorOutput);
         }
 
-        /// <summary>
-        /// Delete downloaded zip and extracted files 
-        /// </summary>
-        public void DeleteDownloaded()
-        {
-            if (Directory.Exists(TempDirectory))
-            {
-                Directory.Delete(TempDirectory, true);
-            }
-            Directory.CreateDirectory(TempDirectory);
-        }
+        
 
         public static bool AutoUpdate(int currentVersion)
         {
@@ -718,8 +624,7 @@ namespace ML3DInstaller.Presenter
             //
 
             FileDownloader downloader = new FileDownloader();
-
-            downloader.DownloadFileWithProgress(url, destinationFilePath, progressForm);
+            
             downloader.WorkerCompleted += (s, e) =>
             {
                 RunWorkerCompletedEventArgs e2 = (RunWorkerCompletedEventArgs)e;
@@ -737,10 +642,13 @@ namespace ML3DInstaller.Presenter
             Properties.Settings.Default.CurrentlyDownloadingDestPath = destinationFilePath;
             Properties.Settings.Default.Save();
 
+            downloader.DownloadFileWithProgress(url, destinationFilePath, progressForm);
             progressForm.StartProgress();
 
             Properties.Settings.Default.CurrentlyDownloadingURL = "";
             Properties.Settings.Default.CurrentlyDownloadingDestPath = "";
+            Properties.Settings.Default.CurrentDownloadVersion = "";
+            Properties.Settings.Default.CurrentDownloadSize = 0;
             Properties.Settings.Default.Save();
             return true;
         }

@@ -41,6 +41,7 @@
             button1 = new Button();
             checkBox1 = new CheckBox();
             cbVerbose = new CheckBox();
+            markdownRichTextBox1 = new View.CustomControls.MarkdownRichTextBox();
             tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
             tableLayoutPanel4.SuspendLayout();
@@ -58,16 +59,18 @@
             tableLayoutPanel1.Controls.Add(button1, 1, 3);
             tableLayoutPanel1.Controls.Add(checkBox1, 0, 3);
             tableLayoutPanel1.Controls.Add(cbVerbose, 0, 4);
+            tableLayoutPanel1.Controls.Add(markdownRichTextBox1, 0, 5);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 5;
+            tableLayoutPanel1.RowCount = 6;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.Size = new Size(343, 148);
+            tableLayoutPanel1.Size = new Size(417, 321);
             tableLayoutPanel1.TabIndex = 0;
             // 
             // lblInfo
@@ -79,7 +82,7 @@
             lblInfo.Location = new Point(3, 24);
             lblInfo.Margin = new Padding(3, 3, 3, 0);
             lblInfo.Name = "lblInfo";
-            lblInfo.Size = new Size(337, 19);
+            lblInfo.Size = new Size(411, 19);
             lblInfo.TabIndex = 1;
             lblInfo.Text = "Please select a software and version and continue.";
             // 
@@ -91,7 +94,7 @@
             label1.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label1.Location = new Point(3, 0);
             label1.Name = "label1";
-            label1.Size = new Size(337, 21);
+            label1.Size = new Size(411, 21);
             label1.TabIndex = 0;
             label1.Text = "Welcome to Microlight3D Software Installer";
             // 
@@ -110,7 +113,7 @@
             tableLayoutPanel2.RowCount = 1;
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel2.Size = new Size(337, 49);
+            tableLayoutPanel2.Size = new Size(411, 48);
             tableLayoutPanel2.TabIndex = 2;
             // 
             // tableLayoutPanel4
@@ -122,13 +125,13 @@
             tableLayoutPanel4.Controls.Add(label3, 0, 0);
             tableLayoutPanel4.Controls.Add(cbVersion, 0, 1);
             tableLayoutPanel4.Dock = DockStyle.Fill;
-            tableLayoutPanel4.Location = new Point(168, 0);
+            tableLayoutPanel4.Location = new Point(205, 0);
             tableLayoutPanel4.Margin = new Padding(0);
             tableLayoutPanel4.Name = "tableLayoutPanel4";
             tableLayoutPanel4.RowCount = 2;
             tableLayoutPanel4.RowStyles.Add(new RowStyle());
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel4.Size = new Size(169, 49);
+            tableLayoutPanel4.Size = new Size(206, 48);
             tableLayoutPanel4.TabIndex = 1;
             // 
             // label3
@@ -138,7 +141,7 @@
             label3.Font = new Font("Segoe UI", 10F);
             label3.Location = new Point(3, 0);
             label3.Name = "label3";
-            label3.Size = new Size(163, 19);
+            label3.Size = new Size(200, 19);
             label3.TabIndex = 0;
             label3.Text = "Version :";
             // 
@@ -150,8 +153,9 @@
             cbVersion.Location = new Point(3, 22);
             cbVersion.MinimumSize = new Size(163, 0);
             cbVersion.Name = "cbVersion";
-            cbVersion.Size = new Size(163, 23);
+            cbVersion.Size = new Size(200, 23);
             cbVersion.TabIndex = 1;
+            cbVersion.SelectedIndexChanged += cbVersion_SelectedIndexChanged;
             // 
             // tableLayoutPanel3
             // 
@@ -168,7 +172,7 @@
             tableLayoutPanel3.RowCount = 2;
             tableLayoutPanel3.RowStyles.Add(new RowStyle());
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel3.Size = new Size(168, 49);
+            tableLayoutPanel3.Size = new Size(205, 48);
             tableLayoutPanel3.TabIndex = 0;
             // 
             // lblSoftware
@@ -178,7 +182,7 @@
             lblSoftware.Font = new Font("Segoe UI", 10F);
             lblSoftware.Location = new Point(3, 0);
             lblSoftware.Name = "lblSoftware";
-            lblSoftware.Size = new Size(162, 19);
+            lblSoftware.Size = new Size(199, 19);
             lblSoftware.TabIndex = 0;
             lblSoftware.Text = "Software : ";
             // 
@@ -189,7 +193,7 @@
             cbSoftware.FormattingEnabled = true;
             cbSoftware.Location = new Point(3, 22);
             cbSoftware.Name = "cbSoftware";
-            cbSoftware.Size = new Size(162, 23);
+            cbSoftware.Size = new Size(199, 23);
             cbSoftware.TabIndex = 1;
             cbSoftware.SelectedIndexChanged += cbSoftware_SelectedIndexChanged;
             // 
@@ -197,7 +201,7 @@
             // 
             button1.Dock = DockStyle.Right;
             button1.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            button1.Location = new Point(231, 101);
+            button1.Location = new Point(305, 100);
             button1.MinimumSize = new Size(0, 30);
             button1.Name = "button1";
             tableLayoutPanel1.SetRowSpan(button1, 2);
@@ -211,9 +215,9 @@
             // 
             checkBox1.AutoSize = true;
             checkBox1.Dock = DockStyle.Top;
-            checkBox1.Location = new Point(3, 101);
+            checkBox1.Location = new Point(3, 100);
             checkBox1.Name = "checkBox1";
-            checkBox1.Size = new Size(222, 19);
+            checkBox1.Size = new Size(271, 19);
             checkBox1.TabIndex = 4;
             checkBox1.Text = "Run Full Installation";
             checkBox1.UseVisualStyleBackColor = true;
@@ -222,13 +226,28 @@
             // cbVerbose
             // 
             cbVerbose.AutoSize = true;
-            cbVerbose.Location = new Point(3, 126);
+            cbVerbose.Location = new Point(3, 125);
             cbVerbose.Name = "cbVerbose";
             cbVerbose.Size = new Size(101, 19);
             cbVerbose.TabIndex = 5;
             cbVerbose.Text = "Verbose Install";
             cbVerbose.UseVisualStyleBackColor = true;
             cbVerbose.Visible = false;
+            // 
+            // markdownRichTextBox1
+            // 
+            markdownRichTextBox1.BackColor = Color.FromArgb(233, 233, 233);
+            markdownRichTextBox1.BorderStyle = BorderStyle.None;
+            tableLayoutPanel1.SetColumnSpan(markdownRichTextBox1, 2);
+            markdownRichTextBox1.Dock = DockStyle.Fill;
+            markdownRichTextBox1.ForeColor = Color.FromArgb(101, 61, 155);
+            markdownRichTextBox1.Location = new Point(8, 155);
+            markdownRichTextBox1.Margin = new Padding(8);
+            markdownRichTextBox1.Name = "markdownRichTextBox1";
+            markdownRichTextBox1.ReadOnly = true;
+            markdownRichTextBox1.Size = new Size(401, 158);
+            markdownRichTextBox1.TabIndex = 6;
+            markdownRichTextBox1.Text = "";
             // 
             // UCHome
             // 
@@ -237,7 +256,7 @@
             Controls.Add(tableLayoutPanel1);
             MinimumSize = new Size(343, 148);
             Name = "UCHome";
-            Size = new Size(343, 148);
+            Size = new Size(417, 321);
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
             tableLayoutPanel2.ResumeLayout(false);
@@ -264,5 +283,6 @@
         private Button button1;
         private CheckBox checkBox1;
         private CheckBox cbVerbose;
+        private View.CustomControls.MarkdownRichTextBox markdownRichTextBox1;
     }
 }

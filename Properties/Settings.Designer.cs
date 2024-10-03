@@ -142,5 +142,29 @@ namespace ML3DInstaller.Properties {
                 this["ShowSupportOptions"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public long CurrentDownloadSize {
+            get {
+                return ((long)(this["CurrentDownloadSize"]));
+            }
+            set {
+                this["CurrentDownloadSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CurrentDownloadVersion {
+            get {
+                return ((string)(this["CurrentDownloadVersion"]));
+            }
+            set {
+                this["CurrentDownloadVersion"] = value;
+            }
+        }
     }
 }

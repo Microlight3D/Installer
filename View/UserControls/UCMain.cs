@@ -9,6 +9,7 @@ using ML3DInstaller.View;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using ML3DInstaller.Presenter;
 using System.Security.Policy;
+using System.IO;
 
 
 namespace ML3DInstaller
@@ -33,7 +34,7 @@ namespace ML3DInstaller
         /// App needs to be exited
         /// </summary>
         public event EventHandler ExitApp;
-        public delegate void InstallSoftwareEvent(string software, bool bypass);
+        public delegate void InstallSoftwareEvent(List<string> zipsToProcess, string softwarePath, bool bypass);
         /// <summary>
         /// Install the software at path \<string\>
         /// </summary>
@@ -85,7 +86,12 @@ namespace ML3DInstaller
             if (zips != null && zips.Count > 0)
             {
                 var uri = new Uri(zips[0]);
-                ZipBaseURL = uri.GetLeftPart(UriPartial.Authority);
+                string[] spliturl = zips[0].Split("/");
+                string baseurl = string.Join("/", spliturl.Take(spliturl.Length-1));
+                //string resultUrl = string.Join("/", zips[0].Take(zips[0].Length - 1)) + "/";
+                
+
+                ZipBaseURL = baseurl;
 
                 int nrows = zips.Count / 2;
                 this.tlpDownloadableContent.RowCount = nrows + 2;
@@ -221,7 +227,56 @@ namespace ML3DInstaller
             bool bypass = false;
             btnInstall.Visible = false;
             btnCancelLeft.Enabled = true;
-            InstallSoftware?.Invoke(PathTB.Text, bypass);
+
+            // If the current version to download is different that the last downloaded one, clear the temp folder and reset properties
+            if (Properties.Settings.Default.CurrentDownloadVersion != SoftwareRelease.ReleaseID.ToString())
+            {
+                Updater.DeleteTempDir();
+                Properties.Settings.Default.CurrentDownloadSize = 0;
+                Properties.Settings.Default.CurrentDownloadVersion = SoftwareRelease.Version;
+                Properties.Settings.Default.CurrentlyDownloadingURL = "";
+                Properties.Settings.Default.CurrentlyDownloadingDestPath = "";
+                Properties.Settings.Default.Save();
+            }
+
+            List<string> zipsToInstall = new List<string>();
+
+            foreach(var cb in checkBoxes)
+            {
+                if (cb.Checked)
+                {
+                    zipsToInstall.Add(ZipBaseURL + "/" + cb.Text + ".zip");
+                }
+            }
+
+            // sort zip list to put dependencies in last
+            zipsToInstall = zipsToInstall.OrderBy(zip => zip.EndsWith("Dependencies.zip") ? 1 : 0).ThenBy(zip => zip).ToList();
+
+            string currentUrl = Properties.Settings.Default.CurrentlyDownloadingURL;
+
+            // Loop through zips to get to the current one 
+            if (Properties.Settings.Default.CurrentlyDownloadingURL != "")
+            {
+                // a download was already being done.
+                List<string> remainingZipsToInstall = new List<string>();
+                bool addZip = false;
+                foreach(var zip in zipsToInstall)
+                {
+                    if (Properties.Settings.Default.CurrentlyDownloadingURL == zip)
+                    {
+                        addZip = true;
+                    }
+                    if (addZip)
+                    {
+                        remainingZipsToInstall.Add(zip);
+                    }
+                }
+                zipsToInstall = remainingZipsToInstall;
+            }
+
+            Properties.Settings.Default.CurrentDownloadVersion = SoftwareRelease.ReleaseID.ToString();
+            Properties.Settings.Default.Save();
+            InstallSoftware?.Invoke(zipsToInstall, PathTB.Text, bypass);
         }
 
         public void UpdateInfo(string text)
@@ -425,6 +480,7 @@ namespace ML3DInstaller
         public void EndProgress()
         {
             progressEvent.Set();
+            progressEvent = new ManualResetEventSlim(false);
         }
 
         public void StartProgress()
@@ -447,9 +503,9 @@ namespace ML3DInstaller
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
-            foreach (CheckBox checkBox in checkBoxes)
+            foreach (CheckBox cbInstallEverything in checkBoxes)
             {
-                checkBox.Checked = checkBox1.Checked;
+                cbInstallEverything.Checked = checkBox1.Checked;
             }
             tlpDownloadableContent.Enabled = !checkBox1.Checked;
         }

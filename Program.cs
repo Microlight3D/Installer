@@ -8,6 +8,7 @@ using static System.Formats.Asn1.AsnWriter;
 using System.Windows.Forms;
 using ML3DInstaller.View;
 using System.Reflection;
+using ML3DInstaller.View.Forms;
 
 namespace ML3DInstaller
 {

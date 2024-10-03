@@ -47,13 +47,13 @@ namespace ML3DInstaller
             cbVersion.Enabled = true;
         }
 
-        
+
         private void UpdateVersions()
         {
             List<Release> versions = Softwares[this.cbSoftware.GetItemText(this.cbSoftware.SelectedItem)];
             cbVersion.Items.Clear();
             int latestIndex = 0;
-            for (int i=0; i<versions.Count; i++)
+            for (int i = 0; i < versions.Count; i++)
             {
                 cbVersion.Items.Add(versions[i].StringVersion);
                 if (versions[i].IsLatest)
@@ -67,6 +67,24 @@ namespace ML3DInstaller
         private void cbSoftware_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateVersions();
+        }
+
+        /// <summary>
+        /// Change readme info when changing version of the release
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cbVersion_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            List<Release> versions = Softwares[this.cbSoftware.GetItemText(this.cbSoftware.SelectedItem)];
+            string version = this.cbVersion.GetItemText(this.cbVersion.SelectedItem);
+            foreach (Release release in versions)
+            {
+                if (release.StringVersion.Equals(version))
+                {
+                    markdownRichTextBox1.SetText(release.Body);
+                }
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -86,7 +104,7 @@ namespace ML3DInstaller
                 );
                 Continue?.Invoke(this, args);
             }
-            
+
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
@@ -97,9 +115,11 @@ namespace ML3DInstaller
                 if (dialogResult == DialogResult.No)
                 {
                     checkBox1.Checked = false;
-                } 
+                }
             }
             cbVerbose.Visible = checkBox1.Checked;
         }
+
+        
     }
 }

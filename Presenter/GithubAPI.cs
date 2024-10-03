@@ -67,6 +67,7 @@ namespace ML3DInstaller.Presenter
                 release.URL = projectReleaseURL;
 
                 release.ReleaseID = releaseId;
+                release.Body = body;
 
                 // Support of anything like 1.2.3.4 into Release-1.2.3.4 (especially for installer)
                 var regex = new Regex(@"^\d+(\.\d+){1,3}$");
@@ -255,6 +256,7 @@ namespace ML3DInstaller.Presenter
         public string Version; // str(X.X.X.X)
         public List<string> Zips;
         public System.Int64 ReleaseID;
+        public string Body; // Readme of the release
 
         public Release()
         {

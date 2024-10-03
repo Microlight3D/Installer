@@ -59,9 +59,15 @@ namespace ML3DInstaller.Presenter
                     // Download the file, taking into consideration what has already been downloaded
                     using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                     {
+                        if (existingFileSize == 0)
+                        {
+                            Properties.Settings.Default.CurrentDownloadSize = response.ContentLength;
+                            Properties.Settings.Default.Save();
+                        }
                         long totalBytes = response.ContentLength + existingFileSize;
                         long totalBytesRead = existingFileSize;
                         int oldProgress = 0;
+                        Debug.WriteLine("Existing size : " + existingFileSize + "\nTotalBytes : " + totalBytes + "\ntotalRead : " + totalBytesRead);
 
                         using (Stream responseStream = response.GetResponseStream())
                         {
