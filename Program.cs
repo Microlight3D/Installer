@@ -24,7 +24,7 @@ namespace ML3DInstaller
             ApplicationConfiguration.Initialize();
             try
             {
-                Application.Run(new Form1());
+                Application.Run(new MainForm());
             }
             catch (Exception ex)
             {
