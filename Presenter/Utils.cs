@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ML3DInstaller.View;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -10,12 +11,12 @@ namespace ML3DInstaller.Presenter
 {
     public static class Utils
     {
-        public static DialogResult ErrorBox(string message, string title)
+        public static DialogResult ErrorBox(string message, string title, MessageBoxButtons buttons = MessageBoxButtons.OK)
         {
             return MessageBox.Show(
                 "Error : "+message, 
-                title, 
-                MessageBoxButtons.OK, 
+                title,
+                buttons, 
                 MessageBoxIcon.Error
             );
         }
@@ -77,6 +78,51 @@ namespace ML3DInstaller.Presenter
                     throw;
                 }
             }
+        }
+
+        /// <summary>
+        /// Note: UCSettings can be accessed with Form.Controls.
+        /// </summary>
+        /// <returns></returns>
+        public static Form FormSettings()
+        {
+            UCSettings uCSettings = new UCSettings();
+            uCSettings.Dock = DockStyle.Fill;
+            Form form = new Form();
+            form.Controls.Add(uCSettings);
+            //form.Parent = this;
+            form.AutoSize = true;
+            form.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            form.StartPosition = FormStartPosition.CenterParent;
+            form.MinimumSize = new Size(367, 185);
+            form.MaximumSize = new Size(367, 185);
+            if (Properties.Settings.Default.DeveloperMode)
+            {
+                form.MinimumSize = new Size(367, 450);
+                form.MaximumSize = new Size(367, 450);
+                form.Size = new Size(367, 450);
+            }
+
+            uCSettings.DevMode += (object? sender, bool devChecked) => {
+                if (devChecked)
+                {
+                    form.MinimumSize = new Size(367, 450);
+                    form.MaximumSize = new Size(367, 450);
+                    form.Size = new Size(367, 450);
+                }
+                else
+                {
+                    form.MinimumSize = new Size(367, 185);
+                    form.MaximumSize = new Size(367, 185);
+                    form.Size = new Size(367, 185);
+                }
+            };
+
+            uCSettings.Exit += (object? sender, EventArgs e) =>
+            {
+                form.Close();
+            };
+            return form;
         }
     }
 }

@@ -49,12 +49,15 @@
             tlpGitPat = new TableLayoutPanel();
             lblGitPat = new Label();
             tbGitPAT = new TextBox();
-            cbUsePAT = new CheckBox();
             cbSupportOptions = new CheckBox();
             tableLayoutPanel4 = new TableLayoutPanel();
             btnSave = new Button();
             button1 = new Button();
             label6 = new Label();
+            tableLayoutPanel6 = new TableLayoutPanel();
+            cbUsePAT = new CheckBox();
+            label7 = new Label();
+            button2 = new Button();
             tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
             tlpDevMode.SuspendLayout();
@@ -62,6 +65,7 @@
             tableLayoutPanel3.SuspendLayout();
             tlpGitPat.SuspendLayout();
             tableLayoutPanel4.SuspendLayout();
+            tableLayoutPanel6.SuspendLayout();
             SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -183,8 +187,8 @@
             tlpDevMode.Controls.Add(cbShowTest, 0, 1);
             tlpDevMode.Controls.Add(label3, 0, 0);
             tlpDevMode.Controls.Add(tlpGitPat, 0, 5);
-            tlpDevMode.Controls.Add(cbUsePAT, 0, 4);
             tlpDevMode.Controls.Add(cbSupportOptions, 0, 7);
+            tlpDevMode.Controls.Add(tableLayoutPanel6, 0, 4);
             tlpDevMode.Dock = DockStyle.Top;
             tlpDevMode.Location = new Point(3, 99);
             tlpDevMode.Name = "tlpDevMode";
@@ -370,18 +374,6 @@
             tbGitPAT.TabIndex = 1;
             tbGitPAT.UseSystemPasswordChar = true;
             // 
-            // cbUsePAT
-            // 
-            cbUsePAT.AutoSize = true;
-            cbUsePAT.Location = new Point(9, 137);
-            cbUsePAT.Margin = new Padding(8, 3, 3, 3);
-            cbUsePAT.Name = "cbUsePAT";
-            cbUsePAT.Size = new Size(198, 19);
-            cbUsePAT.TabIndex = 15;
-            cbUsePAT.Text = "Use Github PAT (Recommended)";
-            cbUsePAT.UseVisualStyleBackColor = true;
-            cbUsePAT.CheckedChanged += cbUsePAT_CheckedChanged;
-            // 
             // cbSupportOptions
             // 
             cbSupportOptions.AutoSize = true;
@@ -452,6 +444,61 @@
             label6.Size = new Size(356, 1);
             label6.TabIndex = 15;
             // 
+            // tableLayoutPanel6
+            // 
+            tableLayoutPanel6.AutoSize = true;
+            tableLayoutPanel6.ColumnCount = 3;
+            tableLayoutPanel6.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel6.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel6.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel6.Controls.Add(cbUsePAT, 0, 0);
+            tableLayoutPanel6.Controls.Add(label7, 1, 0);
+            tableLayoutPanel6.Controls.Add(button2, 2, 0);
+            tableLayoutPanel6.Dock = DockStyle.Fill;
+            tableLayoutPanel6.Location = new Point(1, 134);
+            tableLayoutPanel6.Margin = new Padding(0);
+            tableLayoutPanel6.Name = "tableLayoutPanel6";
+            tableLayoutPanel6.RowCount = 1;
+            tableLayoutPanel6.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel6.Size = new Size(364, 25);
+            tableLayoutPanel6.TabIndex = 18;
+            // 
+            // cbUsePAT
+            // 
+            cbUsePAT.AutoSize = true;
+            cbUsePAT.Dock = DockStyle.Top;
+            cbUsePAT.Location = new Point(8, 3);
+            cbUsePAT.Margin = new Padding(8, 3, 3, 3);
+            cbUsePAT.Name = "cbUsePAT";
+            cbUsePAT.Size = new Size(106, 19);
+            cbUsePAT.TabIndex = 16;
+            cbUsePAT.Text = "Use Github PAT";
+            cbUsePAT.UseVisualStyleBackColor = true;
+            cbUsePAT.CheckedChanged += cbUsePAT_CheckedChanged;
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Dock = DockStyle.Fill;
+            label7.ForeColor = Color.Gray;
+            label7.Location = new Point(120, 0);
+            label7.Name = "label7";
+            label7.Size = new Size(96, 25);
+            label7.TabIndex = 17;
+            label7.Text = "(Recommended)";
+            label7.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // button2
+            // 
+            button2.Dock = DockStyle.Fill;
+            button2.Location = new Point(219, 0);
+            button2.Margin = new Padding(0);
+            button2.Name = "button2";
+            button2.Size = new Size(145, 25);
+            button2.TabIndex = 18;
+            button2.Text = "What's that ?";
+            button2.UseVisualStyleBackColor = true;
+            // 
             // UCSettings
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -474,6 +521,8 @@
             tlpGitPat.PerformLayout();
             tableLayoutPanel4.ResumeLayout(false);
             tableLayoutPanel4.PerformLayout();
+            tableLayoutPanel6.ResumeLayout(false);
+            tableLayoutPanel6.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -500,11 +549,14 @@
         private TableLayoutPanel tlpGitPat;
         private Label lblGitPat;
         private TextBox tbGitPAT;
-        private CheckBox cbUsePAT;
         private TableLayoutPanel tableLayoutPanel5;
         private Label label5;
         private ComboBox cbChunkSize;
         private CheckBox cbSupportOptions;
         private Label label6;
+        private TableLayoutPanel tableLayoutPanel6;
+        private CheckBox cbUsePAT;
+        private Label label7;
+        private Button button2;
     }
 }

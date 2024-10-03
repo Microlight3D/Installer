@@ -114,7 +114,7 @@ namespace ML3DInstaller.Presenter
                 if (Updater.OperationCancelled || InstalledCancel)
                 {
                     MessageBox.Show("Installation Cancelled.");
-                    return;
+                    Application.Exit();
                 }
             }
             Updater.DeleteZips();
@@ -155,7 +155,10 @@ namespace ML3DInstaller.Presenter
 
             // Unzip the zip
             userControlMain.UpdateInfo("UnZipping "+zipName+" ...");
-            Updater.ExtractZip(ZipDownloadResult.Item2, outputPath);
+            if (!Updater.ExtractZip(ZipDownloadResult.Item2, outputPath))
+            {
+                return;
+            }
 
             // Give all the rights to the destination folder
             userControlMain.UpdateInfo("Grant access for execution");

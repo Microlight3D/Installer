@@ -53,13 +53,13 @@
             tableLayoutPanel1.ColumnCount = 2;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 66.6666641F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333359F));
+            tableLayoutPanel1.Controls.Add(markdownRichTextBox1, 0, 5);
             tableLayoutPanel1.Controls.Add(lblInfo, 0, 1);
             tableLayoutPanel1.Controls.Add(label1, 0, 0);
             tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 0, 2);
             tableLayoutPanel1.Controls.Add(button1, 1, 3);
             tableLayoutPanel1.Controls.Add(checkBox1, 0, 3);
             tableLayoutPanel1.Controls.Add(cbVerbose, 0, 4);
-            tableLayoutPanel1.Controls.Add(markdownRichTextBox1, 0, 5);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -70,7 +70,8 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new Size(417, 321);
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel1.Size = new Size(417, 286);
             tableLayoutPanel1.TabIndex = 0;
             // 
             // lblInfo
@@ -201,11 +202,11 @@
             // 
             button1.Dock = DockStyle.Right;
             button1.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            button1.Location = new Point(305, 100);
+            button1.Location = new Point(296, 100);
             button1.MinimumSize = new Size(0, 30);
             button1.Name = "button1";
             tableLayoutPanel1.SetRowSpan(button1, 2);
-            button1.Size = new Size(109, 44);
+            button1.Size = new Size(118, 44);
             button1.TabIndex = 3;
             button1.Text = "Continue";
             button1.UseVisualStyleBackColor = true;
@@ -236,17 +237,15 @@
             // 
             // markdownRichTextBox1
             // 
-            markdownRichTextBox1.BackColor = Color.FromArgb(233, 233, 233);
+            markdownRichTextBox1.BackColor = Color.White;
             markdownRichTextBox1.BorderStyle = BorderStyle.None;
-            tableLayoutPanel1.SetColumnSpan(markdownRichTextBox1, 2);
             markdownRichTextBox1.Dock = DockStyle.Fill;
-            markdownRichTextBox1.ForeColor = Color.FromArgb(101, 61, 155);
-            markdownRichTextBox1.Location = new Point(8, 155);
-            markdownRichTextBox1.Margin = new Padding(8);
+            markdownRichTextBox1.ForeColor = Color.FromArgb(33, 33, 33);
+            markdownRichTextBox1.Location = new Point(3, 150);
             markdownRichTextBox1.Name = "markdownRichTextBox1";
             markdownRichTextBox1.ReadOnly = true;
-            markdownRichTextBox1.Size = new Size(401, 158);
-            markdownRichTextBox1.TabIndex = 6;
+            markdownRichTextBox1.Size = new Size(271, 133);
+            markdownRichTextBox1.TabIndex = 8;
             markdownRichTextBox1.Text = "";
             // 
             // UCHome
@@ -256,7 +255,7 @@
             Controls.Add(tableLayoutPanel1);
             MinimumSize = new Size(343, 148);
             Name = "UCHome";
-            Size = new Size(417, 321);
+            Size = new Size(417, 286);
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
             tableLayoutPanel2.ResumeLayout(false);

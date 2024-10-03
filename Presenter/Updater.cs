@@ -166,10 +166,18 @@ namespace ML3DInstaller.Presenter
         /// </summary>
         /// <param name="zipToUnzip">full path to the zip</param>
         /// <param name="destinationFolder">full path to the folder into which the content of the zip will be unzipped.</param>
-        public void ExtractZip(string zipToUnzip, string destinationFolder)
+        public bool ExtractZip(string zipToUnzip, string destinationFolder)
         {
+            if (!System.IO.File.Exists(zipToUnzip))
+            {
+                Utils.WarningBox("The downloaded zip file was not found. Please restart the installation process or contact support.", "zip not found");
+                DeleteZips();
+                OperationCancelled = true;
+                return false;
+            }
             // true for overwriting 
             ZipFile.ExtractToDirectory(zipToUnzip, destinationFolder, true);
+            return true;
         }
 
         /// <summary>

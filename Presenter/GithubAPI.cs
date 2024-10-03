@@ -25,6 +25,10 @@ namespace ML3DInstaller.Presenter
         {
             List<Release> releases = new List<Release>();
             JsonDocument jsonObject = MakeRequest(projectReleaseURL);
+            if (jsonObject == null)
+            {
+                Application.Exit();
+            }
 
             JsonDocument latestReleaseJson = MakeRequest($"{projectReleaseURL}/latest");
             var latestReleaseId = latestReleaseJson.RootElement.GetProperty("id").GetInt64();
@@ -149,7 +153,24 @@ namespace ML3DInstaller.Presenter
                 }
 
                 HttpResponseMessage response = client.GetAsync(requestUrl).Result;
-                response.EnsureSuccessStatusCode();
+                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    Utils.ErrorBox("The github request was unauthorized.\nThis is likely due to an incorrect Private Access Token in the Developer Settings. The Settings menu will now open. Modify the PAT value or uncheck the use of the PAT.", "401: Unauthorized");
+                    Form fo = Utils.FormSettings();
+                    fo.ShowDialog();
+                    return null;
+                }
+                if (response.StatusCode == HttpStatusCode.Forbidden || response.StatusCode == HttpStatusCode.TooManyRequests)
+                {
+                    DialogResult dr = Utils.ErrorBox("The rate limit has been reached on the server. \nRetry the installation process in an hour, or add a Github Private Access Token in the settings. Do you wish to open the settings menu ?", "403 or 429: Too many requests", MessageBoxButtons.YesNo);
+                    if (dr == DialogResult.Yes)
+                    {
+                        Form fo = Utils.FormSettings();
+                        fo.ShowDialog();
+                    }
+                    return null;
+                }
+                // response.EnsureSuccessStatusCode();
 
                 string jsonString = response.Content.ReadAsStringAsync().Result;
                 Debug.WriteLine(jsonString);

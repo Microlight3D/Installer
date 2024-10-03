@@ -195,47 +195,9 @@ namespace ML3DInstaller
         /// <param name="e"></param>
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            UCSettings uCSettings = new UCSettings();
-            uCSettings.Dock = DockStyle.Fill;
-            Form form = new Form();
-            form.Controls.Add(uCSettings);
-            //form.Parent = this;
-            form.AutoSize = true;
-            form.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            form.StartPosition = FormStartPosition.CenterParent;
-            form.MinimumSize = new Size(367, 185);
-            form.MaximumSize = new Size(367, 185);
-            if (Properties.Settings.Default.DeveloperMode)
-            {
-                form.MinimumSize = new Size(367, 450);
-                form.MaximumSize = new Size(367, 450);
-                form.Size = new Size(367, 450);
-            }
+            Form settingsForm = Utils.FormSettings();
 
-            form.SizeChanged += (object? sender, EventArgs e) =>
-            {
-                Debug.WriteLine("Size : " + form.Size.ToString());
-            };
-            uCSettings.Exit += (object? sender, EventArgs e) =>
-            {
-                form.Close();
-            };
-            uCSettings.DevMode += (object? sender, bool devChecked) => {
-                if (devChecked)
-                {
-                    form.MinimumSize = new Size(367, 450);
-                    form.MaximumSize = new Size(367, 450);
-                    form.Size = new Size(367, 450);
-                }
-                else
-                {
-                    form.MinimumSize = new Size(367, 185);
-                    form.MaximumSize = new Size(367, 185);
-                    form.Size = new Size(367, 185);
-                }
-            };
-
-            form.ShowDialog(this);
+            settingsForm.ShowDialog(this);
                
         }
 
