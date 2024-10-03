@@ -1,18 +1,36 @@
-﻿using System;
+﻿using ML3DInstaller.Presenter;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ML3DInstaller.View.CustomControls
 {
-    internal class MarkdownRichTextBox : RichTextBox
+    internal class MarkdownRichTextBox : RichTextBoxEx
     {
+        private Dictionary<string,string> LinkTextToUrl = new Dictionary<string,string>();
         public MarkdownRichTextBox() 
         {
-            
+            this.DetectUrls = false; // do not remove (related to RichTextBoxEx)
+
+            this.LinkClicked += MarkdownRichTextBox_LinkClicked;
+        }
+
+        private void MarkdownRichTextBox_LinkClicked(object? sender, LinkClickedEventArgs e)
+        {
+            string text = e.LinkText;
+            if ( text != null)
+            {
+                string url = LinkTextToUrl[text];
+                if (url != null)
+                {
+                    Utils.OpenUrl(url);
+                }
+            }
         }
 
         public void SetText(string content)
@@ -66,11 +84,11 @@ namespace ML3DInstaller.View.CustomControls
                     newLine = line;
                     if (line.StartsWith("* "))
                     {
-                        newLine = ReplaceFirst(line, "* ", "   ●");
+                        newLine = ReplaceFirst(line, "* ", "   • ");
                     }
                     if (line.StartsWith("- "))
                     {
-                        newLine = ReplaceFirst(line, "- ", "   ●");
+                        newLine = ReplaceFirst(line, "- ", "   • ");
                     }
                     this.SelectionFont = defaultFont;
                     parseLine(newLine);
@@ -104,6 +122,58 @@ namespace ML3DInstaller.View.CustomControls
             int i = 0;
             while (i < line.Length)
             {
+                // Check for markdown-style hyperlink [text](url)
+                if (line[i] == '[')
+                {
+                    int linkTextStart = i + 1;
+                    int linkTextEnd = line.IndexOf(']', linkTextStart);
+                    if (linkTextEnd != -1 && linkTextEnd + 1 < line.Length && line[linkTextEnd + 1] == '(')
+                    {
+                        int urlStart = linkTextEnd + 2;
+                        int urlEnd = line.IndexOf(')', urlStart);
+                        if (urlEnd != -1)
+                        {
+                            // Extract the link text and URL
+                            string linkText = line.Substring(linkTextStart, linkTextEnd - linkTextStart);
+                            string url = line.Substring(urlStart, urlEnd - urlStart);
+
+                            // Handle punctuation at the end of the link text
+                            char punctuation = '\0';
+                            if (linkText.Length > 0 && (linkText.EndsWith("?") || linkText.EndsWith("!") || linkText.EndsWith(".")))
+                            {
+                                punctuation = linkText[linkText.Length - 1];
+                                linkText = linkText.Substring(0, linkText.Length - 1);
+                            }
+
+                            // Insert any preceding text before the link
+                            if (i > 0)
+                            {
+                                string precedingText = line.Substring(0, i);
+                                AppendFormattedText(precedingText, isBold, isItalic, defaultFont, boldFont, italicFont, boldItalicFont);
+                            }
+
+                            // Insert the link
+                            SetSelectionFont(isBold, isItalic, defaultFont, boldFont, italicFont, boldItalicFont);
+                            this.InsertLink(linkText, url);
+                            LinkTextToUrl[linkText] = url;
+
+                            // Insert punctuation if any
+                            if (punctuation != '\0')
+                            {
+                                this.AppendText(punctuation.ToString());
+                            }
+
+                            // Move the index past the hyperlink
+                            i = urlEnd + 1;
+
+                            // Continue with the rest of the line
+                            line = line.Substring(i);
+                            i = 0;
+                            continue;
+                        }
+                    }
+                }
+
                 char c = line[i];
 
                 if (c == '\\')
@@ -124,45 +194,17 @@ namespace ML3DInstaller.View.CustomControls
                 // Check for '**' for bold
                 if (c == '*' && i + 1 < line.Length && line[i + 1] == '*')
                 {
-                    // Check if adjacent to letters
-                    bool isValid = IsAdjacentToLetter(line, i, 2);
-
-                    if (isValid)
-                    {
-                        // Toggle bold
-                        isBold = !isBold;
-                        i += 2; // Skip both asterisks
-                        continue;
-                    }
-                    else
-                    {
-                        // Not a valid bold marker, treat as normal characters
-                        SetSelectionFont(isBold, isItalic, defaultFont, boldFont, italicFont, boldItalicFont);
-                        this.AppendText("**");
-                        i += 2;
-                        continue;
-                    }
+                    // Toggle bold
+                    isBold = !isBold;
+                    i += 2; // Skip both asterisks
+                    continue;
                 }
                 else if (c == '*')
                 {
-                    // Check if adjacent to letters
-                    bool isValid = IsAdjacentToLetter(line, i, 1);
-
-                    if (isValid)
-                    {
-                        // Toggle italic
-                        isItalic = !isItalic;
-                        i++; // Skip the asterisk
-                        continue;
-                    }
-                    else
-                    {
-                        // Not a valid italic marker, treat as normal character
-                        SetSelectionFont(isBold, isItalic, defaultFont, boldFont, italicFont, boldItalicFont);
-                        this.AppendText("*");
-                        i++;
-                        continue;
-                    }
+                    // Toggle italic
+                    isItalic = !isItalic;
+                    i++; // Skip the asterisk
+                    continue;
                 }
                 else
                 {
@@ -176,6 +218,13 @@ namespace ML3DInstaller.View.CustomControls
             // Append a newline at the end of the line
             this.AppendText("\n");
         }
+
+        private void AppendFormattedText(string text, bool isBold, bool isItalic, Font defaultFont, Font boldFont, Font italicFont, Font boldItalicFont)
+        {
+            SetSelectionFont(isBold, isItalic, defaultFont, boldFont, italicFont, boldItalicFont);
+            this.AppendText(text);
+        }
+
 
         private void SetSelectionFont(bool isBold, bool isItalic, Font defaultFont, Font boldFont, Font italicFont, Font boldItalicFont)
         {
