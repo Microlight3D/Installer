@@ -7,7 +7,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/platform-Windows-brightgreen" alt="Platform Badge"/>
   <img src="https://img.shields.io/github/downloads/Microlight3D/Installer/total" alt="Download Count Badge"/>
-  <a href="https://microlight3d.com/contact"><img src="https://img.shields.io/badge/Support-Available-blue" alt="Support Badge"/></a>
+  <a href="https://www.microlight3d.com/contact"><img src="https://img.shields.io/badge/Support-Available-blue" alt="Support Badge"/></a>
 </p>
 
 ---
