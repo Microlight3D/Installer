@@ -173,9 +173,9 @@
             cbDevMode.Location = new Point(8, 104);
             cbDevMode.Margin = new Padding(8, 3, 3, 3);
             cbDevMode.Name = "cbDevMode";
-            cbDevMode.Size = new Size(113, 19);
+            cbDevMode.Size = new Size(124, 19);
             cbDevMode.TabIndex = 10;
-            cbDevMode.Text = "Developer Mode";
+            cbDevMode.Text = "Advanced Settings";
             cbDevMode.UseVisualStyleBackColor = true;
             cbDevMode.CheckedChanged += cbDevMode_CheckedChanged;
             // 
@@ -188,10 +188,10 @@
             tlpDevMode.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tlpDevMode.Controls.Add(tableLayoutPanel5, 0, 6);
             tlpDevMode.Controls.Add(tableLayoutPanel3, 0, 3);
-            tlpDevMode.Controls.Add(cbShowTest, 0, 1);
+            tlpDevMode.Controls.Add(cbShowTest, 0, 7);
             tlpDevMode.Controls.Add(label3, 0, 0);
             tlpDevMode.Controls.Add(tlpGitPat, 0, 5);
-            tlpDevMode.Controls.Add(cbSupportOptions, 0, 7);
+            tlpDevMode.Controls.Add(cbSupportOptions, 0, 1);
             tlpDevMode.Dock = DockStyle.Top;
             tlpDevMode.Location = new Point(3, 130);
             tlpDevMode.Name = "tlpDevMode";
@@ -217,7 +217,7 @@
             tableLayoutPanel5.Controls.Add(label5, 0, 0);
             tableLayoutPanel5.Controls.Add(cbChunkSize, 1, 0);
             tableLayoutPanel5.Dock = DockStyle.Top;
-            tableLayoutPanel5.Location = new Point(9, 163);
+            tableLayoutPanel5.Location = new Point(9, 161);
             tableLayoutPanel5.Margin = new Padding(8, 0, 0, 0);
             tableLayoutPanel5.Name = "tableLayoutPanel5";
             tableLayoutPanel5.RowCount = 1;
@@ -261,7 +261,7 @@
             tableLayoutPanel3.Controls.Add(label4, 1, 0);
             tableLayoutPanel3.Controls.Add(tbCurrentVersion, 1, 1);
             tableLayoutPanel3.Dock = DockStyle.Top;
-            tableLayoutPanel3.Location = new Point(9, 56);
+            tableLayoutPanel3.Location = new Point(9, 54);
             tableLayoutPanel3.Margin = new Padding(8, 5, 0, 0);
             tableLayoutPanel3.Name = "tableLayoutPanel3";
             tableLayoutPanel3.RowCount = 2;
@@ -306,7 +306,7 @@
             // 
             cbShowTest.AutoSize = true;
             cbShowTest.Dock = DockStyle.Top;
-            cbShowTest.Location = new Point(9, 27);
+            cbShowTest.Location = new Point(9, 193);
             cbShowTest.Margin = new Padding(8, 5, 3, 3);
             cbShowTest.Name = "cbShowTest";
             cbShowTest.Size = new Size(353, 19);
@@ -323,7 +323,7 @@
             label3.Name = "label3";
             label3.Size = new Size(358, 20);
             label3.TabIndex = 4;
-            label3.Text = "Developer Options";
+            label3.Text = "Advanced Settings";
             label3.TextAlign = ContentAlignment.TopCenter;
             // 
             // tlpGitPat
@@ -336,7 +336,7 @@
             tlpGitPat.Controls.Add(lblGitPat, 0, 1);
             tlpGitPat.Controls.Add(tbGitPAT, 1, 1);
             tlpGitPat.Dock = DockStyle.Fill;
-            tlpGitPat.Location = new Point(9, 107);
+            tlpGitPat.Location = new Point(9, 105);
             tlpGitPat.Margin = new Padding(8, 5, 0, 0);
             tlpGitPat.Name = "tlpGitPat";
             tlpGitPat.RowCount = 2;
@@ -385,18 +385,18 @@
             label7.ForeColor = Color.Gray;
             label7.Location = new Point(112, 0);
             label7.Name = "label7";
-            label7.Size = new Size(96, 25);
+            label7.Size = new Size(141, 25);
             label7.TabIndex = 17;
-            label7.Text = "(Recommended)";
+            label7.Text = "(Recommended for devs)";
             label7.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // btnPATHelp
             // 
             btnPATHelp.Dock = DockStyle.Fill;
-            btnPATHelp.Location = new Point(211, 0);
+            btnPATHelp.Location = new Point(256, 0);
             btnPATHelp.Margin = new Padding(0);
             btnPATHelp.Name = "btnPATHelp";
-            btnPATHelp.Size = new Size(145, 25);
+            btnPATHelp.Size = new Size(100, 25);
             btnPATHelp.TabIndex = 18;
             btnPATHelp.Text = "What's that ?";
             btnPATHelp.UseVisualStyleBackColor = true;
@@ -429,7 +429,7 @@
             cbSupportOptions.AutoSize = true;
             tlpDevMode.SetColumnSpan(cbSupportOptions, 2);
             cbSupportOptions.Dock = DockStyle.Top;
-            cbSupportOptions.Location = new Point(9, 193);
+            cbSupportOptions.Location = new Point(9, 25);
             cbSupportOptions.Margin = new Padding(8, 3, 3, 3);
             cbSupportOptions.Name = "cbSupportOptions";
             cbSupportOptions.Size = new Size(353, 19);

@@ -12,6 +12,7 @@ namespace ML3DInstaller
     public partial class MainForm : Form
     {
         Dictionary<string, List<string>> softwares;
+        private bool VisibleReleaseNotes = false;
         public MainForm()
         {
             BeforeAnything();
@@ -25,12 +26,24 @@ namespace ML3DInstaller
             ucMain1.BackToHome += UcMain1_BackToHome;
             ucMain1.InstallSoftware += UcMain1_InstallSoftware;
             ucHome1.Continue += UcHome1_Continue;
-
-            lblDevMode.Visible = Properties.Settings.Default.DeveloperMode;
+            ucHome1.ShowReleaseNotes += UcHome1_ShowReleaseNotes;
 
             SwitchMode("Home");
+        }
 
-            this.SizeChanged += Form1_SizeChanged;
+        private void UcHome1_ShowReleaseNotes(object? sender, bool showRelease)
+        {
+            VisibleReleaseNotes = showRelease;
+            if (showRelease)
+            {
+                if (this.Height < 500)
+                {
+                    this.Height = 500;
+                }
+            } else
+            {
+                this.Height = 200;
+            }
         }
 
         /// <summary>
@@ -153,11 +166,11 @@ namespace ML3DInstaller
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="arguments">software name, software version, installDependencies, isVerbose</param>
-        private void UcHome1_Continue(object? sender, Tuple<Release, bool, bool> arguments)
+        private void UcHome1_Continue(object? sender, Release release)
         {
             SwitchMode("Install");
 
-            MainPresenter mp = new MainPresenter(ucMain1, arguments.Item1, arguments.Item2, arguments.Item3);
+            MainPresenter mp = new MainPresenter(ucMain1, release);
         }
         /// <summary>
         /// Move from install mode to home mode
@@ -180,17 +193,19 @@ namespace ML3DInstaller
             {
                 tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
                 tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 0F));
-                this.Size = new Size(427, 288);
+                this.Size = new Size(427, 270);
             }
             else
             {
                 tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 0));
                 tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-                this.Size = new Size(427, 520);
-            }
-            if (!Properties.Settings.Default.DeveloperMode)
-            {
-                this.Size = new Size(this.Width, this.Height - 17); // remove the height associated with the "developer mode" banner
+                if (this.VisibleReleaseNotes)
+                {
+                    this.Size = new Size(427, 500);
+                } else
+                {
+                    this.Size = new Size(427, 200);
+                }
             }
         }
         /// <summary>
@@ -232,15 +247,6 @@ namespace ML3DInstaller
         private void UcMain1_InstallSoftware(List<string> zipsToProcess, string software, bool bypass)
         {
             this.Size = new Size(427, 120);
-            if (!Properties.Settings.Default.DeveloperMode)
-            {
-                this.Size = new Size(427, 103);
-            }
-        }
-
-        private void Form1_SizeChanged(object? sender, EventArgs e)
-        {
-            Debug.WriteLine("New size : " + this.Size.ToString());
         }
     }
 }

@@ -40,8 +40,7 @@
             lblSoftware = new Label();
             cbSoftware = new ComboBox();
             button1 = new Button();
-            checkBox1 = new CheckBox();
-            cbVerbose = new CheckBox();
+            btnReleaseNoteVisible = new Button();
             tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
             tableLayoutPanel4.SuspendLayout();
@@ -53,25 +52,24 @@
             tableLayoutPanel1.ColumnCount = 2;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 66.6666641F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333359F));
-            tableLayoutPanel1.Controls.Add(markdownRichTextBox1, 0, 5);
+            tableLayoutPanel1.Controls.Add(markdownRichTextBox1, 0, 4);
             tableLayoutPanel1.Controls.Add(lblInfo, 0, 1);
             tableLayoutPanel1.Controls.Add(label1, 0, 0);
             tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 0, 2);
             tableLayoutPanel1.Controls.Add(button1, 1, 3);
-            tableLayoutPanel1.Controls.Add(checkBox1, 0, 3);
-            tableLayoutPanel1.Controls.Add(cbVerbose, 0, 4);
+            tableLayoutPanel1.Controls.Add(btnReleaseNoteVisible, 0, 3);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 6;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowCount = 5;
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel1.Size = new Size(417, 286);
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel1.Size = new Size(417, 148);
             tableLayoutPanel1.TabIndex = 0;
             // 
             // markdownRichTextBox1
@@ -81,13 +79,14 @@
             tableLayoutPanel1.SetColumnSpan(markdownRichTextBox1, 2);
             markdownRichTextBox1.Dock = DockStyle.Fill;
             markdownRichTextBox1.ForeColor = Color.FromArgb(33, 33, 33);
-            markdownRichTextBox1.Location = new Point(6, 153);
+            markdownRichTextBox1.Location = new Point(6, 139);
             markdownRichTextBox1.Margin = new Padding(6);
             markdownRichTextBox1.Name = "markdownRichTextBox1";
             markdownRichTextBox1.ReadOnly = true;
-            markdownRichTextBox1.Size = new Size(405, 127);
+            markdownRichTextBox1.Size = new Size(405, 3);
             markdownRichTextBox1.TabIndex = 8;
             markdownRichTextBox1.Text = "";
+            markdownRichTextBox1.Visible = false;
             // 
             // lblInfo
             // 
@@ -215,40 +214,29 @@
             // 
             // button1
             // 
-            button1.Dock = DockStyle.Right;
+            button1.AutoSize = true;
+            button1.Dock = DockStyle.Top;
             button1.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            button1.Location = new Point(296, 100);
+            button1.Location = new Point(280, 100);
             button1.MinimumSize = new Size(0, 30);
             button1.Name = "button1";
-            tableLayoutPanel1.SetRowSpan(button1, 2);
-            button1.Size = new Size(118, 44);
+            button1.Size = new Size(134, 30);
             button1.TabIndex = 3;
             button1.Text = "Continue";
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
             // 
-            // checkBox1
+            // btnReleaseNoteVisible
             // 
-            checkBox1.AutoSize = true;
-            checkBox1.Dock = DockStyle.Top;
-            checkBox1.Location = new Point(3, 100);
-            checkBox1.Name = "checkBox1";
-            checkBox1.Size = new Size(271, 19);
-            checkBox1.TabIndex = 4;
-            checkBox1.Text = "Run Full Installation";
-            checkBox1.UseVisualStyleBackColor = true;
-            checkBox1.CheckedChanged += checkBox1_CheckedChanged;
-            // 
-            // cbVerbose
-            // 
-            cbVerbose.AutoSize = true;
-            cbVerbose.Location = new Point(3, 125);
-            cbVerbose.Name = "cbVerbose";
-            cbVerbose.Size = new Size(101, 19);
-            cbVerbose.TabIndex = 5;
-            cbVerbose.Text = "Verbose Install";
-            cbVerbose.UseVisualStyleBackColor = true;
-            cbVerbose.Visible = false;
+            btnReleaseNoteVisible.AutoSize = true;
+            btnReleaseNoteVisible.Dock = DockStyle.Fill;
+            btnReleaseNoteVisible.Location = new Point(3, 100);
+            btnReleaseNoteVisible.Name = "btnReleaseNoteVisible";
+            btnReleaseNoteVisible.Size = new Size(271, 30);
+            btnReleaseNoteVisible.TabIndex = 9;
+            btnReleaseNoteVisible.Text = "Show Release Notes";
+            btnReleaseNoteVisible.UseVisualStyleBackColor = true;
+            btnReleaseNoteVisible.Click += btnReleaseNoteVisible_Click;
             // 
             // UCHome
             // 
@@ -257,7 +245,7 @@
             Controls.Add(tableLayoutPanel1);
             MinimumSize = new Size(343, 148);
             Name = "UCHome";
-            Size = new Size(417, 286);
+            Size = new Size(417, 148);
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
             tableLayoutPanel2.ResumeLayout(false);
@@ -282,8 +270,7 @@
         private Label label3;
         private ComboBox cbVersion;
         private Button button1;
-        private CheckBox checkBox1;
-        private CheckBox cbVerbose;
         private View.CustomControls.MarkdownRichTextBox markdownRichTextBox1;
+        private Button btnReleaseNoteVisible;
     }
 }

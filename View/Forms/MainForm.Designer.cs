@@ -36,7 +36,6 @@
             aboutToolStripMenuItem = new ToolStripMenuItem();
             ucMain1 = new UCMain();
             ucHome1 = new UCHome();
-            lblDevMode = new Label();
             contextMenuStrip1 = new ContextMenuStrip(components);
             tableLayoutPanel1.SuspendLayout();
             menuStrip1.SuspendLayout();
@@ -50,7 +49,6 @@
             tableLayoutPanel1.Controls.Add(menuStrip1, 0, 0);
             tableLayoutPanel1.Controls.Add(ucMain1, 0, 2);
             tableLayoutPanel1.Controls.Add(ucHome1, 1, 2);
-            tableLayoutPanel1.Controls.Add(lblDevMode, 0, 1);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -89,43 +87,27 @@
             // ucMain1
             // 
             ucMain1.Dock = DockStyle.Fill;
-            ucMain1.Location = new Point(3, 44);
+            ucMain1.Location = new Point(3, 27);
             ucMain1.MinimumSize = new Size(0, 135);
             ucMain1.Name = "ucMain1";
-            ucMain1.Size = new Size(199, 144);
+            ucMain1.Size = new Size(199, 161);
             ucMain1.TabIndex = 1;
             // 
             // ucHome1
             // 
             ucHome1.Dock = DockStyle.Fill;
-            ucHome1.Location = new Point(208, 44);
+            ucHome1.Location = new Point(208, 27);
             ucHome1.MinimumSize = new Size(343, 132);
             ucHome1.Name = "ucHome1";
-            ucHome1.Size = new Size(343, 144);
+            ucHome1.Size = new Size(343, 161);
             ucHome1.TabIndex = 2;
-            // 
-            // lblDevMode
-            // 
-            lblDevMode.AutoSize = true;
-            lblDevMode.BackColor = Color.FromArgb(192, 255, 255);
-            tableLayoutPanel1.SetColumnSpan(lblDevMode, 2);
-            lblDevMode.Dock = DockStyle.Top;
-            lblDevMode.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblDevMode.ForeColor = Color.Red;
-            lblDevMode.Location = new Point(0, 24);
-            lblDevMode.Margin = new Padding(0);
-            lblDevMode.Name = "lblDevMode";
-            lblDevMode.Size = new Size(411, 17);
-            lblDevMode.TabIndex = 3;
-            lblDevMode.Text = "Developer Mode Activated";
-            lblDevMode.TextAlign = ContentAlignment.TopCenter;
             // 
             // contextMenuStrip1
             // 
             contextMenuStrip1.Name = "contextMenuStrip1";
             contextMenuStrip1.Size = new Size(61, 4);
             // 
-            // Form1
+            // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -134,7 +116,7 @@
             Icon = (Icon)resources.GetObject("$this.Icon");
             KeyPreview = true;
             MinimumSize = new Size(427, 192);
-            Name = "Form1";
+            Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "ML3D Installer";
             tableLayoutPanel1.ResumeLayout(false);
@@ -150,7 +132,6 @@
         private UCMain ucMain1;
         private UCHome ucHome1;
         private ContextMenuStrip contextMenuStrip1;
-        private Label lblDevMode;
         private MenuStrip menuStrip1;
         private ToolStripMenuItem settingsToolStripMenuItem;
         private ToolStripMenuItem aboutToolStripMenuItem;

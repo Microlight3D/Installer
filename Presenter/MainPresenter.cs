@@ -21,8 +21,6 @@ namespace ML3DInstaller.Presenter
 
         private Release CurrentRelease;
 
-        private bool InstallDependencies;
-
         private CancellationTokenSource CancelInstall;
 
         private CancellationTokenSource SourceCopy;
@@ -32,7 +30,7 @@ namespace ML3DInstaller.Presenter
         private UCDependencies dependenciesView;
 
         private bool InstallBlender = false;
-        public MainPresenter(UCMain uCMain, Release release, bool installDependencies, bool IsVerbose) {
+        public MainPresenter(UCMain uCMain, Release release) {
 
             userControlMain = uCMain;
             userControlMain.Init(release);
@@ -43,9 +41,8 @@ namespace ML3DInstaller.Presenter
 
             this.Software = release.Software;
             this.Version = release.Version;
-            this.InstallDependencies = installDependencies;
 
-            Updater = new Updater(release, installDependencies, IsVerbose);
+            Updater = new Updater(release);
         }
 
         

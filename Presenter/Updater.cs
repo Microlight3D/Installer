@@ -46,19 +46,10 @@ namespace ML3DInstaller.Presenter
         /// </summary>
         /// <param name="software">Software name eg: "Phaos"</param>
         /// <param name="version">Version number eg: "2.2.6.5"</param>
-        public Updater(Release release, bool installDependencies, bool verboeInstall) 
+        public Updater(Release release) 
         { 
             this.Software = release.Software;
             this.Version = release.Version;
-            this.installDependencies = installDependencies;
-            if (installDependencies)
-            {
-                this.installVerbose = verboeInstall;
-            }
-            else
-            {
-                this.installVerbose = false;
-            }
             
             string softwarePath = Software + "Redistribuable-" + Version + "\\" + Software + "-" + Version;
             SourceSoftwarePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, softwarePath);

@@ -20,7 +20,7 @@ namespace ML3DInstaller
     public partial class UCHome : UserControl
     {
         Dictionary<string, List<Release>> Softwares;
-        public event EventHandler<Tuple<Release, bool, bool>> Continue;
+        public event EventHandler<Release> Continue;
         public UCHome()
         {
             InitializeComponent();
@@ -31,15 +31,18 @@ namespace ML3DInstaller
             cbSoftware.Items.Clear();
             this.Softwares = softwares;
             int selectedIndex = 0;
-            foreach (var key in softwares.Keys.Select((key, i) => new { i, key })) 
+            foreach (var key in softwares.Keys.Select((key, i) => new { i, key }))
             {
-                if (key.key == "Test" && Properties.Settings.Default.ViewTestProject || 
-                    key.key != "Test")
+                if (key.key != "Installer")
                 {
-                    cbSoftware.Items.Add(key.key);
-                    if (key.key == Properties.Settings.Default.LastUsedSoftware)
+                    if (key.key == "Test" && Properties.Settings.Default.ViewTestProject ||
+                    key.key != "Test")
                     {
-                        selectedIndex = key.i;
+                        cbSoftware.Items.Add(key.key);
+                        if (key.key == Properties.Settings.Default.LastUsedSoftware)
+                        {
+                            selectedIndex = key.i;
+                        }
                     }
                 }
             }
@@ -97,31 +100,28 @@ namespace ML3DInstaller
             Release currentRelease = GithubAPI.GetReleaseByVersion(currentSoftwareReleases, version);
             if (currentRelease.Type != ReleaseType.None)
             {
-                Tuple<Release, bool, bool> args = new Tuple<Release, bool, bool>(
-                    currentRelease,
-                    checkBox1.Checked,
-                    cbVerbose.Checked
-                );
                 Properties.Settings.Default.LastUsedSoftware = cbSoftware.GetItemText(cbSoftware.SelectedItem);
                 Properties.Settings.Default.Save();
-                Continue?.Invoke(this, args);
+                Continue?.Invoke(this, currentRelease);
             }
 
         }
 
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        public event EventHandler<bool> ShowReleaseNotes;
+        private void btnReleaseNoteVisible_Click(object sender, EventArgs e)
         {
-            if (checkBox1.Checked)
+            if (btnReleaseNoteVisible.Text == "Show Release Notes")
             {
-                DialogResult dialogResult = MessageBox.Show("A full installation will re-install all the dependencies. \nDo you wish to continue ?", "Dependencies (Re-)installation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (dialogResult == DialogResult.No)
-                {
-                    checkBox1.Checked = false;
-                }
-            }
-            cbVerbose.Visible = checkBox1.Checked;
-        }
+                btnReleaseNoteVisible.Text = "Hide Release Notes";
 
-        
+            }
+            else
+            {
+                btnReleaseNoteVisible.Text = "Show Release Notes";
+            }
+            markdownRichTextBox1.Visible = btnReleaseNoteVisible.Text == "Hide Release Notes";
+            ShowReleaseNotes?.Invoke(this, btnReleaseNoteVisible.Text == "Hide Release Notes");
+
+        }
     }
 }

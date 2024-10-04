@@ -16,8 +16,8 @@ namespace ML3DInstaller
 {
     public partial class UCMain : UserControl, ProgressBarAPI
     {
-        private string DefaultPath = @"C:\Program Files (x86)\Microlight3D\Phaos\";
-        private string ChosenPath = @"C:\Program Files (x86)\Microlight3D\Phaos\";
+        private string DefaultPath = @"C:\Program Files (x86)\Microlight3D\";
+        private string ChosenPath = @"C:\Program Files (x86)\Microlight3D\";
 
         private string software;
         private string version;
@@ -67,7 +67,7 @@ namespace ML3DInstaller
             this.version = release.Version;
             this.SoftwareRelease = release;
 
-            DefaultPath = @"C:\Program Files (x86)\Microlight3D\" + software + @"\";
+            DefaultPath = @"C:\Program Files (x86)\Microlight3D\";
             ChosenPath = DefaultPath;
 
             lblTitle.Text = "Installing " + software + " version " + version;
