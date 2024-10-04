@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/Microlight3D/Assets/logo.png" height="64">
+  <img src="https://github.com/Microlight3D/Installer/blob/feature-tagManager/microlight.png" height="200">
   <h3 align="center">ML3D Installer</h3>
   <p align="center">Installer for Microlight 3D Software Suite</p>
 </p>
@@ -30,7 +30,7 @@
 The **ML3D Installer** is the official tool for managing the installation and updates of Microlight 3D's software suite, including key products like **Phaos** and **Luminis**. It provides a seamless experience for installing new software, updating existing versions, and configuring options to suit different user expertise levels, from basic users to developers.
 
 <p align="center">
-  <img src="https://github.com/Microlight3D/Assets/main-selection-view.png" alt="Main Selection View" width="600">
+  <img src="https://github.com/user-attachments/assets/73dd466c-74a7-4c9b-bcdc-1cd85c0b6f79" alt="Main Selection View" width="400">
 </p>
 
 ## Installation
