@@ -178,5 +178,125 @@ namespace ML3DInstaller.Properties {
                 this["LastUsedSoftware"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public long LastSourcesUpdate {
+            get {
+                return ((long)(this["LastSourcesUpdate"]));
+            }
+            set {
+                this["LastSourcesUpdate"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string TestReleaseJson {
+            get {
+                return ((string)(this["TestReleaseJson"]));
+            }
+            set {
+                this["TestReleaseJson"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string PhaosReleaseJson {
+            get {
+                return ((string)(this["PhaosReleaseJson"]));
+            }
+            set {
+                this["PhaosReleaseJson"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LuminisReleaseJson {
+            get {
+                return ((string)(this["LuminisReleaseJson"]));
+            }
+            set {
+                this["LuminisReleaseJson"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1800")]
+        public long UpdateSourcesTiming {
+            get {
+                return ((long)(this["UpdateSourcesTiming"]));
+            }
+            set {
+                this["UpdateSourcesTiming"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string TestLatestReleaseJson {
+            get {
+                return ((string)(this["TestLatestReleaseJson"]));
+            }
+            set {
+                this["TestLatestReleaseJson"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string PhaosLatestReleaseJson {
+            get {
+                return ((string)(this["PhaosLatestReleaseJson"]));
+            }
+            set {
+                this["PhaosLatestReleaseJson"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LuminisLatestReleaseJson {
+            get {
+                return ((string)(this["LuminisLatestReleaseJson"]));
+            }
+            set {
+                this["LuminisLatestReleaseJson"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string InstallerReleaseJson {
+            get {
+                return ((string)(this["InstallerReleaseJson"]));
+            }
+            set {
+                this["InstallerReleaseJson"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string InstallerLatestReleaseJson {
+            get {
+                return ((string)(this["InstallerLatestReleaseJson"]));
+            }
+            set {
+                this["InstallerLatestReleaseJson"] = value;
+            }
+        }
     }
 }

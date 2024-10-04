@@ -18,15 +18,7 @@ namespace ML3DInstaller.Presenter
         public HomePresenter(UCHome uchome)
         {
             UCHome = uchome;
-            Dictionary<string, List<Release>> softwares = new Dictionary<string, List<Release>>();
-
-            softwares["Luminis"] = GithubAPI.GetML3DReleases("LuminisRedistribuable");
-            softwares["Phaos"] = GithubAPI.GetML3DReleases("PhaosRedistribuable");
-            if (Properties.Settings.Default.ViewTestProject)
-            {
-                softwares["Test"] = GithubAPI.GetML3DReleases("TestRedistribuable");
-            }
-            UCHome.SetSoftwares(softwares);
+            UCHome.SetSoftwares(GithubAPI.GetAllML3DReleases());
         }
     }
 

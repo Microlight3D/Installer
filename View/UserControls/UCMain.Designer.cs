@@ -37,14 +37,17 @@
             selectFolderBtn = new Button();
             btnInstall = new Button();
             progressBar = new ProgressBar();
-            lblTitle = new Label();
             tlpInstallEverything = new TableLayoutPanel();
             checkBox1 = new CheckBox();
             label2 = new Label();
             tlpDownloadableContent = new TableLayoutPanel();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            lblTitle = new Label();
+            lblIteration = new Label();
             tableLayoutPanel2.SuspendLayout();
             tableLayoutPanel3.SuspendLayout();
             tlpInstallEverything.SuspendLayout();
+            tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
             // tableLayoutPanel2
@@ -59,8 +62,8 @@
             tableLayoutPanel2.Controls.Add(tableLayoutPanel3, 0, 2);
             tableLayoutPanel2.Controls.Add(btnInstall, 1, 6);
             tableLayoutPanel2.Controls.Add(progressBar, 0, 3);
-            tableLayoutPanel2.Controls.Add(lblTitle, 0, 0);
             tableLayoutPanel2.Controls.Add(tlpInstallEverything, 0, 5);
+            tableLayoutPanel2.Controls.Add(tableLayoutPanel1, 0, 0);
             tableLayoutPanel2.Dock = DockStyle.Fill;
             tableLayoutPanel2.Location = new Point(0, 0);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -72,6 +75,7 @@
             tableLayoutPanel2.RowStyles.Add(new RowStyle());
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel2.RowStyles.Add(new RowStyle());
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             tableLayoutPanel2.Size = new Size(345, 261);
             tableLayoutPanel2.TabIndex = 2;
             // 
@@ -176,19 +180,6 @@
             progressBar.Style = ProgressBarStyle.Marquee;
             progressBar.TabIndex = 8;
             // 
-            // lblTitle
-            // 
-            lblTitle.AutoSize = true;
-            tableLayoutPanel2.SetColumnSpan(lblTitle, 3);
-            lblTitle.Dock = DockStyle.Fill;
-            lblTitle.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblTitle.Location = new Point(3, 0);
-            lblTitle.Name = "lblTitle";
-            lblTitle.Size = new Size(339, 20);
-            lblTitle.TabIndex = 10;
-            lblTitle.Text = "Installing XXX version XXX";
-            lblTitle.TextAlign = ContentAlignment.MiddleCenter;
-            // 
             // tlpInstallEverything
             // 
             tlpInstallEverything.ColumnCount = 2;
@@ -249,6 +240,47 @@
             tlpDownloadableContent.Size = new Size(333, 87);
             tlpDownloadableContent.TabIndex = 2;
             // 
+            // tableLayoutPanel1
+            // 
+            tableLayoutPanel1.AutoSize = true;
+            tableLayoutPanel1.ColumnCount = 2;
+            tableLayoutPanel2.SetColumnSpan(tableLayoutPanel1, 3);
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.Controls.Add(lblIteration, 0, 0);
+            tableLayoutPanel1.Controls.Add(lblTitle, 1, 0);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(0, 0);
+            tableLayoutPanel1.Margin = new Padding(0);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 1;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.Size = new Size(345, 20);
+            tableLayoutPanel1.TabIndex = 12;
+            // 
+            // lblTitle
+            // 
+            lblTitle.AutoSize = true;
+            lblTitle.Dock = DockStyle.Fill;
+            lblTitle.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblTitle.Location = new Point(9, 0);
+            lblTitle.Name = "lblTitle";
+            lblTitle.Size = new Size(333, 20);
+            lblTitle.TabIndex = 11;
+            lblTitle.Text = "Installing XXX version XXX";
+            lblTitle.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // lblIteration
+            // 
+            lblIteration.AutoSize = true;
+            lblIteration.Dock = DockStyle.Fill;
+            lblIteration.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblIteration.Location = new Point(3, 0);
+            lblIteration.Name = "lblIteration";
+            lblIteration.Size = new Size(1, 20);
+            lblIteration.TabIndex = 12;
+            lblIteration.TextAlign = ContentAlignment.MiddleCenter;
+            // 
             // UCMain
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -263,6 +295,8 @@
             tableLayoutPanel3.PerformLayout();
             tlpInstallEverything.ResumeLayout(false);
             tlpInstallEverything.PerformLayout();
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel1.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -277,10 +311,12 @@
         private Button selectFolderBtn;
         private Button btnInstall;
         private ProgressBar progressBar;
-        private Label lblTitle;
         private TableLayoutPanel tlpInstallEverything;
         private CheckBox checkBox1;
         private Label label2;
         private TableLayoutPanel tlpDownloadableContent;
+        private TableLayoutPanel tableLayoutPanel1;
+        private Label lblIteration;
+        private Label lblTitle;
     }
 }

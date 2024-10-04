@@ -43,10 +43,13 @@
             btnLaunchUpdate = new Button();
             label4 = new Label();
             tbCurrentVersion = new TextBox();
-            btnClumsy = new Button();
             cbShowTest = new CheckBox();
             label3 = new Label();
             tlpGitPat = new TableLayoutPanel();
+            tableLayoutPanel6 = new TableLayoutPanel();
+            cbUsePAT = new CheckBox();
+            label7 = new Label();
+            btnPATHelp = new Button();
             lblGitPat = new Label();
             tbGitPAT = new TextBox();
             cbSupportOptions = new CheckBox();
@@ -54,18 +57,18 @@
             btnSave = new Button();
             button1 = new Button();
             label6 = new Label();
-            tableLayoutPanel6 = new TableLayoutPanel();
-            cbUsePAT = new CheckBox();
-            label7 = new Label();
-            button2 = new Button();
+            tlpReloadSources = new TableLayoutPanel();
+            btnReloadSources = new Button();
+            lblLastReload = new Label();
             tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
             tlpDevMode.SuspendLayout();
             tableLayoutPanel5.SuspendLayout();
             tableLayoutPanel3.SuspendLayout();
             tlpGitPat.SuspendLayout();
-            tableLayoutPanel4.SuspendLayout();
             tableLayoutPanel6.SuspendLayout();
+            tableLayoutPanel4.SuspendLayout();
+            tlpReloadSources.SuspendLayout();
             SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -74,14 +77,16 @@
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tableLayoutPanel1.Controls.Add(label1, 0, 0);
             tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 0, 1);
-            tableLayoutPanel1.Controls.Add(cbDevMode, 0, 2);
-            tableLayoutPanel1.Controls.Add(tlpDevMode, 0, 5);
-            tableLayoutPanel1.Controls.Add(tableLayoutPanel4, 0, 7);
-            tableLayoutPanel1.Controls.Add(label6, 0, 3);
+            tableLayoutPanel1.Controls.Add(cbDevMode, 0, 3);
+            tableLayoutPanel1.Controls.Add(tlpDevMode, 0, 6);
+            tableLayoutPanel1.Controls.Add(tableLayoutPanel4, 0, 8);
+            tableLayoutPanel1.Controls.Add(label6, 0, 4);
+            tableLayoutPanel1.Controls.Add(tlpReloadSources, 0, 2);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 8;
+            tableLayoutPanel1.RowCount = 9;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
@@ -90,7 +95,7 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 35F));
-            tableLayoutPanel1.Size = new Size(372, 444);
+            tableLayoutPanel1.Size = new Size(372, 385);
             tableLayoutPanel1.TabIndex = 0;
             // 
             // label1
@@ -165,7 +170,7 @@
             // cbDevMode
             // 
             cbDevMode.AutoSize = true;
-            cbDevMode.Location = new Point(8, 73);
+            cbDevMode.Location = new Point(8, 104);
             cbDevMode.Margin = new Padding(8, 3, 3, 3);
             cbDevMode.Name = "cbDevMode";
             cbDevMode.Size = new Size(113, 19);
@@ -183,14 +188,12 @@
             tlpDevMode.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tlpDevMode.Controls.Add(tableLayoutPanel5, 0, 6);
             tlpDevMode.Controls.Add(tableLayoutPanel3, 0, 3);
-            tlpDevMode.Controls.Add(btnClumsy, 0, 2);
             tlpDevMode.Controls.Add(cbShowTest, 0, 1);
             tlpDevMode.Controls.Add(label3, 0, 0);
             tlpDevMode.Controls.Add(tlpGitPat, 0, 5);
             tlpDevMode.Controls.Add(cbSupportOptions, 0, 7);
-            tlpDevMode.Controls.Add(tableLayoutPanel6, 0, 4);
             tlpDevMode.Dock = DockStyle.Top;
-            tlpDevMode.Location = new Point(3, 99);
+            tlpDevMode.Location = new Point(3, 130);
             tlpDevMode.Name = "tlpDevMode";
             tlpDevMode.RowCount = 9;
             tlpDevMode.RowStyles.Add(new RowStyle());
@@ -202,7 +205,7 @@
             tlpDevMode.RowStyles.Add(new RowStyle());
             tlpDevMode.RowStyles.Add(new RowStyle());
             tlpDevMode.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tlpDevMode.Size = new Size(366, 249);
+            tlpDevMode.Size = new Size(366, 217);
             tlpDevMode.TabIndex = 13;
             // 
             // tableLayoutPanel5
@@ -214,7 +217,7 @@
             tableLayoutPanel5.Controls.Add(label5, 0, 0);
             tableLayoutPanel5.Controls.Add(cbChunkSize, 1, 0);
             tableLayoutPanel5.Dock = DockStyle.Top;
-            tableLayoutPanel5.Location = new Point(9, 195);
+            tableLayoutPanel5.Location = new Point(9, 163);
             tableLayoutPanel5.Margin = new Padding(8, 0, 0, 0);
             tableLayoutPanel5.Name = "tableLayoutPanel5";
             tableLayoutPanel5.RowCount = 1;
@@ -258,7 +261,7 @@
             tableLayoutPanel3.Controls.Add(label4, 1, 0);
             tableLayoutPanel3.Controls.Add(tbCurrentVersion, 1, 1);
             tableLayoutPanel3.Dock = DockStyle.Top;
-            tableLayoutPanel3.Location = new Point(9, 89);
+            tableLayoutPanel3.Location = new Point(9, 56);
             tableLayoutPanel3.Margin = new Padding(8, 5, 0, 0);
             tableLayoutPanel3.Name = "tableLayoutPanel3";
             tableLayoutPanel3.RowCount = 2;
@@ -299,18 +302,6 @@
             tbCurrentVersion.TabIndex = 2;
             tbCurrentVersion.Text = "0.0";
             // 
-            // btnClumsy
-            // 
-            btnClumsy.AutoSize = true;
-            btnClumsy.Dock = DockStyle.Left;
-            btnClumsy.Location = new Point(12, 55);
-            btnClumsy.Margin = new Padding(11, 5, 3, 3);
-            btnClumsy.Name = "btnClumsy";
-            btnClumsy.Size = new Size(114, 25);
-            btnClumsy.TabIndex = 12;
-            btnClumsy.Text = "Download Clumsy";
-            btnClumsy.UseVisualStyleBackColor = true;
-            // 
             // cbShowTest
             // 
             cbShowTest.AutoSize = true;
@@ -341,25 +332,84 @@
             tlpGitPat.ColumnCount = 2;
             tlpGitPat.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tlpGitPat.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tlpGitPat.Controls.Add(lblGitPat, 0, 0);
-            tlpGitPat.Controls.Add(tbGitPAT, 1, 0);
+            tlpGitPat.Controls.Add(tableLayoutPanel6, 0, 0);
+            tlpGitPat.Controls.Add(lblGitPat, 0, 1);
+            tlpGitPat.Controls.Add(tbGitPAT, 1, 1);
             tlpGitPat.Dock = DockStyle.Fill;
-            tlpGitPat.Location = new Point(12, 165);
-            tlpGitPat.Margin = new Padding(11, 5, 0, 0);
+            tlpGitPat.Location = new Point(9, 107);
+            tlpGitPat.Margin = new Padding(8, 5, 0, 0);
             tlpGitPat.Name = "tlpGitPat";
-            tlpGitPat.RowCount = 1;
+            tlpGitPat.RowCount = 2;
+            tlpGitPat.RowStyles.Add(new RowStyle());
             tlpGitPat.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tlpGitPat.Size = new Size(353, 29);
+            tlpGitPat.Size = new Size(356, 55);
             tlpGitPat.TabIndex = 14;
+            // 
+            // tableLayoutPanel6
+            // 
+            tableLayoutPanel6.AutoSize = true;
+            tableLayoutPanel6.ColumnCount = 3;
+            tlpGitPat.SetColumnSpan(tableLayoutPanel6, 2);
+            tableLayoutPanel6.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel6.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel6.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel6.Controls.Add(cbUsePAT, 0, 0);
+            tableLayoutPanel6.Controls.Add(label7, 1, 0);
+            tableLayoutPanel6.Controls.Add(btnPATHelp, 2, 0);
+            tableLayoutPanel6.Dock = DockStyle.Fill;
+            tableLayoutPanel6.Location = new Point(0, 0);
+            tableLayoutPanel6.Margin = new Padding(0);
+            tableLayoutPanel6.Name = "tableLayoutPanel6";
+            tableLayoutPanel6.RowCount = 1;
+            tableLayoutPanel6.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel6.Size = new Size(356, 25);
+            tableLayoutPanel6.TabIndex = 19;
+            // 
+            // cbUsePAT
+            // 
+            cbUsePAT.AutoSize = true;
+            cbUsePAT.Dock = DockStyle.Top;
+            cbUsePAT.Location = new Point(0, 3);
+            cbUsePAT.Margin = new Padding(0, 3, 3, 3);
+            cbUsePAT.Name = "cbUsePAT";
+            cbUsePAT.Size = new Size(106, 19);
+            cbUsePAT.TabIndex = 16;
+            cbUsePAT.Text = "Use Github PAT";
+            cbUsePAT.UseVisualStyleBackColor = true;
+            cbUsePAT.CheckedChanged += cbUsePAT_CheckedChanged;
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Dock = DockStyle.Fill;
+            label7.ForeColor = Color.Gray;
+            label7.Location = new Point(112, 0);
+            label7.Name = "label7";
+            label7.Size = new Size(96, 25);
+            label7.TabIndex = 17;
+            label7.Text = "(Recommended)";
+            label7.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // btnPATHelp
+            // 
+            btnPATHelp.Dock = DockStyle.Fill;
+            btnPATHelp.Location = new Point(211, 0);
+            btnPATHelp.Margin = new Padding(0);
+            btnPATHelp.Name = "btnPATHelp";
+            btnPATHelp.Size = new Size(145, 25);
+            btnPATHelp.TabIndex = 18;
+            btnPATHelp.Text = "What's that ?";
+            btnPATHelp.UseVisualStyleBackColor = true;
+            btnPATHelp.Click += btnPATHelp_Click;
             // 
             // lblGitPat
             // 
             lblGitPat.AutoSize = true;
             lblGitPat.Dock = DockStyle.Fill;
-            lblGitPat.Location = new Point(0, 0);
-            lblGitPat.Margin = new Padding(0);
+            lblGitPat.Location = new Point(3, 25);
+            lblGitPat.Margin = new Padding(3, 0, 0, 0);
             lblGitPat.Name = "lblGitPat";
-            lblGitPat.Size = new Size(176, 29);
+            lblGitPat.Size = new Size(175, 30);
             lblGitPat.TabIndex = 0;
             lblGitPat.Text = "Github Private Access Token";
             lblGitPat.TextAlign = ContentAlignment.MiddleLeft;
@@ -367,10 +417,10 @@
             // tbGitPAT
             // 
             tbGitPAT.Dock = DockStyle.Top;
-            tbGitPAT.Location = new Point(179, 3);
+            tbGitPAT.Location = new Point(181, 28);
             tbGitPAT.Name = "tbGitPAT";
             tbGitPAT.PasswordChar = '*';
-            tbGitPAT.Size = new Size(171, 23);
+            tbGitPAT.Size = new Size(172, 23);
             tbGitPAT.TabIndex = 1;
             tbGitPAT.UseSystemPasswordChar = true;
             // 
@@ -379,7 +429,7 @@
             cbSupportOptions.AutoSize = true;
             tlpDevMode.SetColumnSpan(cbSupportOptions, 2);
             cbSupportOptions.Dock = DockStyle.Top;
-            cbSupportOptions.Location = new Point(9, 225);
+            cbSupportOptions.Location = new Point(9, 193);
             cbSupportOptions.Margin = new Padding(8, 3, 3, 3);
             cbSupportOptions.Name = "cbSupportOptions";
             cbSupportOptions.Size = new Size(353, 19);
@@ -396,7 +446,7 @@
             tableLayoutPanel4.Controls.Add(btnSave, 0, 0);
             tableLayoutPanel4.Controls.Add(button1, 0, 0);
             tableLayoutPanel4.Dock = DockStyle.Top;
-            tableLayoutPanel4.Location = new Point(0, 409);
+            tableLayoutPanel4.Location = new Point(0, 350);
             tableLayoutPanel4.Margin = new Padding(0);
             tableLayoutPanel4.Name = "tableLayoutPanel4";
             tableLayoutPanel4.RowCount = 1;
@@ -438,66 +488,54 @@
             label6.AutoSize = true;
             label6.BackColor = Color.Silver;
             label6.Dock = DockStyle.Top;
-            label6.Location = new Point(8, 95);
+            label6.Location = new Point(8, 126);
             label6.Margin = new Padding(8, 0, 8, 0);
             label6.Name = "label6";
             label6.Size = new Size(356, 1);
             label6.TabIndex = 15;
             // 
-            // tableLayoutPanel6
+            // tlpReloadSources
             // 
-            tableLayoutPanel6.AutoSize = true;
-            tableLayoutPanel6.ColumnCount = 3;
-            tableLayoutPanel6.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel6.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel6.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel6.Controls.Add(cbUsePAT, 0, 0);
-            tableLayoutPanel6.Controls.Add(label7, 1, 0);
-            tableLayoutPanel6.Controls.Add(button2, 2, 0);
-            tableLayoutPanel6.Dock = DockStyle.Fill;
-            tableLayoutPanel6.Location = new Point(1, 134);
-            tableLayoutPanel6.Margin = new Padding(0);
-            tableLayoutPanel6.Name = "tableLayoutPanel6";
-            tableLayoutPanel6.RowCount = 1;
-            tableLayoutPanel6.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel6.Size = new Size(364, 25);
-            tableLayoutPanel6.TabIndex = 18;
+            tlpReloadSources.AutoSize = true;
+            tlpReloadSources.ColumnCount = 2;
+            tlpReloadSources.ColumnStyles.Add(new ColumnStyle());
+            tlpReloadSources.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tlpReloadSources.Controls.Add(btnReloadSources, 0, 0);
+            tlpReloadSources.Controls.Add(lblLastReload, 1, 0);
+            tlpReloadSources.Dock = DockStyle.Top;
+            tlpReloadSources.Location = new Point(0, 70);
+            tlpReloadSources.Margin = new Padding(0);
+            tlpReloadSources.Name = "tlpReloadSources";
+            tlpReloadSources.RowCount = 1;
+            tlpReloadSources.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tlpReloadSources.Size = new Size(372, 31);
+            tlpReloadSources.TabIndex = 16;
             // 
-            // cbUsePAT
+            // btnReloadSources
             // 
-            cbUsePAT.AutoSize = true;
-            cbUsePAT.Dock = DockStyle.Top;
-            cbUsePAT.Location = new Point(8, 3);
-            cbUsePAT.Margin = new Padding(8, 3, 3, 3);
-            cbUsePAT.Name = "cbUsePAT";
-            cbUsePAT.Size = new Size(106, 19);
-            cbUsePAT.TabIndex = 16;
-            cbUsePAT.Text = "Use Github PAT";
-            cbUsePAT.UseVisualStyleBackColor = true;
-            cbUsePAT.CheckedChanged += cbUsePAT_CheckedChanged;
+            btnReloadSources.AutoSize = true;
+            btnReloadSources.Dock = DockStyle.Top;
+            btnReloadSources.Location = new Point(3, 3);
+            btnReloadSources.Name = "btnReloadSources";
+            btnReloadSources.Size = new Size(97, 25);
+            btnReloadSources.TabIndex = 0;
+            btnReloadSources.Text = "Reload Sources";
+            btnReloadSources.UseVisualStyleBackColor = true;
+            btnReloadSources.Click += btnReloadSources_Click;
             // 
-            // label7
+            // lblLastReload
             // 
-            label7.AutoSize = true;
-            label7.Dock = DockStyle.Fill;
-            label7.ForeColor = Color.Gray;
-            label7.Location = new Point(120, 0);
-            label7.Name = "label7";
-            label7.Size = new Size(96, 25);
-            label7.TabIndex = 17;
-            label7.Text = "(Recommended)";
-            label7.TextAlign = ContentAlignment.MiddleLeft;
-            // 
-            // button2
-            // 
-            button2.Dock = DockStyle.Fill;
-            button2.Location = new Point(219, 0);
-            button2.Margin = new Padding(0);
-            button2.Name = "button2";
-            button2.Size = new Size(145, 25);
-            button2.TabIndex = 18;
-            button2.Text = "What's that ?";
-            button2.UseVisualStyleBackColor = true;
+            lblLastReload.AutoSize = true;
+            lblLastReload.Dock = DockStyle.Fill;
+            lblLastReload.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lblLastReload.ForeColor = Color.FromArgb(64, 64, 64);
+            lblLastReload.Location = new Point(106, 0);
+            lblLastReload.Name = "lblLastReload";
+            lblLastReload.RightToLeft = RightToLeft.No;
+            lblLastReload.Size = new Size(263, 31);
+            lblLastReload.TabIndex = 1;
+            lblLastReload.Text = "Last update : xxx ago";
+            lblLastReload.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // UCSettings
             // 
@@ -505,7 +543,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(tableLayoutPanel1);
             Name = "UCSettings";
-            Size = new Size(372, 444);
+            Size = new Size(372, 385);
             Load += UCSettings_Load;
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
@@ -519,10 +557,12 @@
             tableLayoutPanel3.PerformLayout();
             tlpGitPat.ResumeLayout(false);
             tlpGitPat.PerformLayout();
-            tableLayoutPanel4.ResumeLayout(false);
-            tableLayoutPanel4.PerformLayout();
             tableLayoutPanel6.ResumeLayout(false);
             tableLayoutPanel6.PerformLayout();
+            tableLayoutPanel4.ResumeLayout(false);
+            tableLayoutPanel4.PerformLayout();
+            tlpReloadSources.ResumeLayout(false);
+            tlpReloadSources.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -540,7 +580,6 @@
         private Button btnLaunchUpdate;
         private Label label4;
         private TextBox tbCurrentVersion;
-        private Button btnClumsy;
         private CheckBox cbShowTest;
         private Label label3;
         private TableLayoutPanel tableLayoutPanel4;
@@ -557,6 +596,9 @@
         private TableLayoutPanel tableLayoutPanel6;
         private CheckBox cbUsePAT;
         private Label label7;
-        private Button button2;
+        private Button btnPATHelp;
+        private TableLayoutPanel tlpReloadSources;
+        private Button btnReloadSources;
+        private Label lblLastReload;
     }
 }

@@ -145,13 +145,6 @@ namespace ML3DInstaller.View.CustomControls
                                 linkText = linkText.Substring(0, linkText.Length - 1);
                             }
 
-                            // Insert any preceding text before the link
-                            if (i > 0)
-                            {
-                                string precedingText = line.Substring(0, i);
-                                AppendFormattedText(precedingText, isBold, isItalic, defaultFont, boldFont, italicFont, boldItalicFont);
-                            }
-
                             // Insert the link
                             SetSelectionFont(isBold, isItalic, defaultFont, boldFont, italicFont, boldItalicFont);
                             this.InsertLink(linkText, url);

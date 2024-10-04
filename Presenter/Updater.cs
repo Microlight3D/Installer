@@ -536,7 +536,7 @@ namespace ML3DInstaller.Presenter
         public static bool AutoUpdate(int currentVersion)
         {
             // Check for updates
-            Release latestRelease = GithubAPI.GetML3DLatest("Installer");
+            Release latestRelease = GithubAPI.GetLatest("Installer");
             if (latestRelease.Type == ReleaseType.Release)
             {
                 int version = latestRelease.VersionInt;
@@ -621,12 +621,13 @@ namespace ML3DInstaller.Presenter
             {
                 throw new DirectoryNotFoundException(Path.GetDirectoryName(destinationFilePath));
             }
-            bool useSemaphore = true;
             if (progressForm == null)
             {
-                progressForm = new FormPleaseWait();
+                FormPleaseWait fpw = new FormPleaseWait();
+                string name = url.TrimEnd('/').Split('/').Last();
+                fpw.SetText("Downloading " + name + " ...");
+                progressForm = fpw;
                 progressForm.SetLoadingMode(true);
-                useSemaphore = false;
             }
             progressForm.SetLoadingMode(true);
             //
@@ -653,12 +654,17 @@ namespace ML3DInstaller.Presenter
             downloader.DownloadFileWithProgress(url, destinationFilePath, progressForm);
             progressForm.StartProgress();
 
+            ResetDownloadSettings();
+            return true;
+        }
+
+        public static void ResetDownloadSettings()
+        {
             Properties.Settings.Default.CurrentlyDownloadingURL = "";
             Properties.Settings.Default.CurrentlyDownloadingDestPath = "";
             Properties.Settings.Default.CurrentDownloadVersion = "";
             Properties.Settings.Default.CurrentDownloadSize = 0;
             Properties.Settings.Default.Save();
-            return true;
         }
     }
 }

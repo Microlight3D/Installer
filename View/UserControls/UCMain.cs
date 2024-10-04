@@ -81,6 +81,9 @@ namespace ML3DInstaller
                 btnCancelLeft.Enabled = true;
             }
 
+            checkBoxes.Clear();
+            tlpDownloadableContent.Controls.Clear();
+
             // Fill downloadable options
             var zips = release.Zips;
             if (zips != null && zips.Count > 0)
@@ -481,6 +484,7 @@ namespace ML3DInstaller
         {
             progressEvent.Set();
             progressEvent = new ManualResetEventSlim(false);
+            SetIteration(-1, -1);
         }
 
         public void StartProgress()
@@ -499,6 +503,36 @@ namespace ML3DInstaller
             RefreshNow();
             progressEvent.Wait();
         }
+        public void SetIteration(int current, int total)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(() =>
+                {
+                    if (current >= 0)
+                    {
+                        lblIteration.Text = "" + current + "/" + total;
+                    }
+                    else
+                    {
+                        lblIteration.Text = "";
+                    }
+                }));
+            }
+            else
+            {
+                if (current >= 0)
+                {
+                    lblIteration.Text = "" + current + "/" + total;
+                }
+                else
+                {
+                    lblIteration.Text = "";
+                }
+            }
+            RefreshNow();
+           
+        }
         #endregion
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
@@ -509,5 +543,7 @@ namespace ML3DInstaller
             }
             tlpDownloadableContent.Enabled = !checkBox1.Checked;
         }
+
+       
     }
 }

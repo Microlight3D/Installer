@@ -51,5 +51,12 @@ namespace ML3DInstaller.View
         /// </summary>
         public void EndProgress();
         public void StartProgress();
+        /// <summary>
+        /// If present, set the iteration information current/total when doing multiple downloads
+        /// else, does nothing.
+        /// </summary>
+        /// <param name="current"></param>
+        /// <param name="total"></param>
+        public void SetIteration(int current, int total);
     }
 }

@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             tableLayoutPanel1 = new TableLayoutPanel();
+            markdownRichTextBox1 = new View.CustomControls.MarkdownRichTextBox();
             lblInfo = new Label();
             label1 = new Label();
             tableLayoutPanel2 = new TableLayoutPanel();
@@ -41,7 +42,6 @@
             button1 = new Button();
             checkBox1 = new CheckBox();
             cbVerbose = new CheckBox();
-            markdownRichTextBox1 = new View.CustomControls.MarkdownRichTextBox();
             tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
             tableLayoutPanel4.SuspendLayout();
@@ -73,6 +73,21 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             tableLayoutPanel1.Size = new Size(417, 286);
             tableLayoutPanel1.TabIndex = 0;
+            // 
+            // markdownRichTextBox1
+            // 
+            markdownRichTextBox1.BackColor = Color.White;
+            markdownRichTextBox1.BorderStyle = BorderStyle.None;
+            tableLayoutPanel1.SetColumnSpan(markdownRichTextBox1, 2);
+            markdownRichTextBox1.Dock = DockStyle.Fill;
+            markdownRichTextBox1.ForeColor = Color.FromArgb(33, 33, 33);
+            markdownRichTextBox1.Location = new Point(6, 153);
+            markdownRichTextBox1.Margin = new Padding(6);
+            markdownRichTextBox1.Name = "markdownRichTextBox1";
+            markdownRichTextBox1.ReadOnly = true;
+            markdownRichTextBox1.Size = new Size(405, 127);
+            markdownRichTextBox1.TabIndex = 8;
+            markdownRichTextBox1.Text = "";
             // 
             // lblInfo
             // 
@@ -234,19 +249,6 @@
             cbVerbose.Text = "Verbose Install";
             cbVerbose.UseVisualStyleBackColor = true;
             cbVerbose.Visible = false;
-            // 
-            // markdownRichTextBox1
-            // 
-            markdownRichTextBox1.BackColor = Color.White;
-            markdownRichTextBox1.BorderStyle = BorderStyle.None;
-            markdownRichTextBox1.Dock = DockStyle.Fill;
-            markdownRichTextBox1.ForeColor = Color.FromArgb(33, 33, 33);
-            markdownRichTextBox1.Location = new Point(3, 150);
-            markdownRichTextBox1.Name = "markdownRichTextBox1";
-            markdownRichTextBox1.ReadOnly = true;
-            markdownRichTextBox1.Size = new Size(271, 133);
-            markdownRichTextBox1.TabIndex = 8;
-            markdownRichTextBox1.Text = "";
             // 
             // UCHome
             // 

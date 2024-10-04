@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.Design;
 using System.ComponentModel.Design.Serialization;
 using System.Data;
 using System.Diagnostics;
@@ -32,26 +33,18 @@ namespace ML3DInstaller
             int selectedIndex = 0;
             foreach (var key in softwares.Keys.Select((key, i) => new { i, key })) 
             {
-                cbSoftware.Items.Add(key.key);
-                if (key.key == Properties.Settings.Default.LastUsedSoftware)
+                if (key.key == "Test" && Properties.Settings.Default.ViewTestProject || 
+                    key.key != "Test")
                 {
-                    selectedIndex = key.i;
+                    cbSoftware.Items.Add(key.key);
+                    if (key.key == Properties.Settings.Default.LastUsedSoftware)
+                    {
+                        selectedIndex = key.i;
+                    }
                 }
             }
             cbSoftware.SelectedIndex = selectedIndex;
             UpdateVersions();
-        }
-
-        private void searchForUpdates()
-        {
-            string urlLuminis = "https://api.github.com/repos/Microlight3D/LuminisRedistribuable/releases";
-            string urlPhaos = "https://api.github.com/repos/Microlight3D/PhaosRedistribuable/releases";
-
-
-            SetSoftwares(null);
-            lblInfo.Text = "Please select a software and version and continue.";
-            cbSoftware.Enabled = true;
-            cbVersion.Enabled = true;
         }
 
 

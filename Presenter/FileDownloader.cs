@@ -67,7 +67,7 @@ namespace ML3DInstaller.Presenter
                         long totalBytes = response.ContentLength + existingFileSize;
                         long totalBytesRead = existingFileSize;
                         int oldProgress = 0;
-                        Debug.WriteLine("Existing size : " + existingFileSize + "\nTotalBytes : " + totalBytes + "\ntotalRead : " + totalBytesRead);
+                        // Debug.WriteLine("Existing size : " + existingFileSize + "\nTotalBytes : " + totalBytes + "\ntotalRead : " + totalBytesRead);
 
                         using (Stream responseStream = response.GetResponseStream())
                         {
@@ -112,7 +112,7 @@ namespace ML3DInstaller.Presenter
                 if (toIntPercentage > previousPercentage)
                 {
                     formPleaseWait.UpdateProgress(toIntPercentage);
-                    Debug.WriteLine("Progress : " + bytesReceived+" / "+totalBytes + " - "+ value + "%");
+                    // Debug.WriteLine("Progress : " + bytesReceived+" / "+totalBytes + " - "+ value + "%");
                 }
                 previousPercentage = progressPercentage;
             };

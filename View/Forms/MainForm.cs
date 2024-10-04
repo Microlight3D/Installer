@@ -47,19 +47,15 @@ namespace ML3DInstaller
                 //check if we are running as administrator currently
                 if (!new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator))
                 {
-                    //Start new process as administrator. Environment.ProcessPath is the path of what we are currently running.
-                    Process.Start(new ProcessStartInfo { FileName = Environment.ProcessPath, UseShellExecute = true, Verb = "runas" });
-
-                    //Exit current process
-                    Environment.Exit(0);
+                    Program.RestartSoftware();
                 }
             }
-            //if user selects "no" from adminstrator request.
             catch
             {
                 MessageBox.Show("Administrative rights are required for installing this application.\nRestart using Right click -> run as Administrator", "Error: Admin Privilege", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Environment.Exit(0);
             }
+            
 
             // Check for access to github
             if (!GithubAPI.IsGithubAccessible())
@@ -81,7 +77,7 @@ namespace ML3DInstaller
             // Delete installer if it is required
             if (Properties.Settings.Default.DeleteInstaller)
             {
-                string tempFilePath = Path.Combine(Path.GetTempPath(), @"Microlight3D_TempVars\ML3DInstallerSetup.exe");
+                string tempFilePath = Path.Combine(Path.GetTempPath(), @"Microlight3D_TempVars\Installer\ML3DInstallerSetup.exe");
                 if (File.Exists(tempFilePath))
                 {
                     File.Delete(tempFilePath);
@@ -93,12 +89,30 @@ namespace ML3DInstaller
             // Check if a download was currently ongoing
             if (Properties.Settings.Default.CurrentlyDownloadingURL != null && Properties.Settings.Default.CurrentlyDownloadingURL != "")
             {
-                Utils.InfoBox("An interrupted download has been detected. Restart the download with the same settings and the process will continue.", "Download pending ..");
+                if (Utils.QuestionBox("An interrupted download has been detected.\n" +
+                    "Press 'yes' and restart the download with the same settings and the process will continue, or press 'No' to cancel onging download\n" +
+                    "Continue the ongoing download ?", "Download pending ..") == DialogResult.No)
+                {
+                    Updater.DeleteTempDir();
+                    Updater.ResetDownloadSettings();
+                }
+            
             } else
             {
-                Updater.DeleteTempDir();
+                try
+                {
+                    Updater.DeleteTempDir();
+                }
+                catch {
+                    // The only reason for an error is if the Installer setup is running, and so the installer setup.exe can't be removed
+                    Utils.ErrorBox("Error: The temporary files' folder couldn't be cleared.\nThis is likely due to the ML3DInstallerSetup.exe already running. Please finish the installation and close it before restarting this software.\nIf it's not running, try re-booting this computer.", "Can't delete previous installer");
+                    Application.Exit();
+                }
+                
             }
         }
+
+        
 
         /// <summary>
         /// Execute command(s) on startup
@@ -198,7 +212,7 @@ namespace ML3DInstaller
             Form settingsForm = Utils.FormSettings();
 
             settingsForm.ShowDialog(this);
-               
+            
         }
 
         /// <summary>

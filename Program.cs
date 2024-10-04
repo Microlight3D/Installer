@@ -12,7 +12,7 @@ using ML3DInstaller.View.Forms;
 
 namespace ML3DInstaller
 {
-    internal static class Program
+    public static class Program
     {
         /// <summary>
         ///  The main entry point for the application.
@@ -43,6 +43,16 @@ namespace ML3DInstaller
                 versionString = versionString.Substring(0, versionString.Length - 2);
             }
             return versionString;
+        }
+
+        public static void RestartSoftware()
+        {
+            //Start new process as administrator. Environment.ProcessPath is the path of what we are currently running.
+            Process.Start(new ProcessStartInfo { FileName = Environment.ProcessPath, UseShellExecute = true, Verb = "runas" });
+
+            //Exit current process
+            Environment.Exit(0);
+            
         }
     }
 }

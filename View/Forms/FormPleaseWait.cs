@@ -21,6 +21,11 @@ namespace ML3DInstaller.View
             this.StartPosition = FormStartPosition.CenterScreen;
         }
 
+        public void SetText(string text)
+        {
+            label1.Text = text;
+        }
+
         public void SetMaximum(int value)
         {
             if (InvokeRequired)
@@ -146,6 +151,11 @@ namespace ML3DInstaller.View
         public void StartProgress()
         {
             this.ShowDialog();
+        }
+
+        public void SetIteration(int current, int total)
+        {
+            
         }
     }
 }

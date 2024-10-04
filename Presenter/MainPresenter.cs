@@ -94,10 +94,14 @@ namespace ML3DInstaller.Presenter
             var CancelToken = CancelInstall.Token;
             BYPASS_INSTALL = bypass;
 
+            int totalZip = zipsToProcess.Count;
+            int current = 1;
+
             foreach (string zip in zipsToProcess)
             {
                 string softwareName = zip.Split('/')[^1].Replace(".zip", "");
                 userControlMain.SetMode("Loading");
+                userControlMain.SetIteration(current, totalZip);
                 string thisZipOutputPath = Path.Combine(outputPath, softwareName);
                 if (softwareName == "Documentation")
                 {
@@ -116,7 +120,9 @@ namespace ML3DInstaller.Presenter
                     MessageBox.Show("Installation Cancelled.");
                     Application.Exit();
                 }
+                current += 1;
             }
+            userControlMain.SetIteration(-1, totalZip);
             Updater.DeleteZips();
             Application.Exit();
         }
@@ -129,6 +135,7 @@ namespace ML3DInstaller.Presenter
         /// <param name="outputPath">location to copy content of the zip</param>
         private async void OneZipProcess(string downloadURL, string softwareName, string outputPath, CancellationToken cancellationToken, string version="")
         {
+            Debug.WriteLine("One zip process");
             if (!CheckInternet())
             {
                 MessageBox.Show("An internet connection is required to install "+softwareName+"\nPlease connect to the internet before re-trying", "No Connection detected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -145,6 +152,8 @@ namespace ML3DInstaller.Presenter
 
             // Download the zip
             userControlMain.UpdateInfo("Downloading "+softwareName+" ...");
+            Debug.WriteLine("Download zip "+softwareName);
+
             var ZipDownloadResult = Updater.DownloadZip(downloadURL, softwareName+".zip", userControlMain);
             if (!ZipDownloadResult.Item1)
             {
@@ -152,6 +161,7 @@ namespace ML3DInstaller.Presenter
                 InstalledCancel = true;
                 return;
             }
+            Debug.WriteLine("Extract zip " + softwareName);
 
             // Unzip the zip
             userControlMain.UpdateInfo("UnZipping "+zipName+" ...");
@@ -159,6 +169,7 @@ namespace ML3DInstaller.Presenter
             {
                 return;
             }
+            Debug.WriteLine("grant access" + softwareName);
 
             // Give all the rights to the destination folder
             userControlMain.UpdateInfo("Grant access for execution");
@@ -170,6 +181,7 @@ namespace ML3DInstaller.Presenter
                 var listOfExe = Updater.GetAllExeInFolder(outputPath);
                 this.SelectDependencies(listOfExe);
             }
+            Debug.WriteLine("create shprtcuts " + softwareName);
 
             // Create Shortcuts
             userControlMain.UpdateInfo("Create shortcuts ...");
@@ -218,7 +230,7 @@ namespace ML3DInstaller.Presenter
             {
                 dependenciesView.Hide();
                 dependenciesView.Dispose();
-                return;
+                Application.Exit();
             };
             dependenciesView.Continue += DependenciesView_Continue;
 

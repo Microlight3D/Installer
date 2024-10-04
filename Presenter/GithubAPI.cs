@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -16,27 +17,100 @@ namespace ML3DInstaller.Presenter
         public GithubAPI() { }
 
         /// <summary>
+        /// Gets a project list of releases from github, and converrt it to a list of release
+        /// If download is at false, it gets the releases from its own memory instead.
+        /// 
         /// the url needs to be in the format : 
         /// https://api.github.com/repos/Microlight3D/SOFTWARENAME/releases";
         /// </summary>
         /// <param name="projectReleaseURL"></param>
         /// <returns></returns>
-        public static List<Release> GetReleases(string projectReleaseURL)
+        public static List<Release> GetReleases(string projectReleaseURL, bool download=false)
         {
-            List<Release> releases = new List<Release>();
-            JsonDocument jsonObject = MakeRequest(projectReleaseURL);
-            if (jsonObject == null)
-            {
-                Application.Exit();
-            }
-
-            JsonDocument latestReleaseJson = MakeRequest($"{projectReleaseURL}/latest");
-            var latestReleaseId = latestReleaseJson.RootElement.GetProperty("id").GetInt64();
-
             var urlComponents = projectReleaseURL.Split('/');
             string softwareName = urlComponents[^2].Replace("Redistribuable", "");
 
-            foreach (var releasejs in jsonObject.RootElement.EnumerateArray())
+            List<Release> releases = new List<Release>();
+            string allReleases = "";
+            string latestRelease = "";
+
+            if (download)
+            {
+                allReleases = MakeRequest(projectReleaseURL);
+                latestRelease = MakeRequest($"{projectReleaseURL}/latest");
+                switch (softwareName)
+                {
+                    case "Luminis":
+                        Properties.Settings.Default.LuminisReleaseJson = allReleases;
+                        Properties.Settings.Default.LuminisLatestReleaseJson = latestRelease;
+                        break;
+                    case "Phaos":
+                        Properties.Settings.Default.PhaosReleaseJson = allReleases;
+                        Properties.Settings.Default.PhaosLatestReleaseJson = latestRelease;
+                        break;
+                    case "Test":
+                        Properties.Settings.Default.TestReleaseJson = allReleases;
+                        Properties.Settings.Default.TestLatestReleaseJson = latestRelease;
+                        break;
+                    case "Installer":
+                        Properties.Settings.Default.InstallerReleaseJson = allReleases;
+                        Properties.Settings.Default.InstallerLatestReleaseJson = latestRelease;
+                        break;
+                    default:
+                        // This will realistically never happen 
+                        Utils.ErrorBox("The installer is trying to download the unknown software : " + softwareName + " at " + projectReleaseURL + ".\n" +
+                            "Please contact the support showing them this message.", "Unknown software");
+                        Application.Exit();
+                        break;
+                }
+                Properties.Settings.Default.Save();
+
+            } else
+            {
+                switch (softwareName)
+                {
+                    case "Luminis":
+                        allReleases = Properties.Settings.Default.LuminisReleaseJson;
+                        latestRelease = Properties.Settings.Default.LuminisLatestReleaseJson;
+                        break;
+                    case "Phaos":
+                        allReleases = Properties.Settings.Default.PhaosReleaseJson;
+                        latestRelease = Properties.Settings.Default.PhaosLatestReleaseJson;
+                        break;
+                    case "Test":
+                        allReleases = Properties.Settings.Default.TestReleaseJson;
+                        latestRelease = Properties.Settings.Default.TestLatestReleaseJson;
+                        break;
+                    case "Installer":
+                        allReleases = Properties.Settings.Default.InstallerReleaseJson;
+                        latestRelease = Properties.Settings.Default.InstallerLatestReleaseJson;
+                        break;
+                    default:
+                        // This will realistically never happen 
+                        Utils.ErrorBox("The installer is trying to download the unknown software : " + softwareName + " at " + projectReleaseURL + ".\n" +
+                            "Please contact the support showing them this message.", "Unknown software");
+                        Application.Exit();
+                        break;
+                }
+            }
+            
+
+
+            JsonDocument allReleasesJsonObject = JsonDocument.Parse(allReleases);
+
+            if (allReleasesJsonObject == null)
+            {
+                Utils.ErrorBox("An unexpected error happened while downloading " + projectReleaseURL + "\nCheck your internet connection and try again.", "Unexpected download error");
+                Application.Exit();
+            }
+
+            // Find id of the latest release (latest as the tag latest)
+            JsonDocument latestReleaseJson = JsonDocument.Parse(latestRelease);
+            var latestReleaseId = latestReleaseJson.RootElement.GetProperty("id").GetInt64();
+
+            
+
+            foreach (var releasejs in allReleasesJsonObject.RootElement.EnumerateArray())
             {
                 Release release = new Release();
                 var name = releasejs.GetProperty("name").GetString()?
@@ -46,6 +120,7 @@ namespace ML3DInstaller.Presenter
                 var releaseId = releasejs.GetProperty("id").GetInt64();
                 var isLatest = releaseId == latestReleaseId;
                 var assets = releasejs.GetProperty("assets");
+                var isDraft = releasejs.GetProperty("draft").GetBoolean();
                 var body = releasejs.GetProperty("body").GetString();
 
                 Debug.WriteLine($"Release Name: {name}, Tag: {tag}, Is Prerelease: {isPrerelease}, Is Latest: {isLatest}");
@@ -65,6 +140,7 @@ namespace ML3DInstaller.Presenter
                 release.FullName = name;
                 release.FullTag = tag;
                 release.IsLatest = isLatest;
+                release.IsDraft = isDraft;
                 release.Software = softwareName;
 
                 release.IsPreview = isPrerelease;
@@ -113,6 +189,11 @@ namespace ML3DInstaller.Presenter
                             break;
                     }
 
+                    if (release.IsDraft)
+                    {
+                        release.StringVersion += " (Draft)";
+                    }
+
                 }
 
                 if (release.Type == ReleaseType.None)
@@ -135,23 +216,67 @@ namespace ML3DInstaller.Presenter
             return releases;
         }
 
-        public static List<Release> GetML3DReleases(string softwareName)
+        /// <summary>
+        /// Get a list of all the releases and all the softwares.
+        /// 
+        /// If the last update is more than 30 minutes old, it re-downloads the content from github.
+        /// A force re-download is available with the argument
+        /// </summary>
+        /// <param name="forceDownload">true will force re-download of the sources</param>
+        /// <returns>a dictionnary associating each software name to a list of its releases</returns>
+        public static Dictionary<string, List<Release>> GetAllML3DReleases(bool forceDownload=false)
         {
-            return GithubAPI.GetReleases("https://api.github.com/repos/Microlight3D/" + softwareName + "/releases");
+            Dictionary<string, List<Release>> softwares = new Dictionary<string, List<Release>>();
+
+            // Check if an update is necessary 
+            long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            bool download = forceDownload;
+            if (
+                    (!download && now - Properties.Settings.Default.LastSourcesUpdate > Properties.Settings.Default.UpdateSourcesTiming) ||
+                    Properties.Settings.Default.LuminisReleaseJson == "" ||
+                    Properties.Settings.Default.LuminisLatestReleaseJson == "" ||
+                    Properties.Settings.Default.PhaosReleaseJson == "" ||
+                    Properties.Settings.Default.PhaosLatestReleaseJson == "" ||
+                    Properties.Settings.Default.TestReleaseJson == "" ||
+                    Properties.Settings.Default.TestLatestReleaseJson == "" ||
+                    Properties.Settings.Default.InstallerReleaseJson == "" ||
+                    Properties.Settings.Default.InstallerLatestReleaseJson == "" // <-- All these are for the first usage, or if the temp mem has been wiped or something
+                )
+            {
+                download = true;
+            }
+
+            softwares["Luminis"] = GithubAPI.GetML3DReleases("LuminisRedistribuable", download);
+            softwares["Phaos"] = GithubAPI.GetML3DReleases("PhaosRedistribuable", download);
+            softwares["Test"] = GithubAPI.GetML3DReleases("TestRedistribuable", download);
+            softwares["Installer"] = GithubAPI.GetML3DReleases("Installer", download);
+
+            if (download)
+            {
+                Properties.Settings.Default.LastSourcesUpdate = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                Properties.Settings.Default.Save();
+            }
+            return softwares;
         }
 
-        public static JsonDocument MakeRequest(string requestUrl)
+        public static List<Release> GetML3DReleases(string softwareName, bool forceDownload)
+        {
+            return GithubAPI.GetReleases("https://api.github.com/repos/Microlight3D/" + softwareName + "/releases", forceDownload);
+        }
+
+        private static int countRequests = 0;
+        public static string MakeRequest(string requestUrl)
         {
             using (HttpClient client = new HttpClient())
             {
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
                 client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)");
-                if (Properties.Settings.Default.DeveloperMode && Properties.Settings.Default.UseGitPAT)
+                if (Properties.Settings.Default.UseGitPAT)
                 {
-                    // Authorization: Bearer YOUR-TOKEN"
-                    client.DefaultRequestHeaders.Add("Authorization", "Bearer "+Properties.Settings.Default.GithubApiToken);
+                    client.DefaultRequestHeaders.Add("Authorization", "Bearer "+ GetToken());
                 }
-
+                countRequests++;
+                Debug.WriteLine("================ Requests : "+countRequests);
                 HttpResponseMessage response = client.GetAsync(requestUrl).Result;
                 if (response.StatusCode == HttpStatusCode.Unauthorized)
                 {
@@ -173,8 +298,8 @@ namespace ML3DInstaller.Presenter
                 // response.EnsureSuccessStatusCode();
 
                 string jsonString = response.Content.ReadAsStringAsync().Result;
-                Debug.WriteLine(jsonString);
-                return JsonDocument.Parse(jsonString);
+                //Debug.WriteLine(jsonString);
+                return jsonString;
             }
         }
 
@@ -218,10 +343,13 @@ namespace ML3DInstaller.Presenter
         /// </summary>
         /// <param name="projectURL"></param>
         /// <returns></returns>
-        public static Release GetLatest(string projectURL)
+        public static Release GetLatest(string projectName)
         {
             Release releaseLatest = new Release();
-            List<Release> releases = GetReleases(projectURL);
+            
+            Dictionary<string, List<Release>> AllReleases = GetAllML3DReleases();
+            List<Release> releases = AllReleases[projectName];
+            
             foreach (Release release in releases)
             {
                 if (release.IsLatest)
@@ -230,11 +358,6 @@ namespace ML3DInstaller.Presenter
                 }
             }
             return releaseLatest;
-        }
-
-        public static Release GetML3DLatest(string softwareName)
-        {
-            return GetLatest("https://api.github.com/repos/Microlight3D/" + softwareName + "/releases");
         }
 
         public static Release GetReleaseByVersion(List<Release> releases, string version)
@@ -248,6 +371,40 @@ namespace ML3DInstaller.Presenter
                 }
             }
             return r;
+        }
+
+        public static string GetToken()
+        {
+            if (Properties.Settings.Default.GithubApiToken != null && Properties.Settings.Default.GithubApiToken != "" && Properties.Settings.Default.GithubApiToken != String.Empty)
+            {
+                string encryptedToken = Properties.Settings.Default.GithubApiToken;
+                byte[] encryptedBytes = Utils.StringToBytesArr(encryptedToken);
+                return Utils.Decrypt(encryptedBytes, Utils.GetMotherboardSerialNumber());
+            } else
+            {
+                return "";
+            }
+        }
+
+        public static string GetLastReload()
+        {
+            long lastReload = Properties.Settings.Default.LastSourcesUpdate;
+            long timeSinceLast = DateTimeOffset.UtcNow.ToUnixTimeSeconds() - lastReload;
+
+            if (timeSinceLast < 60)
+            {
+                return "" + timeSinceLast + " seconds";
+            }
+            if (timeSinceLast < 3600)
+            {
+                return "" + timeSinceLast / 60 + " minute(s)";
+            }
+            if (timeSinceLast < 3600 * 24)
+            {
+                return "" + timeSinceLast / 3600 + " hour(s)";
+            }
+            return "1+ day(s)";
+
         }
 
         
@@ -271,6 +428,7 @@ namespace ML3DInstaller.Presenter
         public string URL; // download url
         public bool IsLatest;
         public bool IsPreview;
+        public bool IsDraft = false;
         public ReleaseType Type; // <= anything other than that is ignored. Case unsensitive
         public int VersionInt; // A.B.C.D : D + C*100 + B*10,000 + A*1,000,000 
         public string StringVersion; // X.X.X.X (latest) (Test)

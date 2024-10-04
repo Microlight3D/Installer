@@ -22,12 +22,16 @@ namespace ML3DInstaller.View
             cbShowTest.Checked = Properties.Settings.Default.ViewTestProject;
             cbDevMode.Checked = Properties.Settings.Default.DeveloperMode;
             cbUsePAT.Checked = Properties.Settings.Default.UseGitPAT;
-            tbGitPAT.Text = Properties.Settings.Default.GithubApiToken;
+
             cbSupportOptions.Checked = Properties.Settings.Default.ShowSupportOptions;
             int selectedChunk = Properties.Settings.Default.DownloadBlockSize;
             int cbChunkSizeIndex = cbChunkSize.Items.IndexOf(selectedChunk.ToString("N0"));
             cbChunkSize.SelectedIndex = cbChunkSizeIndex;
             tlpDevMode.Visible = Properties.Settings.Default.DeveloperMode;
+
+            tbGitPAT.Text = GithubAPI.GetToken();
+            lblLastReload.Text = "Last update : "+GithubAPI.GetLastReload()+" ago";
+
             init = true;
         }
 
@@ -49,30 +53,19 @@ namespace ML3DInstaller.View
 
         private bool SaveSettings()
         {
-            /*
-             * InitializeComponent();
-            rbShowProd.Checked = Properties.Settings.Default.ReleaseOnly;
-            rbShowall.Checked = !Properties.Settings.Default.ReleaseOnly;
-            cbShowTest.Checked = Properties.Settings.Default.ViewTestProject;
-            cbDevMode.Checked = Properties.Settings.Default.DeveloperMode;
-            cbUsePAT.Checked = Properties.Settings.Default.UseGitPAT;
-            tbGitPAT.Text = Properties.Settings.Default.GithubApiToken;
-            cbSupportOptions.Checked = Properties.Settings.Default.ShowSupportOptions;
-            int selectedChunk = Properties.Settings.Default.DownloadBlockSize;
-            int cbChunkSizeIndex = cbChunkSize.Items.IndexOf(selectedChunk.ToString("N0"));
-            cbChunkSize.SelectedIndex = cbChunkSizeIndex;
-            tlpDevMode.Visible = Properties.Settings.Default.DeveloperMode;
-            init = true;
-             * */
             Properties.Settings.Default.ReleaseOnly = rbShowProd.Checked;
             Properties.Settings.Default.ViewTestProject = cbShowTest.Checked;
             Properties.Settings.Default.DeveloperMode = cbDevMode.Checked;
             Properties.Settings.Default.UseGitPAT = cbUsePAT.Checked;
-            Properties.Settings.Default.GithubApiToken = tbGitPAT.Text;
+
             Properties.Settings.Default.ShowSupportOptions = cbSupportOptions.Checked;
 
             string selected = this.cbChunkSize.GetItemText(this.cbChunkSize.SelectedItem);
             Properties.Settings.Default.DownloadBlockSize = int.Parse(selected.Replace(",", ""));
+
+            // Encrypt the PAT
+            byte[] encryptedPAT = Utils.Encrypt(tbGitPAT.Text, Utils.GetMotherboardSerialNumber());
+            Properties.Settings.Default.GithubApiToken = Utils.ByteArrToString(encryptedPAT);
 
             Properties.Settings.Default.Save();
             return true;
@@ -88,8 +81,14 @@ namespace ML3DInstaller.View
         {
             if (SaveSettings())
             {
-                MessageBox.Show("Restart software to apply changes.");
-                Exit?.Invoke(this, EventArgs.Empty);
+                if (Utils.QuestionBox("A restart of the installer is needed to apply changes. \nRestart now ?", "Restart needed") == DialogResult.Yes)
+                {
+                    Program.RestartSoftware();
+                }
+                else
+                {
+                    Exit?.Invoke(this, EventArgs.Empty);
+                }
             }
 
         }
@@ -118,12 +117,42 @@ namespace ML3DInstaller.View
 
         private void btnLaunchUpdate_Click(object sender, EventArgs e)
         {
+            this.Enabled = false;
+            this.Cursor = Cursors.WaitCursor;
             Updater.AutoUpdate(GithubAPI.VersionToInt(tbCurrentVersion.Text));
+            this.Enabled = true;
+            this.Cursor = Cursors.Default;
         }
 
         private void cbUsePAT_CheckedChanged(object sender, EventArgs e)
         {
             tlpGitPat.Enabled = cbUsePAT.Checked;
+        }
+
+        private void btnPATHelp_Click(object sender, EventArgs e)
+        {
+            DialogResult dr = Utils.QuestionBox(
+                "A github \"Private Access Token\" (PAT) is a key, which is used to remotely access to a www.github.com account.\n" +
+                "This key is very private, and must not be shared with anyone. The ML3DInstaller saves an encrypted version in the temporary memory of your computer.\n" +
+                "This key will never be sent to anyone by this software, and will only be saved on this computer.\n" +
+                "To create a PAT, access your settings in your github account, or press \"Yes\" below, and generate a new token, enabling reading of your organisations and repositories to the key.\n" +
+                "\n" +
+                "Go to github's PAT page ?",
+                "Github PAT creation process");
+            if (dr == DialogResult.Yes)
+            {
+                Utils.OpenUrl("https://github.com/settings/tokens");
+            }
+        }
+
+        private void btnReloadSources_Click(object sender, EventArgs e)
+        {
+            this.Enabled = false;
+            this.Cursor = Cursors.WaitCursor;
+            GithubAPI.GetAllML3DReleases(true);
+            lblLastReload.Text = "Last update : 0 seconds ago";
+            this.Enabled = true;
+            this.Cursor = Cursors.Default;
         }
     }
 }
