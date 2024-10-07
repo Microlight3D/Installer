@@ -280,7 +280,7 @@ namespace ML3DInstaller.Presenter
                 HttpResponseMessage response = client.GetAsync(requestUrl).Result;
                 if (response.StatusCode == HttpStatusCode.Unauthorized)
                 {
-                    Utils.ErrorBox("The github request was unauthorized.\nThis is likely due to an incorrect Private Access Token in the Developer Settings. The Settings menu will now open. Modify the PAT value or uncheck the use of the PAT.", "401: Unauthorized");
+                    Utils.ErrorBox("The github request was unauthorized.\nThis is likely due to an incorrect Private Access Token in the Advanced Settings. The Settings menu will now open. Modify the PAT value or uncheck the use of the PAT.", "401: Unauthorized");
                     Form fo = Utils.FormSettings();
                     fo.ShowDialog();
                     return null;

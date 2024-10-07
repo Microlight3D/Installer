@@ -126,7 +126,8 @@ namespace ML3DInstaller.View
 
         private void cbUsePAT_CheckedChanged(object sender, EventArgs e)
         {
-            tlpGitPat.Enabled = cbUsePAT.Checked;
+            lblGitPat.Enabled = cbUsePAT.Checked;
+            tbGitPAT.Enabled = cbUsePAT.Checked;
         }
 
         private void btnPATHelp_Click(object sender, EventArgs e)
@@ -134,7 +135,7 @@ namespace ML3DInstaller.View
             DialogResult dr = Utils.QuestionBox(
                 "A github \"Private Access Token\" (PAT) is a key, which is used to remotely access to a www.github.com account.\n" +
                 "This key is very private, and must not be shared with anyone. The ML3DInstaller saves an encrypted version in the temporary memory of your computer.\n" +
-                "This key will never be sent to anyone by this software, and will only be saved on this computer.\n" +
+                "This key will never be sent to anyone by this software, and will only be saved on this computer.\n\n" +
                 "To create a PAT, access your settings in your github account, or press \"Yes\" below, and generate a new token, enabling reading of your organisations and repositories to the key.\n" +
                 "\n" +
                 "Go to github's PAT page ?",

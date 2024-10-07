@@ -18,7 +18,7 @@
     <Product>ML3DInstaller</Product>
     <Copyright>Copyright © 2024 Microlight3D</Copyright>
     <AssemblyVersion>1.0.1.0</AssemblyVersion>
-    <FileVersion>1.5.0</FileVersion>
+    <FileVersion>1.6.0</FileVersion>
 	<DelaySign>true</DelaySign>
 	<SelfContained>true</SelfContained>
   </PropertyGroup>
