@@ -121,6 +121,7 @@ namespace ML3DInstaller.Presenter
             }
             userControlMain.SetIteration(-1, totalZip);
             Updater.DeleteZips();
+            Utils.InfoBox("Thank you for using Microlight 3D's Software Installer.", "Installation Complete");
             Application.Exit();
         }
 
