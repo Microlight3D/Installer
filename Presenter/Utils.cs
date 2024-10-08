@@ -77,7 +77,7 @@ namespace ML3DInstaller.Presenter
                 message,
                 title,
                 MessageBoxButtons.OK,
-                MessageBoxIcon.Error
+                MessageBoxIcon.Information
             );
         }
 

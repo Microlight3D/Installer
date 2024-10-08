@@ -119,7 +119,7 @@ namespace ML3DInstaller.View
         {
             this.Enabled = false;
             this.Cursor = Cursors.WaitCursor;
-            Updater.AutoUpdate(GithubAPI.VersionToInt(tbCurrentVersion.Text));
+            Updater.AutoUpdate(GithubAPI.VersionToInt("0.0"));
             this.Enabled = true;
             this.Cursor = Cursors.Default;
         }

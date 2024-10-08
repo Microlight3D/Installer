@@ -39,10 +39,6 @@
             tableLayoutPanel5 = new TableLayoutPanel();
             label5 = new Label();
             cbChunkSize = new ComboBox();
-            tableLayoutPanel3 = new TableLayoutPanel();
-            btnLaunchUpdate = new Button();
-            label4 = new Label();
-            tbCurrentVersion = new TextBox();
             cbShowTest = new CheckBox();
             label3 = new Label();
             tlpGitPat = new TableLayoutPanel();
@@ -60,11 +56,11 @@
             tlpReloadSources = new TableLayoutPanel();
             btnReloadSources = new Button();
             lblLastReload = new Label();
+            btnLaunchUpdate = new Button();
             tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
             tlpDevMode.SuspendLayout();
             tableLayoutPanel5.SuspendLayout();
-            tableLayoutPanel3.SuspendLayout();
             tlpGitPat.SuspendLayout();
             tableLayoutPanel6.SuspendLayout();
             tableLayoutPanel4.SuspendLayout();
@@ -95,6 +91,7 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 35F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             tableLayoutPanel1.Size = new Size(372, 385);
             tableLayoutPanel1.TabIndex = 0;
             // 
@@ -186,26 +183,26 @@
             tlpDevMode.CellBorderStyle = TableLayoutPanelCellBorderStyle.Single;
             tlpDevMode.ColumnCount = 1;
             tlpDevMode.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tlpDevMode.Controls.Add(tableLayoutPanel5, 0, 6);
-            tlpDevMode.Controls.Add(tableLayoutPanel3, 0, 3);
-            tlpDevMode.Controls.Add(cbShowTest, 0, 7);
+            tlpDevMode.Controls.Add(btnLaunchUpdate, 0, 2);
+            tlpDevMode.Controls.Add(tableLayoutPanel5, 0, 5);
+            tlpDevMode.Controls.Add(cbShowTest, 0, 6);
             tlpDevMode.Controls.Add(label3, 0, 0);
-            tlpDevMode.Controls.Add(tlpGitPat, 0, 5);
+            tlpDevMode.Controls.Add(tlpGitPat, 0, 4);
             tlpDevMode.Controls.Add(cbSupportOptions, 0, 1);
             tlpDevMode.Dock = DockStyle.Top;
             tlpDevMode.Location = new Point(3, 130);
             tlpDevMode.Name = "tlpDevMode";
-            tlpDevMode.RowCount = 9;
+            tlpDevMode.RowCount = 8;
             tlpDevMode.RowStyles.Add(new RowStyle());
             tlpDevMode.RowStyles.Add(new RowStyle());
-            tlpDevMode.RowStyles.Add(new RowStyle());
-            tlpDevMode.RowStyles.Add(new RowStyle());
+            tlpDevMode.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
             tlpDevMode.RowStyles.Add(new RowStyle());
             tlpDevMode.RowStyles.Add(new RowStyle());
             tlpDevMode.RowStyles.Add(new RowStyle());
             tlpDevMode.RowStyles.Add(new RowStyle());
             tlpDevMode.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tlpDevMode.Size = new Size(366, 217);
+            tlpDevMode.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tlpDevMode.Size = new Size(366, 207);
             tlpDevMode.TabIndex = 13;
             // 
             // tableLayoutPanel5
@@ -217,7 +214,7 @@
             tableLayoutPanel5.Controls.Add(label5, 0, 0);
             tableLayoutPanel5.Controls.Add(cbChunkSize, 1, 0);
             tableLayoutPanel5.Dock = DockStyle.Top;
-            tableLayoutPanel5.Location = new Point(9, 161);
+            tableLayoutPanel5.Location = new Point(9, 151);
             tableLayoutPanel5.Margin = new Padding(8, 0, 0, 0);
             tableLayoutPanel5.Name = "tableLayoutPanel5";
             tableLayoutPanel5.RowCount = 1;
@@ -250,63 +247,11 @@
             cbChunkSize.Size = new Size(172, 23);
             cbChunkSize.TabIndex = 1;
             // 
-            // tableLayoutPanel3
-            // 
-            tableLayoutPanel3.AutoSize = true;
-            tableLayoutPanel3.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            tableLayoutPanel3.ColumnCount = 2;
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel3.Controls.Add(btnLaunchUpdate, 0, 0);
-            tableLayoutPanel3.Controls.Add(label4, 1, 0);
-            tableLayoutPanel3.Controls.Add(tbCurrentVersion, 1, 1);
-            tableLayoutPanel3.Dock = DockStyle.Top;
-            tableLayoutPanel3.Location = new Point(9, 54);
-            tableLayoutPanel3.Margin = new Padding(8, 5, 0, 0);
-            tableLayoutPanel3.Name = "tableLayoutPanel3";
-            tableLayoutPanel3.RowCount = 2;
-            tableLayoutPanel3.RowStyles.Add(new RowStyle());
-            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel3.Size = new Size(356, 44);
-            tableLayoutPanel3.TabIndex = 13;
-            // 
-            // btnLaunchUpdate
-            // 
-            btnLaunchUpdate.Dock = DockStyle.Top;
-            btnLaunchUpdate.Location = new Point(3, 3);
-            btnLaunchUpdate.MinimumSize = new Size(114, 0);
-            btnLaunchUpdate.Name = "btnLaunchUpdate";
-            tableLayoutPanel3.SetRowSpan(btnLaunchUpdate, 2);
-            btnLaunchUpdate.Size = new Size(114, 38);
-            btnLaunchUpdate.TabIndex = 0;
-            btnLaunchUpdate.Text = "Launch Update";
-            btnLaunchUpdate.UseVisualStyleBackColor = true;
-            btnLaunchUpdate.Click += btnLaunchUpdate_Click;
-            // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Dock = DockStyle.Top;
-            label4.Location = new Point(123, 0);
-            label4.Name = "label4";
-            label4.Size = new Size(230, 15);
-            label4.TabIndex = 1;
-            label4.Text = "Set Current Version";
-            // 
-            // tbCurrentVersion
-            // 
-            tbCurrentVersion.Dock = DockStyle.Top;
-            tbCurrentVersion.Location = new Point(123, 18);
-            tbCurrentVersion.Name = "tbCurrentVersion";
-            tbCurrentVersion.Size = new Size(230, 23);
-            tbCurrentVersion.TabIndex = 2;
-            tbCurrentVersion.Text = "0.0";
-            // 
             // cbShowTest
             // 
             cbShowTest.AutoSize = true;
             cbShowTest.Dock = DockStyle.Top;
-            cbShowTest.Location = new Point(9, 193);
+            cbShowTest.Location = new Point(9, 183);
             cbShowTest.Margin = new Padding(8, 5, 3, 3);
             cbShowTest.Name = "cbShowTest";
             cbShowTest.Size = new Size(353, 19);
@@ -336,7 +281,7 @@
             tlpGitPat.Controls.Add(lblGitPat, 0, 1);
             tlpGitPat.Controls.Add(tbGitPAT, 1, 1);
             tlpGitPat.Dock = DockStyle.Fill;
-            tlpGitPat.Location = new Point(9, 105);
+            tlpGitPat.Location = new Point(9, 95);
             tlpGitPat.Margin = new Padding(8, 5, 0, 0);
             tlpGitPat.Name = "tlpGitPat";
             tlpGitPat.RowCount = 2;
@@ -537,6 +482,19 @@
             lblLastReload.Text = "Last update : xxx ago";
             lblLastReload.TextAlign = ContentAlignment.MiddleLeft;
             // 
+            // btnLaunchUpdate
+            // 
+            btnLaunchUpdate.AutoSize = true;
+            btnLaunchUpdate.Dock = DockStyle.Fill;
+            btnLaunchUpdate.Location = new Point(4, 51);
+            btnLaunchUpdate.MinimumSize = new Size(114, 0);
+            btnLaunchUpdate.Name = "btnLaunchUpdate";
+            btnLaunchUpdate.Size = new Size(358, 34);
+            btnLaunchUpdate.TabIndex = 18;
+            btnLaunchUpdate.Text = "Upgrade to Latest Release";
+            btnLaunchUpdate.UseVisualStyleBackColor = true;
+            btnLaunchUpdate.Click += btnLaunchUpdate_Click;
+            // 
             // UCSettings
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -553,8 +511,6 @@
             tlpDevMode.PerformLayout();
             tableLayoutPanel5.ResumeLayout(false);
             tableLayoutPanel5.PerformLayout();
-            tableLayoutPanel3.ResumeLayout(false);
-            tableLayoutPanel3.PerformLayout();
             tlpGitPat.ResumeLayout(false);
             tlpGitPat.PerformLayout();
             tableLayoutPanel6.ResumeLayout(false);
@@ -576,10 +532,6 @@
         private Label label2;
         private CheckBox cbDevMode;
         private TableLayoutPanel tlpDevMode;
-        private TableLayoutPanel tableLayoutPanel3;
-        private Button btnLaunchUpdate;
-        private Label label4;
-        private TextBox tbCurrentVersion;
         private CheckBox cbShowTest;
         private Label label3;
         private TableLayoutPanel tableLayoutPanel4;
@@ -600,5 +552,6 @@
         private TableLayoutPanel tlpReloadSources;
         private Button btnReloadSources;
         private Label lblLastReload;
+        private Button btnLaunchUpdate;
     }
 }
